@@ -8,10 +8,8 @@ const email: any = (document.getElementById("email") as HTMLInputElement);
 const password: any = (document.getElementById("password") as HTMLInputElement);
 
 // Regular Expression for the username
-// const usernameRegExp = ;
+const usernameRegExp: RegExp = /^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$/;
 
-// Regular Expression for the email
-const emailRegExp: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 /**
  * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
  */
@@ -28,23 +26,17 @@ function setup(): void {
                 document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
             }
             // username validation
-            // else if (username.value !== usernameRegExp) {
-            //     console.log("voldoet niet aan username eisen");
-            // }
-            //email validation
-            else if (email.value !== emailRegExp) {
-                console.log("uw email bestaat niet");
+            else if (username.value !== usernameRegExp) {
+                console.log("voldoet niet aan de eisen");
             }
-
-            // password validation
         } else {
             // Calls the signUpDatabase function
             signUpDatabase(username.value, email.value, password.value);
-                
+            console.log("registerd!");
         } 
     });
 }
-    
+
 
 
 /**
