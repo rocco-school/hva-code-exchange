@@ -16,3 +16,7 @@ https://theusatwork.com/solution-based-thinking-top-traits-of-great-problem-solv
 https://www.globalknowledge.com/us-en/resources/resource-library/articles/top-10-traits-of-successful-it-pros/
 https://www.comptia.org/blog/5-traits-that-will-lead-an-it-student-to-success
 https://fullscale.io/blog/great-programmer-traits/
+
+## signup regex:
+
+https://cheatography.com/davechild/cheat-sheets/regular-expressions/
