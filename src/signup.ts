@@ -1,6 +1,6 @@
 import { delay } from "./components/delay";
 import "./config";
-import { api, url } from "@hboictcloud/api";
+import { api } from "@hboictcloud/api";
 
 // Haal de waarden uit de inputvelden met het id username, email and password
 const username: any = (document.getElementById("username") as HTMLInputElement);
@@ -18,7 +18,7 @@ const emailRegEx: RegExp = /^((?![\w-\.]+@([\w-]+\.)+[\w-]{2,4}).)*$/g;
 // Regular Expression for password
 // Minimum eight and maximum 60 characters, at least one uppercase letter, one lowercase letter, one number and one special character
 const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/g;
-// Regular Expression for the password
+
 
 /**
  * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
@@ -27,9 +27,9 @@ function setup(): void {
     // Maak een actie aan voor de login knop. Als je hier op drukt wordt de code tussen de { } aangeroepen
     document.querySelector("#signupButton")?.addEventListener("click", async () => {
 
-        // If the username input OR email input OR password input are empty
-        // Then an alert will be displayed which disappears in 3000 ms
         if(username && email && password) {
+            // If the username input OR email input OR password input are empty
+            // Then an alert will be displayed which disappears in 3000 ms
             if (username.value === "" || email.value === "" || password.value === "" ) {
                 const textInput: string = "There are empty fields!";
                 alertPopUp(textInput);
@@ -37,20 +37,25 @@ function setup(): void {
             // username validation
             else if (username.value.match(usernameRegEx)) {
                 const textInput: string = "Username needs at least 5 alphanumerics!";
+                // Calls the alertPopUp function and sends the assigned data
                 alertPopUp(textInput);
             }
+            // checks if email already exists
+
             // email validation
             else if (email.value.match(emailRegEx)) {
                 const textInput: string = "Your email does not exist!";
+                // Calls the alertPopUp function and sends the assigned data
                 alertPopUp(textInput);
             }
             // password validation
             else if (password.value.match(passwordRegEx)) {
                 const textInput: string = "Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.";
+                // Calls the alertPopUp function and sends the assigned data
                 alertPopUp(textInput);
             }
             else {
-                // Calls the signUpDatabase function
+                // Calls the signUpDatabase function and sends the assigned data
                 signUpDatabase(username.value, email.value, password.value);
                 console.log("registerd!");
             } 

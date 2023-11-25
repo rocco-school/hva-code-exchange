@@ -17,6 +17,10 @@ https://www.globalknowledge.com/us-en/resources/resource-library/articles/top-10
 https://www.comptia.org/blog/5-traits-that-will-lead-an-it-student-to-success
 https://fullscale.io/blog/great-programmer-traits/
 
-## signup regex:
+## regex research:
 
 https://cheatography.com/davechild/cheat-sheets/regular-expressions/
+https://regex101.com/
+https://regexr.com/
+https://stackoverflow.com/questions/406230/regular-expression-to-match-a-line-that-doesnt-contain-a-word
+
