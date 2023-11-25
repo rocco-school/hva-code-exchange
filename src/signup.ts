@@ -10,7 +10,8 @@ const email: any = (document.getElementById("email") as HTMLInputElement);
 const password: any = (document.getElementById("password") as HTMLInputElement);
 
 // Regular Expression for names
-const nameRegEx: RegExp = /^((?![a-zA-z\D]).)\D*$/g;
+// only letters are allowed
+const nameRegEx: RegExp = /^(?!=\d)([a-zA-Z][\sa-zA-Z])*$/g;
 
 // Regular Expression for username
 // Needs at least 5 alphanumerics and a limit of 40 alphanumerics 
