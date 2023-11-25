@@ -3,9 +3,14 @@ import "./config";
 import { api } from "@hboictcloud/api";
 
 // Haal de waarden uit de inputvelden met het id username, email and password
+const firstname: any = (document.getElementById("firstname") as HTMLInputElement);
+const lastname: any = (document.getElementById("lastname") as HTMLInputElement);
 const username: any = (document.getElementById("username") as HTMLInputElement);
 const email: any = (document.getElementById("email") as HTMLInputElement);
 const password: any = (document.getElementById("password") as HTMLInputElement);
+
+// Regular Expression for names
+const nameRegEx: RegExp = /^((?![a-zA-z\D]).)\D*$/g;
 
 // Regular Expression for username
 // Needs at least 5 alphanumerics and a limit of 40 alphanumerics 
@@ -27,11 +32,23 @@ function setup(): void {
     // Maak een actie aan voor de login knop. Als je hier op drukt wordt de code tussen de { } aangeroepen
     document.querySelector("#signupButton")?.addEventListener("click", async () => {
 
-        if(username && email && password) {
+        if(firstname && lastname && username && email && password) {
             // If the username input OR email input OR password input are empty
             // Then an alert will be displayed which disappears in 3000 ms
-            if (username.value === "" || email.value === "" || password.value === "" ) {
+            if (firstname.value ==="" || lastname.value === "" || username.value === "" || email.value === "" || password.value === "" ) {
                 const textInput: string = "There are empty fields!";
+                alertPopUp(textInput);
+            }
+            // firstname validation
+            else if (firstname.value.match(nameRegEx)) {
+                const textInput: string = "Only alphabetic letters are allowed!";
+                // Calls the alertPopUp function and sends the assigned data
+                alertPopUp(textInput);
+            }
+            // lastname validation
+            else if (lastname.value.match(nameRegEx)) {
+                const textInput: string = "Only alphabetic letters are allowed!";
+                // Calls the alertPopUp function and sends the assigned data
                 alertPopUp(textInput);
             }
             // username validation
@@ -56,8 +73,8 @@ function setup(): void {
             }
             else {
                 // Calls the signUpDatabase function and sends the assigned data
-                signUpDatabase(username.value, email.value, password.value);
-                console.log("registerd!");
+                signUpDatabase(firstname.value, lastname.value, username.value, email.value, password.value);
+                console.log("registered!");
             } 
         };
     });
@@ -67,17 +84,19 @@ function setup(): void {
 
 /**
  *
+ * @param firstname
+ * @param lastname
  * @param username
  * @param email
  * @param password
  * @returns Array with the user data
  */
-async function signUpDatabase(username: string, email: string, password: string): Promise<Array<any> | undefined> {
+async function signUpDatabase(firstname: string, lastname: string, username: string, email: string, password: string): Promise<Array<any> | undefined> {
     // proberen de data op te halen uit de database
     try {
-        let dataString: string[] = [username, password, email];
+        let dataString: string[] = [firstname, lastname, username, password, email];
         const data: any = await api.queryDatabase(
-            "INSERT INTO user (username, password, email) VALUES (?,?,?)",
+            "INSERT INTO user (firstname, lastname, username, password, email) VALUES (?,?,?,?,?)",
             ...dataString
         );
 
