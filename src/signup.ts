@@ -10,20 +10,20 @@ const email: any = (document.getElementById("email") as HTMLInputElement);
 const password: any = (document.getElementById("password") as HTMLInputElement);
 
 // Regular Expression for names
-// only letters are allowed
-const nameRegEx: RegExp = /^(?!=\d)([a-zA-Z][\sa-zA-Z])*$/g;
+// only letters are allowed and numbers are not allowed
+const nameRegEx: RegExp = /^((?!\w\D+$).)/;
 
 // Regular Expression for username
 // Needs at least 5 alphanumerics and a limit of 40 alphanumerics 
-const usernameRegEx: RegExp = /^((?![a-zA-Z0-9_]{5,40}).)*$/g;
+const usernameRegEx: RegExp = /^((?![a-zA-Z0-9_]{5,40}).)*$/;
 
 // Regular Expression for email
 // Needs alphanumerics before the @ which follows with a dot and 2-4 letters 
-const emailRegEx: RegExp = /^((?![\w-\.]+@([\w-]+\.)+[\w-]{2,4}).)*$/g;
+const emailRegEx: RegExp = /^((?![\w-\.]+@([\w-]+\.)+[\w-]{2,4}).)*$/;
 
 // Regular Expression for password
 // Minimum eight and maximum 60 characters, at least one uppercase letter, one lowercase letter, one number and one special character
-const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/g;
+const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/;
 
 
 /**
