@@ -30,13 +30,14 @@ function setup(): void {
     if (submitButton) {
         submitButton.addEventListener("submit", async function (e): Promise<void> {
             e.preventDefault();
-            console.log("submit");
 
             document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
 
             const inputs: (HTMLInputElement | null)[] = [firstnameInput, lastnameInput, usernameInput, emailInput, passwordInput];
 
             const verifiedInputs: boolean = await validateInputs(inputs);
+
+            console.log(verifiedInputs);
 
             if (verifiedInputs) {
                 const verifiedPass: boolean = await verifyPassword(passwordInput.value);
@@ -70,6 +71,7 @@ function setup(): void {
                 // Returns the alertPopUp function and with the assigned data
                 await alertPopUp(textInput);
                 noError = false;
+                break;
             }
         }
 
