@@ -1,6 +1,6 @@
 export class User {
     // private fields
-    private _id: number;
+    private _user_id: number;
     private _username: string;
     private _email: string;
     private _firstname: string;
@@ -9,7 +9,7 @@ export class User {
     // De constructor wordt eenmalig aangeroepen als de class wordt geïnstantieerd.
     // Deze constructor vult de fields bij het aanmaken van een object.
     public constructor(id: number, username: string, email: string, firstname: string, lastname: string) {
-        this._id = id;
+        this._user_id = id;
         this._username = username;
         this._email = email;
         this._firstname = firstname;
@@ -18,7 +18,7 @@ export class User {
 
     // Getters en setters
     public get id(): number {
-        return this._id;
+        return this._user_id;
     }
 
     public get username(): string {
@@ -38,7 +38,7 @@ export class User {
     }
 
     public set id(value: number) {
-        this._id = value;
+        this._user_id = value;
     }
 
     public set username(value: string) {
@@ -58,6 +58,6 @@ export class User {
     }
 
     public toString(): string {
-        return `User: ${this._id} ${this._username} ${this._email} ${this._firstname} ${this._lastname}`;
+        return `User: ${this._user_id} ${this._username} ${this._email} ${this._firstname} ${this._lastname}`;
     }
 }

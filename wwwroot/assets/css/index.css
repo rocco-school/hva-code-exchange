@@ -16,3 +16,29 @@ body {
     display: flex;
     justify-content: center;
 }
+
+.container {
+    text-align: start;
+    margin-top: 50px;
+}
+
+.table-fit {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.table-dark td,
+.table-dark th,
+.table-dark thead th {
+    background-color: #343a40;
+    color: #ffffff;
+    border-color: #454d55;
+}
+
+.answer-count {
+    margin-right: 9rem;
+}
+
+.pointer {
+    cursor: pointer;
+}

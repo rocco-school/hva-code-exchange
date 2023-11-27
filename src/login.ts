@@ -13,12 +13,17 @@ function setup(): void {
 
         // Roep de loginFromDatabase functie aan (op regel 50) en geef username en password mee
         try {
+            console.log(username);
+            console.log(password);
             const data: any = await loginFromDatabase(username, password);
             
             if (data.length > 0) {
+
+                // Clear session from previous sessions.
+                session.clear();
                 // Maak user object aan met de waarden uit de database
                 // Sla de gebruikersgegevens op in een sessie
-                session.set("user", data[0].id);
+                session.set("user", data[0].user_id);
 
                 // Stuur de gebruiker door naar de homepagina
                 url.redirect("/index.html");
@@ -43,16 +48,12 @@ function setup(): void {
  * @param password
  * @returns Array with the user data
  */
-async function loginFromDatabase(username: string, password: string): Promise<Array<any> | undefined> {
+async function loginFromDatabase(username: string, password: string): Promise<string | any[]> {
     // proberen de data op te halen uit de database
     try {
-        const data: any = await api.queryDatabase(
-            "SELECT id FROM user WHERE username = ? AND password = ?",
-            username,
-            password
-        );
-
-        return data;
+        const param: string[] = [username, password];
+        console.log(param, "params");
+        return await api.queryDatabase("SELECT * from user WHERE username = ? AND password = ?", ...param);
     } catch (error) {
         // als het niet lukt de data op te halen, geef een lege array terug
         return [];

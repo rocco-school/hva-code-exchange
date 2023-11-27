@@ -17,22 +17,40 @@
         <!-- Deze HTML pagina wordt als eerste aangeroepen als de website wordt aangeroepen in de browser -->
         <main>
             <div class="container">
-                <div class="wrapper">
-                    <div class="login-box">
-                        <div class="login-section">
-                            <img src="/assets/img/code_exchange.png" alt="Logo" class="logo" />
-                            <h1>Welkom, je bent ingelogd <span class="name">username</span>.</h1>
+                <table class="table table-fit table-dark table-striped">
+                    <tbody>
+                    <tr class="pointer">
+                        <td>
+                            <div class="d-flex">
+                                <div class="answer-count">
+                                    <span>Anwsers: 10</span>
+                                </div>
 
-                            <button
-                                class="btn btn-primary btn-lg btn-block logout-btn"
-                                id="logoutButton"
-                                type="submit"
-                            >
-                                Logout
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <div>
+                                    <div class="mb-2 text-primary">This is a very long question</div>
+                                    <div>This is a very long answer that's been cut off</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr class="pointer">
+                        <td>
+                            <div class="d-flex">
+                                <div class="answer-count">
+                                    <span>Anwsers: 10</span>
+                                </div>
+
+                                <div>
+                                    <div class="mb-2 text-primary">This is a very long question</div>
+                                    <div>This is a very long answer that's been cut off</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
             </div>
         </main>
         <!--  Dit typescript bestand (index.ts) wordt hier aangeroepen en uitgevoerd -->
