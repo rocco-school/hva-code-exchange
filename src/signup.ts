@@ -2,7 +2,7 @@ import { delay } from "./components/delay";
 import "./config";
 import { api, url } from "@hboictcloud/api";
 
-// Haal de waarden uit de inputvelden met het id username, email and password
+// Gets the variables from the outputs with the id username, email and password
 const firstnameInput: any = (document.getElementById("firstname") as HTMLInputElement);
 const lastnameInput: any = (document.getElementById("lastname") as HTMLInputElement);
 const usernameInput: any = (document.getElementById("username") as HTMLInputElement);
@@ -17,28 +17,29 @@ const emailData: any = await api.queryDatabase(
 // keeps redirect message hidden
 document.getElementsByTagName("section")[0].setAttribute("style", "display:none");
 
-// Regular Expression for names
-// only letters are allowed and numbers are not allowed
-const nameRegEx: RegExp = /^((?!\w\D+$){,45}.)/;
-
-// Regular Expression for username
-// Needs at least 5 alphanumerics and a limit of 40 alphanumerics 
-const usernameRegEx: RegExp = /^((?![a-zA-Z0-9_]{5,45}).)*$/;
-
-// Regular Expression for email
-// Needs alphanumerics before the @ which follows with a dot and 2-4 letters 
-const emailRegEx: RegExp = /^((?![\w-\.]+@([\w-]+\.)+[\w-]{2,4}).)*$/;
-
-// Regular Expression for password
-// Minimum eight and maximum 60 characters, at least one uppercase letter, one lowercase letter, one number and one special character
-const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/;
-
 
 /**
- * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
+ * This method will be called when the page is loaded, this happens at the end of this file.
  */
 function setup(): void {
-    // Maak een actie aan voor de login knop. Als je hier op drukt wordt de code tussen de { } aangeroepen
+
+    // Regular Expression for names
+    // only letters are allowed and numbers are not allowed
+    const nameRegEx: RegExp = /^((?!\w\D+$){,45}.)/;
+
+    // Regular Expression for username
+    // Needs at least 5 alphanumerics and a limit of 40 alphanumerics 
+    const usernameRegEx: RegExp = /^((?![a-zA-Z0-9_]{5,45}).)*$/;
+
+    // Regular Expression for email
+    // Needs alphanumerics before the @ which follows with a dot and 2-4 letters 
+    const emailRegEx: RegExp = /^((?![\w-\.]+@([\w-]+\.)+[\w-]{2,4}).)*$/;
+
+    // Regular Expression for password
+    // Minimum ofeight and maximum 60 characters, at least one uppercase letter, one lowercase letter, one number and one special character
+    const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/;
+
+    // Creates an action for the login button, the code between the curly braces will be executed when the button gets clicked.
     document.querySelector("#signupButton")?.addEventListener("click", async () => {
 
         // loops through all the emails that exists in the database
@@ -48,45 +49,43 @@ function setup(): void {
             // Then an alert will be displayed which disappears in 3000 ms
                 if (firstnameInput.value === "" || lastnameInput.value === "" || usernameInput.value === "" || emailInput.value === "" || passwordInput.value === "" ) {
                     const textInput: string = "There are empty fields!";
-                    alertPopUp(textInput);
-                    return;
+                    return alertPopUp(textInput);
                 }
                 // firstname validation
                 else if (firstnameInput.value.match(nameRegEx)) {
                     const textInput: string = "Only alphabetic letters are allowed!";
-                    // Calls the alertPopUp function and sends the assigned data
-                    alertPopUp(textInput);
+                    // Returns the alertPopUp function and with the assigned data
+                    return alertPopUp(textInput);
                 }
                 // lastname validation
                 else if (lastnameInput.value.match(nameRegEx)) {
                     const textInput: string = "Only alphabetic letters are allowed!";
-                    // Calls the alertPopUp function and sends the assigned data
-                    alertPopUp(textInput);
+                    // Returns the alertPopUp function and with the assigned data
+                    return alertPopUp(textInput);
                 }
                 // username validation
                 else if (usernameInput.value.match(usernameRegEx)) {
                     const textInput: string = "Username needs at least 5 alphanumerics!";
-                    // Calls the alertPopUp function and sends the assigned data
-                    alertPopUp(textInput);
+                    // Returns the alertPopUp function and with the assigned data
+                    return alertPopUp(textInput);
                 }
                 // email validation
                 else if (emailInput.value.match(emailRegEx)) {
                     const textInput: string = "Your email does not exist!";
-                    // Calls the alertPopUp function and sends the assigned data
-                    alertPopUp(textInput);
+                    // Returns the alertPopUp function and with the assigned data
+                    return alertPopUp(textInput);
                 }
                 // checks if email already exists using the for loop
                 else if (emailInput.value === email.email) {
                     const textInput: string = "Your email already has an existing account!";
-                    // Calls the alertPopUp function and sends the assigned data
-                    alertPopUp(textInput);
-                    return;
+                    // Returns the alertPopUp function and with the assigned data
+                    return alertPopUp(textInput);
                 }
                 // password validation
                 else if (passwordInput.value.match(passwordRegEx)) {
                     const textInput: string = "Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.";
-                    // Calls the alertPopUp function and sends the assigned data
-                    alertPopUp(textInput);
+                    // Returns the alertPopUp function and with the assigned data
+                    return alertPopUp(textInput);
                 }
                 else {
                 // Calls the signUpDatabase function and sends the assigned data
@@ -113,7 +112,8 @@ function setup(): void {
  * @returns Array with the user data
  */
 async function signUpDatabase(firstnameInput: string, lastnameInput: string, usernameInput: string, emailInput: string, passwordInput: string): Promise<Array<any> | undefined> {
-    // proberen de data op te halen uit de database
+
+    // tries to get the data out of the database
     try {
         let dataString: string[] = [firstnameInput, lastnameInput, usernameInput, passwordInput, emailInput];
         const data: any = await api.queryDatabase(
@@ -123,7 +123,7 @@ async function signUpDatabase(firstnameInput: string, lastnameInput: string, use
 
         return data;
     } catch (error) {
-        // als het niet lukt de data op te halen, geef een lege array terug
+        // if it fails, then it returns an empty array
         return [];
     }
 }
@@ -139,5 +139,5 @@ async function alertPopUp(textInput: string): Promise<void> {
     document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
 }
 
-// Roep de setup functie aan als de pagina is geladen
+// Calls the setup function when the page is loaded
 setup();
