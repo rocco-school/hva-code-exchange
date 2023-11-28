@@ -9,6 +9,7 @@ import {USER_QUERY} from "./query/user.query";
 function setup(): void {
     // keeps redirect message hidden
     document.getElementsByTagName("section")[0].setAttribute("style", "display:none");
+
     const firstnameInput: any = (document.getElementById("firstname") as HTMLInputElement);
     const lastnameInput: any = (document.getElementById("lastname") as HTMLInputElement);
     const usernameInput: any = (document.getElementById("username") as HTMLInputElement);
@@ -17,6 +18,10 @@ function setup(): void {
 
     const submitButton: any = (document.getElementById("signupForm") as HTMLInputElement);
 
+
+    // Regular Expression for firstname and lastname
+    // only letters are allowed and numbers are not allowed
+    const nameRegEx: RegExp = /^((?!\w\D+$){,45}.)/;
 
     // Regular Expression for email
     // Needs alphanumerics before the @ which follows with a dot and 2-4 letters
@@ -28,7 +33,7 @@ function setup(): void {
 
 
     if (submitButton) {
-        submitButton.addEventListener("submit", async function (e): Promise<void> {
+        submitButton.addEventListener("submit", async function (e: any): Promise<void> {
             e.preventDefault();
 
             document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
@@ -40,10 +45,12 @@ function setup(): void {
             console.log(verifiedInputs);
 
             if (verifiedInputs) {
+                const verifiedFirstname: boolean = await verifyFirstname(firstnameInput.value);
+                const verifiedLastname: boolean = await verifyLastname(lastnameInput.value);
                 const verifiedPass: boolean = await verifyPassword(passwordInput.value);
                 const verifiedEmail: boolean = await verifyEmail(emailInput.value);
 
-                if (verifiedPass && verifiedEmail) {
+                if (verifiedFirstname && verifiedLastname && verifiedInputs && verifiedPass && verifiedEmail) {
                     try {
                         const newUser: any = await signUpDatabase(firstnameInput.value, lastnameInput.value, usernameInput.value, emailInput.value, passwordInput.value);
 
@@ -63,7 +70,7 @@ function setup(): void {
      * Validates the input field and sets a custom validation message if needed.
      * @param {HTMLInputElement | null} inputs - The input element to validate.
      */
-    async function validateInputs(inputs): Promise<boolean> {
+    async function validateInputs(inputs: any): Promise<boolean> {
         let noError: boolean = true;
         for (const input of inputs) {
             if (input && input.value === "") {
@@ -78,7 +85,32 @@ function setup(): void {
         return noError;
     }
 
-    async function verifyEmail(email): Promise<boolean> {
+
+    async function verifyFirstname(firstname: any): Promise<boolean> {
+        if (firstname.match(nameRegEx)) {
+            // Returns the alertPopUp function and with the assigned data
+            const textInput: string = "Your firstname may only contain letters";
+            await alertPopUp(textInput);
+            return false;
+        } 
+
+        return true;
+        
+    }
+
+    async function verifyLastname(lastname: any): Promise<boolean> {
+        if (!lastname.match(nameRegEx)) {
+            return true;
+        } else {
+            const textInput: string = "Your lastname may only contain letters";
+            // Returns the alertPopUp function and with the assigned data
+            await alertPopUp(textInput);
+            return false;
+        }
+
+    }
+
+    async function verifyEmail(email: any): Promise<boolean | any> {
         if (email.match(emailRegEx)) {
             const textInput: string = "Email is not correct!";
             // Returns the alertPopUp function and with the assigned data
@@ -104,7 +136,7 @@ function setup(): void {
 
     }
 
-    async function verifyPassword(password): Promise<boolean> {
+    async function verifyPassword(password: any): Promise<boolean> {
         if (!password.match(passwordRegEx)) {
             return true;
         } else {
@@ -115,6 +147,7 @@ function setup(): void {
         }
 
     }
+
 }
 
 
