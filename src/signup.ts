@@ -18,11 +18,6 @@ function setup(): void {
 
     const submitButton: any = (document.getElementById("signupForm") as HTMLInputElement);
 
-
-    // Regular Expression for firstname and lastname
-    // only letters are allowed and numbers are not allowed
-    const nameRegEx: RegExp = /^((?!\w\D+$){,45}.)/;
-
     // Regular Expression for email
     // Needs alphanumerics before the @ which follows with a dot and 2-4 letters
     const emailRegEx: RegExp = /^((?![\w-\.]+@([\w-]+\.)+[\w-]{2,4}).)*$/;
@@ -45,12 +40,11 @@ function setup(): void {
             console.log(verifiedInputs);
 
             if (verifiedInputs) {
-                const verifiedFirstname: boolean = await verifyFirstname(firstnameInput.value);
-                const verifiedLastname: boolean = await verifyLastname(lastnameInput.value);
+
                 const verifiedPass: boolean = await verifyPassword(passwordInput.value);
                 const verifiedEmail: boolean = await verifyEmail(emailInput.value);
 
-                if (verifiedFirstname && verifiedLastname && verifiedInputs && verifiedPass && verifiedEmail) {
+                if (verifiedInputs && verifiedPass && verifiedEmail) {
                     try {
                         const newUser: any = await signUpDatabase(firstnameInput.value, lastnameInput.value, usernameInput.value, emailInput.value, passwordInput.value);
 
@@ -83,31 +77,6 @@ function setup(): void {
         }
 
         return noError;
-    }
-
-
-    async function verifyFirstname(firstname: any): Promise<boolean> {
-        if (firstname.match(nameRegEx)) {
-            // Returns the alertPopUp function and with the assigned data
-            const textInput: string = "Your firstname may only contain letters";
-            await alertPopUp(textInput);
-            return false;
-        } 
-
-        return true;
-
-    }
-
-    async function verifyLastname(lastname: any): Promise<boolean> {
-        if (!lastname.match(nameRegEx)) {
-            return true;
-        } else {
-            const textInput: string = "Your lastname may only contain letters";
-            // Returns the alertPopUp function and with the assigned data
-            await alertPopUp(textInput);
-            return false;
-        }
-
     }
 
     async function verifyEmail(email: any): Promise<boolean | any> {
