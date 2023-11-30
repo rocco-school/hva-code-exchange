@@ -91,6 +91,11 @@ function setup(): void {
         return noError;
     }
 
+    /**
+     * Validates the email field and sets a custom validation message if needed.
+     *
+     * @param email
+     */
     async function verifyEmail(email: any): Promise<boolean | any> {
         console.log(email, "1");
         if (email.match(emailRegEx)) {
@@ -118,6 +123,11 @@ function setup(): void {
 
     }
 
+    /**
+     * Validates the firstname field and sets a custom validation message if needed.
+     *
+     * @param firstname
+     */
     async function verifyFirstname(firstname: any): Promise<boolean> {
         if (!firstname.match(nameRegEx)) {
             // Returns the alertPopUp function and with the assigned data
@@ -129,6 +139,11 @@ function setup(): void {
         return true;
     }
 
+    /**
+     * Validates the lastname field and sets a custom validation message if needed.
+     *
+     * @param lastname
+     */
     async function verifyLastname(lastname: any): Promise<boolean> {
         if (!lastname.match(nameRegEx)) {
             const textInput: string = "Your lastname may only contain letters";
@@ -139,6 +154,11 @@ function setup(): void {
         return true;
     }
 
+    /**
+     * Validates the password field and sets a custom validation message if needed.
+     *
+     * @param password
+     */
     async function verifyPassword(password: any): Promise<boolean> {
         console.log(password);
         if (password.match(passwordRegEx)) {
