@@ -26,6 +26,9 @@ function setup(): void {
     // Minimum ofeight and maximum 60 characters, at least one uppercase letter, one lowercase letter, one number and one special character
     const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/;
 
+    // Regular Expression for firstname and lastname
+    // only letters are allowed and numbers are not allowed
+    const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
 
     if (submitButton) {
         submitButton.addEventListener("submit", async function (e: any): Promise<void> {
@@ -40,11 +43,20 @@ function setup(): void {
             console.log(verifiedInputs);
 
             if (verifiedInputs) {
-
-                const verifiedPass: boolean = await verifyPassword(passwordInput.value);
+                const verifiedFirstname: boolean = await verifyFirstname(firstnameInput.value);
+                console.log(verifiedFirstname, "fistname");
+                if (!verifiedFirstname) return;
+                const verifiedLastname: boolean = await verifyLastname(lastnameInput.value);
+                console.log(verifiedLastname, "lastname");
+                if (!verifiedLastname) return;
                 const verifiedEmail: boolean = await verifyEmail(emailInput.value);
+                console.log(verifiedEmail, "Email");
+                if (!verifiedEmail) return;
+                const verifiedPass: boolean = await verifyPassword(passwordInput.value);
+                console.log(verifiedPass, "password");
+                if (!verifiedPass) return;
 
-                if (verifiedInputs && verifiedPass && verifiedEmail) {
+                if (verifiedInputs && verifiedFirstname && verifiedLastname && verifiedPass && verifiedEmail) {
                     try {
                         const newUser: any = await signUpDatabase(firstnameInput.value, lastnameInput.value, usernameInput.value, emailInput.value, passwordInput.value);
 
@@ -80,16 +92,17 @@ function setup(): void {
     }
 
     async function verifyEmail(email: any): Promise<boolean | any> {
+        console.log(email, "1");
         if (email.match(emailRegEx)) {
             const textInput: string = "Email is not correct!";
             // Returns the alertPopUp function and with the assigned data
             await alertPopUp(textInput);
             return false;
         }
-
+        console.log(email, "2");
         try {
             const emailExists: any = await api.queryDatabase(USER_QUERY.GET_EMAIL_BY_EMAIL, email);
-
+            console.log(emailExists);
             if (emailExists[0]) {
                 const textInput: string = "Email already exists!";
                 // Returns the alertPopUp function and with the assigned data
@@ -105,18 +118,37 @@ function setup(): void {
 
     }
 
+    async function verifyFirstname(firstname: any): Promise<boolean> {
+        if (!firstname.match(nameRegEx)) {
+            // Returns the alertPopUp function and with the assigned data
+            const textInput: string = "Your firstname may only contain letters";
+            await alertPopUp(textInput);
+            return false;
+        }
+
+        return true;
+    }
+
+    async function verifyLastname(lastname: any): Promise<boolean> {
+        if (!lastname.match(nameRegEx)) {
+            const textInput: string = "Your lastname may only contain letters";
+            // Returns the alertPopUp function and with the assigned data
+            await alertPopUp(textInput);
+            return false;
+        }
+        return true;
+    }
+
     async function verifyPassword(password: any): Promise<boolean> {
-        if (!password.match(passwordRegEx)) {
-            return true;
-        } else {
+        console.log(password);
+        if (password.match(passwordRegEx)) {
             const textInput: string = "Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.";
             // Returns the alertPopUp function and with the assigned data
             await alertPopUp(textInput);
             return false;
         }
-
+        return true;
     }
-
 }
 
 
