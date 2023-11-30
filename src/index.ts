@@ -40,7 +40,7 @@ async function setup(): Promise<void> {
 
 
         try {
-            const data: any[] = [86, questionTitle.value, question.value, 0];
+            const data: any[] = [94, questionTitle.value, question.value, 0];
             const questionQuery: any = await api.queryDatabase(QUESTION_QUERY.CREATE_QUESTION, ...data);
 
             if (questionQuery) {
