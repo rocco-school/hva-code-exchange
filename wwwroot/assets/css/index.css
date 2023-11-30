@@ -42,3 +42,12 @@ body {
 .pointer {
     cursor: pointer;
 }
+
+.button {
+    width: 70%;
+    margin: auto auto 1rem;
+}
+
+.hidden {
+    display: none;
+}

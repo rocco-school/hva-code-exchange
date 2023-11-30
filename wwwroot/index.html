@@ -12,42 +12,56 @@
         />
         <title>SE Code Exchange</title>
         <link rel="stylesheet" href="/assets/css/index.css" />
+        <link rel="stylesheet" href="/assets/css/general.css" />
     </head>
     <body>
         <!-- Deze HTML pagina wordt als eerste aangeroepen als de website wordt aangeroepen in de browser -->
         <main>
             <div class="container">
+
+
+                <div class="darkness-container create-question hidden">
+                    <div class="create-form">
+                        <div class="container">
+                            <h2 class="container--title">Create question</h2>
+                            <form class="question-form">
+
+                                <div class="mb-3">
+                                    <label for="questionTitle" class="form-label">Question title</label>
+                                    <input type="text" class="form-control" id="questionTitle">
+                                </div>
+
+                                <select class="form-select mb-3 question-select" multiple aria-label="multiple select example">
+                                    <option selected>Select tag</option>
+                                    <option value="1">HTML</option>
+                                    <option value="2">CSS</option>
+                                    <option value="3">Javascript</option>
+                                </select>
+
+                                <div class="form-floating">
+                                    <textarea class="form-control question-textarea" placeholder="Leave your question here" id="question" style="height: 100px"></textarea>
+                                    <label for="question">Question</label>
+                                </div>
+
+                                <div class="error-message edit-event-message hidden">Error when editing Event!</div>
+
+                                <div class="form-buttons">
+                                    <button class="submit" type="submit">Save</button>
+                                    <button class="cancel cancel-create-question" type="button">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="button">
+                    <button type="button" class="btn btn-outline-secondary create-question-button">Create question</button>
+                </div>
+
                 <table class="table table-fit table-dark table-striped">
-                    <tbody>
-                    <tr class="pointer">
-                        <td>
-                            <div class="d-flex">
-                                <div class="answer-count">
-                                    <span>Anwsers: 10</span>
-                                </div>
-
-                                <div>
-                                    <div class="mb-2 text-primary">This is a very long question</div>
-                                    <div>This is a very long answer that's been cut off</div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <tr class="pointer">
-                        <td>
-                            <div class="d-flex">
-                                <div class="answer-count">
-                                    <span>Anwsers: 10</span>
-                                </div>
-
-                                <div>
-                                    <div class="mb-2 text-primary">This is a very long question</div>
-                                    <div>This is a very long answer that's been cut off</div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    <tbody class="questions-body">
 
                     </tbody>
                 </table>
