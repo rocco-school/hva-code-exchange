@@ -8,12 +8,15 @@ import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
  */
 async function setup(): Promise<void> {
 
+    // update question table.
     await getAllQuestions();
 
     const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question-button"));
     const createQuestionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
     const questionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-form"));
     const cancelForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".cancel-create-question"));
+
+
 
     createQuestion.addEventListener("click", (): void => {
         console.log("clicked!");
