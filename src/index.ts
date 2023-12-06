@@ -2,6 +2,7 @@ import "./config";
 import {api} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import {Question} from "./models/question";
 
 /**
  * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurd helemaal onderin!
@@ -18,7 +19,6 @@ async function setup(): Promise<void> {
     const cancelForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".cancel-create-question"));
 
 
-
     // Show question form on click
     createQuestion.addEventListener("click", (): void => {
         createQuestionForm.classList.remove("hidden");
@@ -33,7 +33,11 @@ async function setup(): Promise<void> {
 
     });
 
-    // Event listener for the create event form submission.
+    /**
+     * Event listener for the create event form submission.
+     * @param {Event} e - The event object representing the form submission.
+     * @returns {Promise<void>} - A Promise that resolves when the function completes.
+     */
     questionForm.addEventListener("submit", async function (e): Promise<void> {
         e.preventDefault();
 
@@ -47,15 +51,22 @@ async function setup(): Promise<void> {
 
 
         try {
-            const data: any[] = [94, questionTitle.value, question.value, 0];
+            // Creating a new Question object with the provided values.
+            const data: any[] = [94, questionTitle.value, question.value, false];
+
+            // Querying the database with the new question data.
             const questionQuery: any = await api.queryDatabase(QUESTION_QUERY.CREATE_QUESTION, ...data);
 
+            // Checking if the database query was successful.
             if (questionQuery) {
                 console.log("Successfully created question!");
+
+                // Hiding the createQuestionForm and refreshing the page.
                 createQuestionForm.classList.add("hidden");
                 location.reload();
             }
         } catch (e) {
+            // Handling any errors that occur during the process.
             console.error(e);
         }
     });
@@ -64,51 +75,79 @@ async function setup(): Promise<void> {
 // Run bij het opstarten de setup functie
 await setup();
 
-
+/**
+ * Asynchronously retrieves all questions from the database and renders them in the UI.
+ * @returns {Promise<void>} - A Promise that resolves when the function completes.
+ */
 async function getAllQuestions(): Promise<void> {
     try {
+        // Querying the database to get all questions.
+
         const questions: any = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTIONS);
+
         const questionsBody: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".questions-body"));
+
+        // If there are no questions, return early.
         if (!questions) return;
 
+        // Iterating over each question and rendering it in the UI.
         questions.forEach((question): void => {
-            const tr: HTMLTableRowElement | undefined = questionsBody?.appendChild(document.createElement("tr"));
-            if (tr) {
-                tr.setAttribute("id", question["question_id"]);
-                tr.setAttribute("class", "question");
-                tr.setAttribute("class", "pointer");
-                const td: HTMLTableCellElement = tr.appendChild(document.createElement("td"));
-                const container: HTMLDivElement = td.appendChild(document.createElement("div"));
-                container.setAttribute("class", "d-flex");
-                const count: HTMLDivElement = container.appendChild(document.createElement("div"));
-                count.setAttribute("class", "answer-count");
-                const countSpan: HTMLSpanElement = count.appendChild(document.createElement("span"));
-                if (countSpan) {
-                    countSpan.innerHTML = "Answers: 10"; // TODO change this into actual answer count.
-                }
+            // Creating a new table row for each question.
+            const tr: HTMLTableRowElement = questionsBody?.appendChild(document.createElement("tr"));
 
+            if (tr) {
+                // Setting attributes for the table row.
+                tr.setAttribute("id", question["question_id"]);
+                tr.classList.add("question", "pointer"); // Combining multiple class attributes.
+
+                // Creating a table cell for the question details.
+                const td: HTMLTableCellElement = tr.appendChild(document.createElement("td"));
+
+                // Creating a container to hold question details.
+                const container: HTMLDivElement = td.appendChild(document.createElement("div"));
+                container.classList.add("d-flex");
+
+                // Creating a div to display the answer count.
+                const count: HTMLDivElement = container.appendChild(document.createElement("div"));
+                count.classList.add("answer-count");
+
+                // Creating a span to display the actual answer count (TODO: replace with actual count).
+                const countSpan: HTMLSpanElement = count.appendChild(document.createElement("span"));
+                countSpan.innerHTML = "Answers: 10";
+
+                // Creating a div for the question body.
                 const questionBody: HTMLDivElement = container.appendChild(document.createElement("div"));
 
+                // Creating a div for the question title.
                 const questionTitle: HTMLDivElement = questionBody.appendChild(document.createElement("div"));
-                questionTitle.setAttribute("class", "mb-2 text-primary");
+                questionTitle.classList.add("mb-2", "text-primary");
+
+                // Populating the question title.
                 if (questionTitle) {
                     questionTitle.innerHTML = question["title"];
                 }
+
+                // Creating a div for the question text.
                 const questionText: HTMLDivElement = questionBody.appendChild(document.createElement("div"));
+
+                // Populating the question text.
                 if (questionText) {
                     questionText.innerHTML = question["body"];
                 }
 
+                // Adding a click event listener to redirect to the question detail page.
                 tr.addEventListener("click", (): void => {
                     handleRedirectToQuestionDetail(tr);
                 });
             }
         });
 
+        // Logging the retrieved questions and the questionsBody element for debugging purposes.
         console.log(questions);
         console.log(questionsBody);
 
     } catch (e) {
+        // Handling any errors that occur during the process.
         console.error(e);
     }
 }
