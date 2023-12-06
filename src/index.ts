@@ -11,6 +11,7 @@ async function setup(): Promise<void> {
     // update question table.
     await getAllQuestions();
 
+    // Get all create question form elements.
     const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question-button"));
     const createQuestionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
     const questionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-form"));
@@ -18,11 +19,13 @@ async function setup(): Promise<void> {
 
 
 
+    // Show question form on click
     createQuestion.addEventListener("click", (): void => {
-        console.log("clicked!");
         createQuestionForm.classList.remove("hidden");
     });
 
+
+    // Cancel creating question on click
     cancelForm.addEventListener("click", (): void => {
         if (createQuestionForm) {
             createQuestionForm.classList.add("hidden");
@@ -30,6 +33,7 @@ async function setup(): Promise<void> {
 
     });
 
+    // Event listener for the create event form submission.
     questionForm.addEventListener("submit", async function (e): Promise<void> {
         e.preventDefault();
 
