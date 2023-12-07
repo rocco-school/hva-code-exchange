@@ -49,7 +49,7 @@ export class Question {
         return this._updated_at;
     }
 
-    public set id(value: number) {
+    public set questionId(value: number) {
         this._question_id = value;
     }
 

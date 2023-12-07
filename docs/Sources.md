@@ -16,3 +16,10 @@ https://theusatwork.com/solution-based-thinking-top-traits-of-great-problem-solv
 https://www.globalknowledge.com/us-en/resources/resource-library/articles/top-10-traits-of-successful-it-pros/
 https://www.comptia.org/blog/5-traits-that-will-lead-an-it-student-to-success
 https://fullscale.io/blog/great-programmer-traits/
+
+
+
+## Code:
+
+Text field:
+https://stackoverflow.com/questions/35953345/how-to-allow-users-to-customize-text-field-with-styling

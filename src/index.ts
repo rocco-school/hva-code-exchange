@@ -14,8 +14,8 @@ import {Question} from "./models/question";
  */
 async function setup(): Promise<void> {
 
-    // update question table.
-    await getAllQuestions();
+    // populate question table.
+    await populateQuestionTable();
 
     // Get all create question form elements.
     const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question-button"));
@@ -50,11 +50,6 @@ async function setup(): Promise<void> {
         const questionSelect: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-select"));
         const question: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("question"));
 
-        console.log(questionTitle.value, "title");
-        console.log(questionSelect.value, "select");
-        console.log(question.value, "question");
-
-
         try {
             // Creating a new Question object with the provided values.
             const data: any[] = [94, questionTitle.value, question.value, false];
@@ -64,8 +59,6 @@ async function setup(): Promise<void> {
 
             // Checking if the database query was successful.
             if (questionQuery) {
-                console.log("Successfully created question!");
-
                 // Hiding the createQuestionForm and refreshing the page.
                 createQuestionForm.classList.add("hidden");
                 location.reload();
@@ -84,12 +77,11 @@ await setup();
  * Asynchronously retrieves all questions from the database and renders them in the UI.
  * @returns {Promise<void>} - A Promise that resolves when the function completes.
  */
-async function getAllQuestions(): Promise<void> {
+async function populateQuestionTable(): Promise<void> {
     try {
         // Querying the database to get all questions.
 
-        const questions: any = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTIONS);
-
+        const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTIONS) as [Question];
         const questionsBody: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".questions-body"));
 
         // If there are no questions, return early.
@@ -97,12 +89,22 @@ async function getAllQuestions(): Promise<void> {
 
         // Iterating over each question and rendering it in the UI.
         questions.forEach((question): void => {
+            const singleQuestion: Question = new Question(
+                question["question_id"],
+                question["user_id"],
+                question["title"],
+                question["body"],
+                question["is_closed"],
+                question["created_at"],
+                question["updated_at"],
+            );
+
             // Creating a new table row for each question.
             const tr: HTMLTableRowElement = questionsBody?.appendChild(document.createElement("tr"));
 
             if (tr) {
                 // Setting attributes for the table row.
-                tr.setAttribute("id", question["question_id"]);
+                tr.setAttribute("id", String(singleQuestion.questionId));
                 tr.classList.add("question", "pointer"); // Combining multiple class attributes.
 
                 // Creating a table cell for the question details.
@@ -129,7 +131,7 @@ async function getAllQuestions(): Promise<void> {
 
                 // Populating the question title.
                 if (questionTitle) {
-                    questionTitle.innerHTML = question["title"];
+                    questionTitle.innerHTML = singleQuestion.title;
                 }
 
                 // Creating a div for the question text.
@@ -137,7 +139,7 @@ async function getAllQuestions(): Promise<void> {
 
                 // Populating the question text.
                 if (questionText) {
-                    questionText.innerHTML = question["body"];
+                    questionText.innerHTML = singleQuestion.body;
                 }
 
                 // Adding a click event listener to redirect to the question detail page.
@@ -146,10 +148,6 @@ async function getAllQuestions(): Promise<void> {
                 });
             }
         });
-
-        // Logging the retrieved questions and the questionsBody element for debugging purposes.
-        console.log(questions);
-        console.log(questionsBody);
 
     } catch (e) {
         // Handling any errors that occur during the process.
