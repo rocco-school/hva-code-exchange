@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Gebruik bootstrap -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+        crossorigin="anonymous"
+    />
+    <title>SE Code Exchange</title>
+    <link rel="stylesheet" href="./assets/css/question.css" />
+    <link rel="stylesheet" href="./assets/css/general.css" />
+</head>
+<body>
+<!-- Deze HTML pagina wordt als eerste aangeroepen als de website wordt aangeroepen in de browser -->
+<main>
+    <div class="container">
+
+
+        <div class="darkness-container create-question hidden">
+            <div class="create-form">
+                <div class="container">
+                    <h2 class="container--title">Create question</h2>
+                    <form class="question-form">
+
+                        <div class="mb-3">
+                            <label for="questionTitle" class="form-label">Question title</label>
+                            <input type="text" class="form-control" id="questionTitle">
+                        </div>
+
+                        <select class="form-select mb-3 question-select" multiple aria-label="multiple select example">
+                            <option selected>Select tag</option>
+                            <option value="1">HTML</option>
+                            <option value="2">CSS</option>
+                            <option value="3">Javascript</option>
+                        </select>
+
+                        <div class="form-floating">
+                            <textarea class="form-control question-textarea" placeholder="Leave your question here" id="question" style="height: 100px"></textarea>
+                            <label for="question">Question</label>
+                        </div>
+
+                        <div class="error-message edit-event-message hidden">Error when editing Event!</div>
+
+                        <div class="form-buttons">
+                            <button class="submit" type="submit">Save</button>
+                            <button class="cancel cancel-create-question" type="button">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="button">
+            <button type="button" class="btn btn-outline-secondary create-question-button">Create question</button>
+        </div>
+
+        <table class="table table-fit table-dark table-striped">
+            <tbody class="questions-body">
+
+            </tbody>
+        </table>
+    </div>
+</main>
+<!--  Dit typescript bestand (index.ts) wordt hier aangeroepen en uitgevoerd -->
+<script src="/src/question.ts" type="module"></script>
+</body>
+</html>
