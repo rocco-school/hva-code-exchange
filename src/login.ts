@@ -2,7 +2,12 @@ import "./config";
 import { api, session, url } from "@hboictcloud/api";
 
 /**
- * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
+ * The main application entry point for the login page.
+ *
+ * This function initializes the login page, including event handling,
+ * user verification, and other related functionality.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 function setup(): void {
     // Maak een actie aan voor de login knop. Als je hier op drukt wordt de code tussen de { } aangeroepen
@@ -60,5 +65,5 @@ async function loginFromDatabase(username: string, password: string): Promise<st
     }
 }
 
-// Roep de setup functie aan als de pagina is geladen
-setup();
+// Invoke the login page application entry point.
+await setup();

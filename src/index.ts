@@ -5,7 +5,12 @@ import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import {Question} from "./models/question";
 
 /**
- * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurd helemaal onderin!
+ * The main application entry point for the home page.
+ *
+ * This function initializes the home page, including event handling,
+ * user verification, and other related functionality.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
 
@@ -72,7 +77,7 @@ async function setup(): Promise<void> {
     });
 }
 
-// Run bij het opstarten de setup functie
+// Invoke the homepage application entry point.
 await setup();
 
 /**
