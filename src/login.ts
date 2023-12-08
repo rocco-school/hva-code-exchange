@@ -1,14 +1,12 @@
 import {delay} from "./components/delay";
 import "./config";
 import {api, session, url} from "@hboictcloud/api";
-import {sign} from "./components/jsonwebtoken";
 import {User} from "./models/user";
-import bcrypt from "bcryptjs";
 import {USER_QUERY} from "./query/user.query";
 import {comparePasswords} from "./components/hashPassword";
 import {security} from "./components/security";
 import {JWTPayload} from "jose";
-
+import {assignToken} from "./components/handleUserSession";
 /**
  * The main application entry point for the login page.
  *
@@ -101,27 +99,3 @@ async function loginFromDatabase(email: string, password: string): Promise<User 
 
 // Invoke the login page application entry point.
 await setup();
-
-
-/**
- * Assigns a JWT token to the user's session after logging in.
- *
- * @param {User} user - The logged-in user data or user ID.
- * @returns {Promise<void>} A Promise that resolves when the token is assigned successfully.
- */
-async function assignToken(user: User): Promise<void> {
-    // Get secret key from env file
-    const secret: string = __SECRET_KEY__;
-
-    // Construct payload for JWT
-    const payload: { userId: number; email: string } = {
-        userId: user["user_id"], // TODO fix to work with model.
-        email: user.email,
-    };
-
-    // Generate JWT with payload and secret.
-    const jwtToken: string = (await sign(payload, secret)).valueOf();
-
-    // Put JWT inside user session storage
-    session.set("JWTToken", jwtToken);
-}
