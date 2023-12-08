@@ -1,10 +1,11 @@
 import "./config";
 import {api, url} from "@hboictcloud/api";
 import {USER_QUERY} from "./query/user.query";
-import {hashPassword} from "./components/hash-password";
+import {hashPassword} from "./components/hashPassword";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
+import {getUserById} from "./components/getUser";
 
 
 /**
@@ -95,8 +96,9 @@ async function setup(): Promise<void> {
                             // Log the newly created user.
                             console.log("User signed up successfully:", newUser);
 
+
                             // TODO:add popup to tell user successfully signed up
-                            location.replace("login.html");
+                            // location.replace("login.html");
                         }
                     } catch (e) {
                         // Handle unexpected errors during sign-up.
@@ -229,7 +231,6 @@ async function signUpDatabase(firstnameInput: string, lastnameInput: string, use
 
         // Insert user data into the database.
         const user: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER, ...dataString);
-
         // Retrieve the newly created user based on the insertId.
         return user
             .then((databaseResponse) => {
@@ -248,30 +249,6 @@ async function signUpDatabase(firstnameInput: string, lastnameInput: string, use
 }
 
 /**
- * Retrieves a user from the database by user ID.
- * @param {number} userId - The ID of the user to retrieve.
- * @returns {Promise<User>} A Promise that resolves to the user object if found, otherwise resolves to undefined.
- */
-async function getUserById(userId: number): Promise<User | undefined> {
-    try {
-        // Use the API to query the database and retrieve user information.
-        const userArray: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, userId) as [User];
-
-        // If the user is not found, the function resolves to undefined.
-        if (userArray.length <= 0) return undefined;
-
-        // Return the first user from the array
-        return userArray[0] as User;
-    } catch (error) {
-        // Log any errors that occur during the database query.
-        console.error(`Error while retrieving user with ID ${userId}:`, error);
-        // Propagate the error so the caller can handle it if needed.
-        throw error;
-    }
-}
-
-
-/**
  *
  * @param textInput
  */
@@ -281,4 +258,4 @@ async function alertPopUp(textInput: string): Promise<void> {
 }
 
 // Calls the setup function when the page is loaded
-setup();
+await setup();

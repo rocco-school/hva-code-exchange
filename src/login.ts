@@ -5,7 +5,7 @@ import {sign} from "./components/jsonwebtoken";
 import {User} from "./models/user";
 import bcrypt from "bcryptjs";
 import {USER_QUERY} from "./query/user.query";
-import {comparePasswords} from "./components/hash-password";
+import {comparePasswords} from "./components/hashPassword";
 import {security} from "./components/security";
 import {JWTPayload} from "jose";
 
