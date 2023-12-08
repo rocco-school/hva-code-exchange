@@ -7,7 +7,7 @@ import {session} from "@hboictcloud/api";
  *
  * @returns {Promise<void>} A Promise that resolves after the specified delay.
  */
-export async function endUserSession(this: HTMLElement): Promise<void> {
+export async function endUserSession(): Promise<void> {
     // Remove JWTToken From session
     session.remove("JWTToken");
     location.reload();
