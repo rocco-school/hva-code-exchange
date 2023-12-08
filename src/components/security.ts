@@ -8,7 +8,7 @@ import {JWTPayload} from "jose";
  * returns false; otherwise, returns true.
  * @returns {Promise<boolean>} A Promise that resolves to true if the user is authenticated, otherwise resolves to false.
  */
-export async function security(): Promise<JWTPayload> {
+export async function security(): Promise<JWTPayload | boolean> {
     try {
         // Get the JWT token from the user's session.
         const token: string | undefined = session.get("JWTToken");
