@@ -1,83 +1,83 @@
 export class Question {
     // private fields
-    private _question_id: number;
-    private _user_id: number;
-    private _title: string;
-    private _body: string;
-    private _is_closed: boolean;
-    private _created_at: Date;
-    private _updated_at: Date;
+    private _questionId: number;
+    private _userId: number;
+    private _questionTitle: string;
+    private _questionBody: string;
+    private _isClosed: boolean;
+    private _createdAt: Date;
+    private _updatedAt: Date;
 
     // De constructor wordt eenmalig aangeroepen als de class wordt geïnstantieerd.
     // Deze constructor vult de fields bij het aanmaken van een object.
-    public constructor(questionId: number, userId: number, title: string, body: string, isClosed: boolean, createdAt: Date, updatedAt: Date) {
-        this._question_id = questionId;
-        this._user_id = userId;
-        this._title = title;
-        this._body = body;
-        this._is_closed = isClosed;
-        this._created_at = createdAt;
-        this._updated_at = updatedAt;
+    public constructor(questionId: number, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date, updatedAt: Date) {
+        this._questionId = questionId;
+        this._userId = userId;
+        this._questionTitle = questionTitle;
+        this._questionBody = questionBody;
+        this._isClosed = isClosed;
+        this._createdAt = createdAt;
+        this._updatedAt = updatedAt;
     }
 
     // Getters en setters
     public get questionId(): number {
-        return this._question_id;
+        return this._questionId;
     }
 
     public get userId(): number {
-        return this._user_id;
+        return this._userId;
     }
 
-    public get title(): string {
-        return this._title;
+    public get questionTitle(): string {
+        return this._questionTitle;
     }
 
-    public get body(): string {
-        return this._body;
+    public get questionBody(): string {
+        return this._questionBody;
     }
 
     public get isClosed(): boolean {
-        return this._is_closed;
+        return this._isClosed;
     }
 
     public get createdAt(): Date {
-        return this._created_at;
+        return this._createdAt;
     }
 
     public get updatedAt(): Date {
-        return this._updated_at;
+        return this._updatedAt;
     }
 
     public set questionId(value: number) {
-        this._question_id = value;
+        this._questionId = value;
     }
 
     public set userId(value: number) {
-        this._user_id = value;
+        this._userId = value;
     }
 
-    public set title(value: string) {
-        this._title = value;
+    public set questionTitle(value: string) {
+        this._questionTitle = value;
     }
 
-    public set body(value: string) {
-        this._body = value;
+    public set questionBody(value: string) {
+        this._questionBody = value;
     }
 
     public set isClosed(value: boolean) {
-        this._is_closed = value;
+        this._isClosed = value;
     }
 
     public set createdAt(value: Date) {
-        this._created_at = value;
+        this._createdAt = value;
     }
 
     public set updatedAt(value: Date) {
-        this._updated_at = value;
+        this._updatedAt = value;
     }
 
     public toString(): string {
-        return `User: ${this._question_id} ${this._user_id} ${this._title} ${this._body} ${this._is_closed} ${this._created_at} ${this._updated_at}`;
+        return `User: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._createdAt} ${this._updatedAt}`;
     }
 }

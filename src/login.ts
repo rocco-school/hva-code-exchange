@@ -37,7 +37,7 @@ async function setup(): Promise<void> {
 
             if (data) {
                 // Stuur de gebruiker door naar de homepagina
-                url.redirect("/index.html");
+                // url.redirect("/question.html");
             } else {
                 // Als de gebruiker niet bestaat, geef melding aan gebruiker door in de css (bootstrap) de display op block te zetten
                 document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: block");
@@ -63,8 +63,9 @@ async function setup(): Promise<void> {
  */
 async function loginFromDatabase(email: string, password: string): Promise<User | []> {
     try {
+        console.log("Start");
         // Query the database to retrieve user information based on the email.
-        const user: [User] = await api.queryDatabase(USER_QUERY.GET_USER_PASSWORD_BY_EMAIL, email) as [User];
+        const user: [User] = await api.queryDatabase(USER_QUERY.FIND_USER_BY_EMAIL, email) as [User];
 
         // Check if a user with the given email exists.
         if (user.length <= 0) {

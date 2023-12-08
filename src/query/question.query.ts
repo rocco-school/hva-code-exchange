@@ -7,8 +7,8 @@ export const QUESTION_QUERY: {
 
 } = {
     SELECT_QUESTIONS: "SELECT * FROM question LIMIT 50",
-    SELECT_QUESTION: "SELECT * FROM question WHERE question_id = ?",
-    CREATE_QUESTION: "INSERT INTO question (user_id, title, body, is_closed) VALUES(?, ?, ?, ?)",
-    UPDATE_QUESTION: "UPDATE question SET title = ?, body = ?, is_closed = ? WHERE question_id = ?",
-    DELETE_QUESTION: "DELETE FROM question WHERE question_id = ?",
+    SELECT_QUESTION: "SELECT * FROM question WHERE questionId = ?",
+    CREATE_QUESTION: "INSERT INTO question (userId, title, body, isClosed) VALUES(?, ?, ?, ?)",
+    UPDATE_QUESTION: "UPDATE question SET title = ?, body = ?, isClosed = ? WHERE questionId = ?",
+    DELETE_QUESTION: "DELETE FROM question WHERE questionId = ?",
 };

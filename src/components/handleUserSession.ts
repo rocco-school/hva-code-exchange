@@ -27,7 +27,7 @@ export async function assignToken(user: User): Promise<void> {
 
     // Construct payload for JWT
     const payload: { userId: number; email: string } = {
-        userId: user["user_id"], // TODO fix to work with model.
+        userId: user.userId,
         email: user.email,
     };
 
