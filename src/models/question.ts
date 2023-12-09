@@ -1,5 +1,6 @@
+// Class representing a Question in your application
 export class Question {
-    // private fields
+    // Private fields to store question details
     private _questionId: number;
     private _userId: number;
     private _questionTitle: string;
@@ -8,8 +9,7 @@ export class Question {
     private _createdAt: Date;
     private _updatedAt: Date;
 
-    // De constructor wordt eenmalig aangeroepen als de class wordt geïnstantieerd.
-    // Deze constructor vult de fields bij het aanmaken van een object.
+    // Constructor to initialize the question object with provided values
     public constructor(questionId: number, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date, updatedAt: Date) {
         this._questionId = questionId;
         this._userId = userId;
@@ -20,7 +20,7 @@ export class Question {
         this._updatedAt = updatedAt;
     }
 
-    // Getters en setters
+    // Getters for accessing private fields
     public get questionId(): number {
         return this._questionId;
     }
@@ -49,6 +49,7 @@ export class Question {
         return this._updatedAt;
     }
 
+    // Setters for modifying private fields
     public set questionId(value: number) {
         this._questionId = value;
     }
@@ -77,7 +78,9 @@ export class Question {
         this._updatedAt = value;
     }
 
+    // Method to convert the question object to a string representation
     public toString(): string {
-        return `User: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._createdAt} ${this._updatedAt}`;
+        return `Question: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._createdAt} ${this._updatedAt}`;
     }
 }
+

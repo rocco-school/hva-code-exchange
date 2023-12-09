@@ -1,63 +1,86 @@
-export class User {
-    // private fields
-    private _id: number;
-    private _username: string;
-    private _email: string;
-    private _firstname: string;
-    private _lastname: string;
+// Class representing a Question in your application
+export class Question {
+    // Private fields to store question details
+    private _questionId: number;
+    private _userId: number;
+    private _questionTitle: string;
+    private _questionBody: string;
+    private _isClosed: boolean;
+    private _createdAt: Date;
+    private _updatedAt: Date;
 
-    // De constructor wordt eenmalig aangeroepen als de class wordt geïnstantieerd.
-    // Deze constructor vult de fields bij het aanmaken van een object.
-    public constructor(id: number, username: string, email: string, firstname: string, lastname: string) {
-        this._id = id;
-        this._username = username;
-        this._email = email;
-        this._firstname = firstname;
-        this._lastname = lastname;
+    // Constructor to initialize the question object with provided values
+    public constructor(questionId: number, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date, updatedAt: Date) {
+        this._questionId = questionId;
+        this._userId = userId;
+        this._questionTitle = questionTitle;
+        this._questionBody = questionBody;
+        this._isClosed = isClosed;
+        this._createdAt = createdAt;
+        this._updatedAt = updatedAt;
     }
 
-    // Getters en setters
-    public get id(): number {
-        return this._id;
+    // Getters for accessing private fields
+    public get questionId(): number {
+        return this._questionId;
     }
 
-    public get username(): string {
-        return this._username;
+    public get userId(): number {
+        return this._userId;
     }
 
-    public get email(): string {
-        return this._email;
+    public get questionTitle(): string {
+        return this._questionTitle;
     }
 
-    public get firstname(): string {
-        return this._firstname;
+    public get questionBody(): string {
+        return this._questionBody;
     }
 
-    public get lastname(): string {
-        return this._lastname;
+    public get isClosed(): boolean {
+        return this._isClosed;
     }
 
-    public set id(value: number) {
-        this._id = value;
+    public get createdAt(): Date {
+        return this._createdAt;
     }
 
-    public set username(value: string) {
-        this._username = value;
+    public get updatedAt(): Date {
+        return this._updatedAt;
     }
 
-    public set email(value: string) {
-        this._email = value;
+    // Setters for modifying private fields
+    public set questionId(value: number) {
+        this._questionId = value;
     }
 
-    public set firstname(value: string) {
-        this._firstname = value;
+    public set userId(value: number) {
+        this._userId = value;
     }
 
-    public set lastname(value: string) {
-        this._lastname = value;
+    public set questionTitle(value: string) {
+        this._questionTitle = value;
     }
 
+    public set questionBody(value: string) {
+        this._questionBody = value;
+    }
+
+    public set isClosed(value: boolean) {
+        this._isClosed = value;
+    }
+
+    public set createdAt(value: Date) {
+        this._createdAt = value;
+    }
+
+    public set updatedAt(value: Date) {
+        this._updatedAt = value;
+    }
+
+    // Method to convert the question object to a string representation
     public toString(): string {
-        return `User: ${this._id} ${this._username} ${this._email} ${this._firstname} ${this._lastname}`;
+        return `Question: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._createdAt} ${this._updatedAt}`;
     }
 }
+
