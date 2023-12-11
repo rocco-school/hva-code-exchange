@@ -7,7 +7,7 @@ import {utils} from "@hboictcloud/api";
  * @returns {Promise<void>} A Promise that resolves after the specified delay.
  */
 export async function handleRedirectToQuestionDetail(row: HTMLTableRowElement): Promise<void> {
-    const id: string = row.getAttribute("id");
+    const id: string = row.getAttribute("id")!;
 
     if (id) {
         const url: string = utils.createUrl("single-question.html", {

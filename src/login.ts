@@ -7,6 +7,7 @@ import {comparePasswords} from "./components/hashPassword";
 import {security} from "./components/security";
 import {JWTPayload} from "jose";
 import {assignToken} from "./components/handleUserSession";
+
 /**
  * The main application entry point for the login page.
  *
@@ -18,38 +19,38 @@ import {assignToken} from "./components/handleUserSession";
 async function setup(): Promise<void> {
 
     // Check the security status by calling the 'security' function.
-    const loginStatus: JWTPayload = await security();
+    const loginStatus: JWTPayload | boolean = await security();
 
     // If the user is authenticated (loginStatus is true), redirect them to the index.html page.
     if (loginStatus) {
         url.redirect("/index.html");
     }
 
-    // Maak een actie aan voor de login knop. Als je hier op drukt wordt de code tussen de { } aangeroepen
+    // Create an action for the login button. When you press this, the code between the { } is called
     document.querySelector(".login-btn")?.addEventListener("click", async () => {
-        // Haal de waarden uit de inputvelden met het id username en email
+        // Get the values from the input fields with the id username and email
         const email: string = (<HTMLInputElement>document.getElementById("email")).value;
         const password: string = (<HTMLInputElement>document.getElementById("password")).value;
 
-        // Roep de loginFromDatabase functie aan (op regel 50) en geef username en email mee
+        // Call the loginFromDatabase function (on line 50) and provide username and email
         try {
             const data: any = await loginFromDatabase(email, password);
 
             if (data) {
-                // Stuur de gebruiker door naar de homepagina
-                // url.redirect("/question.html");
+                // Redirect the user to the home page
+                // url.redirect("/question-list.html");
             } else {
-                // Als de gebruiker niet bestaat, geef melding aan gebruiker door in de css (bootstrap) de display op block te zetten
+                // If the user does not exist, give notification to user by setting display to block in the css (bootstrap)
                 document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: block");
                 await delay(3000);
                 document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
 
-                // Maak de inputvelden weer leeg
+                // Empty the input fields again
                 (<HTMLInputElement>document.getElementById("username")).value = "";
                 (<HTMLInputElement>document.getElementById("password")).value = "";
             }
         } catch (error) {
-            // als het niet lukt de data op te halen, geef de gebruiker een foutmelding
+            // if it fails to retrieve the data, give the user an error message
             console.log("Fout bij inloggen");
         }
     });

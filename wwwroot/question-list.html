@@ -11,20 +11,25 @@
         crossorigin="anonymous"
     />
     <title>SE Code Exchange</title>
-    <link rel="stylesheet" href="./assets/css/index.css" />
+    <link rel="stylesheet" href="./assets/css/question.css" />
     <link rel="stylesheet" href="./assets/css/general.css" />
 </head>
 <body>
 <!-- This HTML page is called first when the website is called in the browser -->
 <main>
     <div class="container">
-        <h1 class="question-title"></h1>
-        <p class="question-body"></p>
+        <div class="button">
+            <button type="button" class="btn btn-outline-secondary create-question">Ask question</button>
+        </div>
 
+        <table class="table table-fit table-dark table-striped">
+            <tbody class="questions-body">
 
+            </tbody>
+        </table>
     </div>
 </main>
-<!--  This typescript file (single-question.ts) is called and executed here -->
-<script src="/src/single-question.ts" type="module"></script>
+<!-- This typescript file (question.ts) is called and executed here  -->
+<script src="/src/question.ts" type="module"></script>
 </body>
 </html>

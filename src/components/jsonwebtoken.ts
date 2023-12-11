@@ -4,11 +4,11 @@ import {SignJWT, jwtVerify, type JWTPayload} from "jose";
 /**
  * Sign the JSON Web Token (JWT) with the provided payload and secret
  *
- * @param {JWTPayload} payload - The data to be included in the JWT.
- * @param {string} secret - The secret key for JWT signing.
+ * @param payload - The data to be included in the JWT.
+ * @param secret - The secret key for JWT signing.
  * @returns A signed JWT string.
  */
-export async function sign(payload, secret): Promise<string> {
+export async function sign(payload: JWTPayload, secret: string): Promise<string> {
     // Get current date
     const iat: number = Math.floor(Date.now() / 1000);
     // Set expiration time
@@ -27,11 +27,11 @@ export async function sign(payload, secret): Promise<string> {
 /**
  * Verify a JSON Web Token (JWT) using the provided token and secret.
  *
- * @param {string} token - The JWT token to be verified.
- * @param {string} secret - The secret key for JWT verification.
+ * @param token - The JWT token to be verified.
+ * @param secret - The secret key for JWT verification.
  * @returns The payload extracted from the JWT if verification is successful.
  */
-export async function verify(token, secret): Promise<JWTPayload> {
+export async function verify(token: string, secret: string): Promise<JWTPayload> {
     // Verify the JWT token and extract its payload.
     const {payload} = await jwtVerify(token, new TextEncoder().encode(secret));
     // Return the payload, which indicates successful verification.

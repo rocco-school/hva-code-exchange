@@ -5,7 +5,7 @@ import {hashPassword} from "./components/hashPassword";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
-import {getUserById} from "./components/getUser";
+import {getUserById} from "./components/utils/getUser";
 
 
 /**
@@ -19,7 +19,7 @@ import {getUserById} from "./components/getUser";
 async function setup(): Promise<void> {
 
     // Check the security status by calling the 'security' function.
-    const loginStatus: JWTPayload = await security();
+    const loginStatus: JWTPayload | boolean = await security();
 
     // If the user is authenticated (loginStatus is true), redirect them to the index.html page.
     if (loginStatus) {

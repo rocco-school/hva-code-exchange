@@ -1,7 +1,6 @@
 import "./config";
-import {api} from "@hboictcloud/api";
-import {QUESTION_QUERY} from "./query/question.query";
 import {Question} from "./models/question";
+import {getQuestion} from "./components/utils/getQuestion";
 
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
@@ -19,12 +18,12 @@ async function setup(): Promise<void> {
     await checkURLParams();
 
     // Retrieves a question from the database based on the URL parameter question ID.
-    const question: Question | undefined = await getQuestion();
+    const question: Question | undefined = await getQuestion(questionId);
 
     if (!question) location.replace("index.html");
 
-    (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.title;
-    (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.body;
+    (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
+    (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
 
 
 }
@@ -55,27 +54,5 @@ async function checkURLParams(): Promise<void> {
         }
     } catch (e) {
         console.log(e);
-    }
-}
-
-
-async function getQuestion(): Promise<Question | undefined> {
-    try {
-        const getQuestion: any = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId);
-        if (getQuestion.length > 0) {
-            return new Question(
-                getQuestion[0]["question_id"],
-                getQuestion[0]["user_id"],
-                getQuestion[0]["title"],
-                getQuestion[0]["body"],
-                getQuestion[0]["is_closed"],
-                getQuestion[0]["created_at"],
-                getQuestion[0]["updated_at"],
-            );
-        }
-
-        return undefined;
-    } catch (e) {
-        console.error(e);
     }
 }

@@ -1,5 +1,5 @@
-import {User} from "../models/user";
-import {USER_QUERY} from "../query/user.query";
+import {User} from "../../models/user";
+import {USER_QUERY} from "../../query/user.query";
 import {api} from "@hboictcloud/api";
 
 /**

@@ -1,5 +1,5 @@
 import "./config";
-import {api} from "@hboictcloud/api";
+import {api, url} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import {Question} from "./models/question";
@@ -13,12 +13,12 @@ import {Question} from "./models/question";
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
-
     // populate question table.
     await populateQuestionTable();
 
     // Get all create question form elements.
-    const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question-button"));
+    const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
+
     const createQuestionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
     const questionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-form"));
     const cancelForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".cancel-create-question"));
@@ -26,7 +26,7 @@ async function setup(): Promise<void> {
 
     // Show question form on click
     createQuestion.addEventListener("click", (): void => {
-        createQuestionForm.classList.remove("hidden");
+        url.redirect("create-question.html");
     });
 
 
@@ -47,7 +47,7 @@ async function setup(): Promise<void> {
         e.preventDefault();
 
         const questionTitle: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("questionTitle"));
-        const questionSelect: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-select"));
+        // const questionSelect: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-select"));
         const question: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("question"));
 
         try {
@@ -90,13 +90,13 @@ async function populateQuestionTable(): Promise<void> {
         // Iterating over each question and rendering it in the UI.
         questions.forEach((question): void => {
             const singleQuestion: Question = new Question(
-                question["question_id"],
-                question["user_id"],
-                question["title"],
-                question["body"],
-                question["is_closed"],
-                question["created_at"],
-                question["updated_at"],
+                question.questionId,
+                question.userId,
+                question.questionTitle,
+                question.questionBody,
+                question.isClosed,
+                question.createdAt,
+                question.updatedAt
             );
 
             // Creating a new table row for each question.
@@ -131,7 +131,7 @@ async function populateQuestionTable(): Promise<void> {
 
                 // Populating the question title.
                 if (questionTitle) {
-                    questionTitle.innerHTML = singleQuestion.title;
+                    questionTitle.innerHTML = singleQuestion.questionTitle;
                 }
 
                 // Creating a div for the question text.
@@ -139,7 +139,7 @@ async function populateQuestionTable(): Promise<void> {
 
                 // Populating the question text.
                 if (questionText) {
-                    questionText.innerHTML = singleQuestion.body;
+                    questionText.innerHTML = singleQuestion.questionBody;
                 }
 
                 // Adding a click event listener to redirect to the question detail page.
