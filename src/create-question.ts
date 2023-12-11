@@ -175,7 +175,7 @@ async function setup(): Promise<void> {
         if (valid) {
             let tags: HTMLInputElement = document.querySelector(".tags_input") as HTMLInputElement;
 
-            console.log(tags);
+            console.log(tags.value);
             resetCustomSelects();
             return;
         }
