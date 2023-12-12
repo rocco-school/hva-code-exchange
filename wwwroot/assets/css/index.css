@@ -38,15 +38,16 @@
 /* Styling for specific elements within the navigation bar */
 .navbar .container #burgerMenu {
     height: 2rem;
+    cursor: pointer;
 }
 
 .navbar .container #codeExchangeLogo {
     height: 3.5rem;
 }
 
-
+/* Styling for the sidebar menu */
 .sidebarMenu {
-    display: none;
+    visibility: hidden; /* Initially hide the sidebar */
     padding: 1rem;
     width: 12.5rem;
     background-color: #f1f1f1;
@@ -55,25 +56,34 @@
     overflow: auto;
 }
 
+/* Show the sidebar when the 'show' class is applied */
+.sidebarMenu.show {
+    visibility: visible;
+}
+
+/* Styling for the content container within the sidebar */
 .sidebarMenu .container {
     display: flex;
     flex-direction: column;
 }
 
+/* Styling for the close button in the sidebar */
 .sidebarMenu .container #sidebarClose {
     margin-bottom: 2rem;
+    cursor: pointer;
 }
 
+/* Styling for the list of buttons in the sidebar */
 .sidebarMenu .container .containerButtons {
-    list-style: none;
-} 
+    list-style: none; /* Remove default list styling */
+}
 
-.sidebarMenu .container .containerButtons button{
+/* Styling for individual buttons within the sidebar */
+.sidebarMenu .container .containerButtons button {
     width: 12rem;
     padding: 0.5rem;
     margin-bottom: 1rem;
 }
-
 
 
 /* Styling for the main header section */
