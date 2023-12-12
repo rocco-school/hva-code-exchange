@@ -1,18 +1,138 @@
-body {
-    font-size: 1.2em;
-    background-color: #0e0224;
-    background-image: url(/assets/img/background.jpg) !important;
-    color: #fff;
-    font-family: "Roboto", sans-serif;
-    margin: 0;
+* {
     padding: 0;
+    margin: 0;
 }
 
-.alert-danger {
-    display: none;
+
+
+.navbar {
+    height: 3.5rem;
+    background-color: #f1f1f1;
+    border-bottom: grey 1px solid;
+    padding: 0 1rem;
 }
 
-.login-box {
+.navbar .container {
     display: flex;
     justify-content: center;
+    align-items: center;
+
+    list-style: none;
+}
+
+.navbar .container li:nth-child(3),
+.navbar .container li:nth-child(4) {
+    margin-right: 0.5rem;
+}
+
+.navbar .container li:nth-child(1),
+.navbar .container li:nth-child(2) {
+    margin-right: auto;
+}
+
+.navbar .container button {
+    padding: 0.5rem;
+}
+
+.navbar .container #burgerMenu {
+    height: 2rem;
+}
+
+.navbar .container #codeExchangeLogo {
+    height: 3.5rem;
+}
+
+
+.mainHeader {
+    height: auto;
+    width: auto;
+    margin: 10rem 16rem;
+}
+
+.mainHeader .container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mainHeader .container .mainHeaderTextLayout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 30rem;
+}
+
+.mainHeader .container .mainHeaderTextLayout h1{
+    margin-bottom: 1rem;
+}
+
+.mainHeader .container .mainHeaderTextLayout button{
+    margin-top: 1rem;
+}
+
+.mainHeader #unsplashPicture1 {
+    height: 18rem;
+}
+
+
+
+.sectionPerks {
+    height: auto;
+    width: auto;
+    margin-top: 10rem;
+}
+
+.sectionPerks .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sectionPerks .container .containerPerkBoxes {
+    display: flex;
+    flex-direction: row;
+    align-content: center;;
+
+    margin-top: 4rem;
+}
+
+.sectionPerks .container .containerPerkBoxes .perkBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 10rem;
+    margin: 0 2rem;
+    padding: 2rem;
+    background-color: #f1f1f1;
+}
+
+.sectionPerks .container .containerPerkBoxes .perkBox p{
+    margin-top: 1rem;
+}
+
+
+
+.sectionContact {
+    height: auto;
+    width: auto;
+    margin-top: 10rem;
+    background-color: #f1f1f1;
+}
+
+.sectionContact .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sectionContact .container .containerContactBoxes{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.sectionContact .container .containerContactBoxes .contactBox{  
+    padding: 2rem;
 }
