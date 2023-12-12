@@ -39,7 +39,7 @@ export class QuestionService {
      */
     public static async updateQuestion(question: Question): Promise<[Question]> {
         // Destructuring the question object to get individual properties
-        const questionData: (string | number | boolean | null)[] = [question.questionTitle,  question.questionBody, question.isClosed, question.questionId];
+        const questionData: (string | number | boolean | null)[] = [question.questionTitle, question.questionBody, question.isClosed, question.questionId];
 
         // Querying the database to update the question with the given questionId.
         const updatedQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.UPDATE_QUESTION, ...questionData) as [Question];

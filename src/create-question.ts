@@ -7,6 +7,7 @@ import {
     setupSelectBoxClickHandling,
     updateSelectedOptions
 } from "./components/customSelect";
+import {CodingTag} from "./models/codingTag";
 
 /**
  * The main application entry point for the create-question page.
@@ -68,12 +69,17 @@ async function setup(): Promise<void> {
 // Invoke the question detail page application entry point.
 await setup();
 
-
 async function populateTagSelect(optionsBody: Element): Promise<void> {
+    const codingTags: CodingTag[] | string = await CodingTag.getCodingTags();
 
-    const newOption: string = "<div class=\"option\" data-value=\"Black\">Black</div>";
+    if (codingTags.length === 0) return;
 
-    optionsBody.innerHTML += newOption;
+    for (const codingTag of codingTags) {
+        const tag: CodingTag = codingTag as CodingTag;
+
+        const newOption: string = "<div class=\"option\" data-value=\"" + tag.tagId + "\">" + tag.tagName + "</div>";
+        optionsBody.innerHTML += newOption;
+    }
 }
 
 

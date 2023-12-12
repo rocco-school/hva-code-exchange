@@ -152,7 +152,7 @@ export class Question {
      * Deletes a question from the database using the service.
      *
      * @param {number} questionId - The ID of the question to delete.
-     * @returns {Promise<Question[] | string>} A Promise resolving to either the updated questions or an error message.
+     * @returns {Promise<Question[] | string>} A Promise resolving to either delete the questions or an error message.
      * @throws {Error} Throws an error if the deletion operation fails.
      */
     public static async deleteQuestion(questionId: number): Promise<Question[] | string> {
