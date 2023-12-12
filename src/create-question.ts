@@ -17,7 +17,6 @@ import {
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
-
     const selectOptions: Element | null = document.querySelector(".options");
     if (selectOptions) await populateTagSelect(selectOptions);
 

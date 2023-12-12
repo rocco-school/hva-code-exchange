@@ -11,7 +11,6 @@
         crossorigin="anonymous"
     />
     <title>SE Code Exchange</title>
-<!--    <link rel="stylesheet" href="./assets/css/general.css"/>-->
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -28,46 +27,69 @@
 
         <!-- Section for Question Title -->
         <section class="question-section question-title-section">
-            <label for="questionTitle" class="label">Title</label>
+            <div class="question-title-container">
+                <div class="custom-text-field">
+                    <label for="questionTitle" class="label">Title</label>
 
-            <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"/>
+                    <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"/>
+                </div>
+            </div>
         </section>
 
         <!-- Section for Question Body -->
         <section class="question-section question-body-section">
-            <label for="problemDescription" class="label">Problem</label>
+            <div class="question-container">
+                <div class="custom-text-field">
+                    <label for="problemDescription" class="label">Problem</label>
 
-            <textarea id="problemDescription" name="problemDescription"
-                      class="question-body-textarea"></textarea>
-
+                    <textarea id="problemDescription" name="problemDescription"
+                              class="question-body-textarea"></textarea>
+                </div>
+            </div>
         </section>
 
         <!-- Section for Tags -->
         <section class="question-section tags-section">
             <div class="tag-container">
-                <div class="custom-select open">
-                    <div class="select-box">
-                        <input type="text" class="tags_input" name="tags" hidden/>
-                        <div class="selected-options">
-
-                        </div>
-                        <div class="arrow">
-                            <i class="fa fa-angle-down"></i>
-                        </div>
-                    </div>
-                    <div class="options">
-                        <div class="option-search-tags">
-                            <input type="text" class="search-tags" placeholder="Search tags..."/>
-                            <button type="button" class="clear"><i class="fa fa-close"></i></button>
-                        </div>
-                        <div class="option all-tags" data-value="All">Select All</div>
-                        <div class="no-result-message" style="display: none">No result match</div>
-                    </div>
-                    <div class="tag_error_msg error"></div>
+                <div class="custom-text-field">
+                    <label for="tags_input" class="label">Tags</label>
                 </div>
-                <input type="button" class="btn_submit" value="Submit"/>
+
+                <div class="tag-container--inner">
+                    <div class="custom-select open">
+                        <div class="select-box">
+                            <input type="text" class="tags_input" id="tags_input" name="tags" hidden/>
+                            <div class="selected-options">
+
+                            </div>
+                            <div class="arrow">
+                                <i class="fa fa-angle-down"></i>
+                            </div>
+                        </div>
+                        <div class="options">
+                            <div class="option-search-tags">
+                                <input type="text" class="search-tags" placeholder="Search tags..."/>
+                                <button type="button" class="clear"><i class="fa fa-close"></i></button>
+                            </div>
+                            <div class="option all-tags" data-value="All">Select All</div>
+                            <div class="no-result-message" style="display: none">No result match</div>
+                        </div>
+                        <div class="tag_error_msg error"></div>
+                    </div>
+                </div>
             </div>
         </section>
+
+
+        <!-- Section for submitting -->
+        <section class="question-section submit-section">
+            <div class="submit-container">
+                <button class="button">Post question</button>
+
+                <a class="discard-button">Discord question</a>
+            </div>
+        </section>
+
 
     </div>
 </main>
