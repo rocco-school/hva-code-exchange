@@ -7,8 +7,8 @@ export class User {
     private _password: string;
     private _email: string;
 
-    // De constructor wordt eenmalig aangeroepen als de class wordt geïnstantieerd.
-    // Deze constructor vult de fields bij het aanmaken van een object.
+    // The constructor is called once when the class is instantiated.
+    // This constructor fills the fields when creating an object.
     public constructor(userId: number, username: string, password: string, email: string, firstname: string, lastname: string) {
         this._userId = userId;
         this._firstname = firstname;

@@ -31,6 +31,8 @@ export async function assignToken(user: User): Promise<void> {
         email: user.email,
     };
 
+    console.log(payload);
+
     // Generate JWT with payload and secret.
     const jwtToken: string = (await sign(payload, secret)).valueOf();
 

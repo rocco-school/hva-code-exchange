@@ -1,243 +1,83 @@
 import "./config";
+import {
+    addClickListenersToOptions,
+    handleButtonClick,
+    handleDocumentClick,
+    setupCustomSelect,
+    setupSelectBoxClickHandling,
+    updateSelectedOptions
+} from "./components/customSelect";
 
 /**
- * The main application entry point for the single-question page.
+ * The main application entry point for the create-question page.
  *
- * This function initializes the single-question page, including event handling,
+ * This function initializes the create-question page, including event handling,
  * user verification, and other related functionality.
  *
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
 
+    const selectOptions: Element | null = document.querySelector(".options");
+    if (selectOptions) await populateTagSelect(selectOptions);
+
+    // Select all elements with the class "custom-select"
     const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
 
-
-
+    // Update selected options for each custom select
     customSelects.forEach(item => {
         updateSelectedOptions(item);
     });
 
-    customSelects.forEach(function (customSelect: Element) {
-        const searchInput: HTMLInputElement | null = customSelect.querySelector(".search-tags");
-        const optionsContainer: Element | null = customSelect.querySelector(".options");
-        const noResultMessage: Element | null = customSelect.querySelector(".no-result-message");
-        const allTagsOption: Element | null = customSelect.querySelector(".option.all-tags");
-        const clearButton: Element | null = customSelect.querySelector(".clear");
+    // Apply setup to all custom select elements
+    customSelects.forEach(setupCustomSelect);
 
-        allTagsOption?.addEventListener("click", function () {
-            const isActive: boolean = allTagsOption?.classList.contains("active");
+    // Add click event listeners to options within each custom select
+    customSelects.forEach(addClickListenersToOptions);
 
-            customSelect.querySelectorAll(".option").forEach(function (option: Element) {
-                if (option !== allTagsOption) {
-                    option.classList.toggle("active", !isActive);
-                }
-            });
+    // Add a click event listener to the document for handling custom select elements and removing tags
+    document.addEventListener("click", handleDocumentClick);
 
-            updateSelectedOptions(customSelect);
-        });
-
-
-        clearButton?.addEventListener("click", function () {
-            if (searchInput) {
-                searchInput.value = "";
-            }
-            customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
-                option.classList.add("block");
-            });
-
-            noResultMessage?.classList.add("hidden");
-        });
-
-        searchInput?.addEventListener("input", function () {
-            const searchTerm: string = searchInput?.value.toLowerCase();
-            console.log(searchTerm);
-
-            customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
-                if (option.textContent) {
-                    const optionText: string | null = option.textContent.trim();
-
-                    const shouldShow: boolean = optionText.toLowerCase().includes(searchTerm);
-
-                    if (shouldShow) {
-                        if (option.classList.contains("hidden")) {
-                            option.classList.remove("hidden");
-                        }
-                        option.classList.add("block");
-                    }
-
-                    if (!shouldShow) {
-                        if (option.classList.contains("block")) {
-                            option.classList.remove("block");
-                        }
-                        option.classList.add("hidden");
-                    }
-                }
-            });
-            const options: NodeListOf<Element> = customSelect.querySelectorAll(".option");
-
-            const anyOptionsMatch: boolean = Array.from(options).some(option => option.classList.contains("block"));
-
-            if (anyOptionsMatch) noResultMessage?.classList.add("hidden");
-            if (!anyOptionsMatch) noResultMessage?.classList.add("block");
-
-            if (searchTerm) {
-                optionsContainer?.classList.add("option-search-active");
-            } else {
-                optionsContainer?.classList.remove("option-search-active");
-            }
-
-        });
-
-    });
-
-
-    customSelects.forEach(function (customSelect: Element) {
-        customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
-            option.addEventListener("click", function (): void {
-                option.classList.toggle("active");
-                updateSelectedOptions(customSelect);
-            });
-        });
-    });
-
-    document.addEventListener("click", function (event ) {
-        const elem: HTMLElement = event.target as HTMLElement;
-        const removeTag: Element | null = elem.closest(".remove-tag");
-        if (removeTag) {
-            const customSelect: Element | null = removeTag.closest(".custom-select");
-            if (customSelect) {
-                const valueToRemove: string | null = removeTag.getAttribute("data-value");
-                const optionToRemove: Element | null = customSelect?.querySelector(".option[data-value=\"" + valueToRemove + "\" ]");
-                optionToRemove?.classList.remove("active");
-
-                const otherSelectedOptions: NodeListOf<Element> = customSelect?.querySelectorAll(".option.active:not(.all-tags)");
-                const allTagsOption: Element | null = customSelect?.querySelector(".option.all-tags");
-
-                if (otherSelectedOptions.length === 0) {
-                    allTagsOption?.classList.remove("active");
-                }
-                updateSelectedOptions(customSelect);
-            }
-        }
-    });
-
+    // Select all elements with the class "select-box"
     const selectBoxes: NodeListOf<Element> = document.querySelectorAll(".select-box");
-    selectBoxes.forEach(function (selectBox: Element) {
-        selectBox.addEventListener("click", function (event){
-            const targetElem: HTMLElement = event.target as HTMLElement;
-            const elem: HTMLElement = event.target as HTMLElement;
-            if (!targetElem.closest(".tag") && elem.parentElement) {
-                elem.parentElement.classList.toggle("open");
-            }
-        });
-    });
 
-    document.addEventListener("click", function (event: MouseEvent) {
-        const targetElem: HTMLElement = event.target as HTMLElement;
+    // Set up click event handling for select boxes
+    setupSelectBoxClickHandling(selectBoxes);
 
-        if (!targetElem.closest(".custom-select") && !targetElem.classList.contains("remove-tag")) {
-            customSelects.forEach(function (customSelect: Element) {
-                customSelect.classList.remove("open");
-            });
-        }
-    });
-
-
+    // Update selected options for the first custom select (assuming there's at least one)
     updateSelectedOptions(customSelects[0]);
 
+    // Select the submit button with the class "btn_submit"
     const submitButton: Element | null = document.querySelector(".btn_submit");
-    submitButton?.addEventListener("click", function (): void {
-        let valid: boolean = true;
 
-        customSelects.forEach(function (customSelect: Element) {
-            const selectedOptions: NodeListOf<Element> = customSelect.querySelectorAll(".option.active");
-
-            if (selectedOptions.length === 0) {
-                const tagErrorMsg: Element | null = customSelect.querySelector(".tag_error_msg");
-
-                if (tagErrorMsg) {
-                    tagErrorMsg.textContent = "This field is required!";
-                    tagErrorMsg.classList.add("block");
-                }
-
-                valid = false;
+    // Add a click event listener to the submit button to handle the click
+    submitButton?.addEventListener("click", async function (): Promise<void> {
+        // Use the async function handleButtonClick when the submit button is clicked
+        handleButtonClick().then((result: string | null): void => {
+            if (result !== null) {
+                // Handle the valid result
+                console.log(result);
             } else {
-                const tagErrorMsg: Element | null = customSelect.querySelector(".tag_error_msg");
-
-                if (tagErrorMsg) {
-                    tagErrorMsg.textContent = "";
-                    tagErrorMsg.classList.add("hidden");
-                }
+                // Handle the case where the input is not valid
+                console.log("Input is not valid.");
             }
         });
-
-        if (valid) {
-            let tags: HTMLInputElement = document.querySelector(".tags_input") as HTMLInputElement;
-
-            console.log(tags.value);
-            resetCustomSelects();
-            return;
-        }
-
     });
+
 }
 
 // Invoke the question detail page application entry point.
 await setup();
 
 
-function resetCustomSelects(): void {
-    document.querySelectorAll(".custom-select").forEach(function (customSelect: Element) {
-        customSelect.querySelectorAll(".option.active").forEach(function (option: Element) {
-            option.classList.remove("active");
-        });
-        customSelect.querySelector(".option.all-tags")?.classList.remove("active");
-        updateSelectedOptions(customSelect);
-    });
+async function populateTagSelect(optionsBody: Element): Promise<void> {
+
+
+    const newOption: string = "<div class=\"option\" data-value=\"Black\">Black</div>";
+
+    optionsBody.innerHTML += newOption;
 }
 
-
-function updateSelectedOptions(customSelect: any): void {
-    const selectedOptions: any[] = Array.from(customSelect.querySelectorAll(".option.active")).filter(option => option !== customSelect.querySelector(".option.all-tags")).map(function (option: any): {
-        text: any;
-        value: any
-    } {
-        return {
-            value: option.getAttribute("data-value"),
-            text: option.textContent.trim()
-        };
-    });
-
-    const selectedValues: any[] = selectedOptions.map(function (option: any) {
-        return option.value;
-    });
-
-    customSelect.querySelector(".tags_input").value = selectedValues.join(", ");
-
-    let tagsHtml: string  = "";
-
-    if (selectedOptions.length === 0) {
-        tagsHtml = "<span class=\"holder\">Select the tags</span>";
-    } else {
-        const maxTagsToShow: number = 4;
-        let additionalTagsCount: number = 0;
-
-        selectedOptions.forEach(function (option: any, index: number) {
-            if (index < maxTagsToShow) {
-                tagsHtml += "<span class=\"tag\">" + option.text + "<span class=\"remove-tag\" data-value=\"" + option.value + "\">&times;</span></span>";
-            } else {
-                additionalTagsCount++;
-            }
-        });
-
-        if (additionalTagsCount > 0) {
-            tagsHtml += "<span class=\"tag\"> " + additionalTagsCount + " </span>";
-        }
-    }
-
-    customSelect.querySelector(".selected-options").innerHTML = tagsHtml;
-}
 
 
 
