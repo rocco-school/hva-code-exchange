@@ -1,25 +1,25 @@
+/* Resetting default padding and margin for all elements */
 * {
     padding: 0;
     margin: 0;
 }
 
-
-
+/* Styling for the navigation bar */
 .navbar {
     height: 3.5rem;
-    background-color: #f1f1f1;
     border-bottom: grey 1px solid;
     padding: 0 1rem;
 }
 
+/* Styling for the navigation bar container */
 .navbar .container {
     display: flex;
     justify-content: center;
     align-items: center;
-
     list-style: none;
 }
 
+/* Margin adjustments for specific navigation bar items */
 .navbar .container li:nth-child(3),
 .navbar .container li:nth-child(4) {
     margin-right: 0.5rem;
@@ -30,10 +30,12 @@
     margin-right: auto;
 }
 
+/* Styling for buttons within the navigation bar */
 .navbar .container button {
     padding: 0.5rem;
 }
 
+/* Styling for specific elements within the navigation bar */
 .navbar .container #burgerMenu {
     height: 2rem;
 }
@@ -43,30 +45,64 @@
 }
 
 
+.sidebarMenu {
+    display: none;
+    padding: 1rem;
+    width: 12.5rem;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+.sidebarMenu .container {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarMenu .container #sidebarClose {
+    margin-bottom: 2rem;
+}
+
+.sidebarMenu .container .containerButtons {
+    list-style: none;
+} 
+
+.sidebarMenu .container .containerButtons button{
+    width: 12rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+
+
+/* Styling for the main header section */
 .mainHeader {
     height: auto;
     width: auto;
     margin: 10rem 16rem;
 }
 
+/* Styling for the main header container */
 .mainHeader .container {
     display: flex;
     justify-content: space-between;
 }
 
+/* Styling for layout within the main header */
 .mainHeader .container .mainHeaderTextLayout {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     width: 30rem;
 }
 
-.mainHeader .container .mainHeaderTextLayout h1{
+/* Styling for specific elements within the main header */
+.mainHeader .container .mainHeaderTextLayout h1 {
     margin-bottom: 1rem;
 }
 
-.mainHeader .container .mainHeaderTextLayout button{
+.mainHeader .container .mainHeaderTextLayout button {
     margin-top: 1rem;
 }
 
@@ -74,45 +110,45 @@
     height: 18rem;
 }
 
-
-
+/* Styling for the perks section */
 .sectionPerks {
     height: auto;
     width: auto;
     margin-top: 10rem;
 }
 
+/* Styling for the perks container */
 .sectionPerks .container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Styling for the perk boxes container */
 .sectionPerks .container .containerPerkBoxes {
     display: flex;
     flex-direction: row;
-    align-content: center;;
-
+    align-content: center;
     margin-top: 4rem;
 }
 
+/* Styling for individual perk boxes */
 .sectionPerks .container .containerPerkBoxes .perkBox {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     width: 10rem;
     margin: 0 2rem;
     padding: 2rem;
     background-color: #f1f1f1;
 }
 
-.sectionPerks .container .containerPerkBoxes .perkBox p{
+/* Margin adjustment for text within perk boxes */
+.sectionPerks .container .containerPerkBoxes .perkBox p {
     margin-top: 1rem;
 }
 
-
-
+/* Styling for the contact section */
 .sectionContact {
     height: auto;
     width: auto;
@@ -120,19 +156,22 @@
     background-color: #f1f1f1;
 }
 
+/* Styling for the contact container */
 .sectionContact .container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.sectionContact .container .containerContactBoxes{
+/* Styling for the contact boxes container */
+.sectionContact .container .containerContactBoxes {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
 
-.sectionContact .container .containerContactBoxes .contactBox{  
+/* Styling for individual contact boxes */
+.sectionContact .container .containerContactBoxes .contactBox {
     padding: 2rem;
 }
