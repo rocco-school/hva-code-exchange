@@ -108,7 +108,6 @@ export class Question {
     public async updateQuestion(): Promise<Question[] | string> {
         try {
             // Calling the updateQuestion method from the service.
-            console.log(this);
             return await QuestionService.updateQuestion(this);
         } catch (error) {
             // Handling any errors that occur during the process.

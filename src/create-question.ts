@@ -72,7 +72,6 @@ await setup();
 
 async function populateTagSelect(optionsBody: Element): Promise<void> {
 
-
     const newOption: string = "<div class=\"option\" data-value=\"Black\">Black</div>";
 
     optionsBody.innerHTML += newOption;
