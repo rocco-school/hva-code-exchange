@@ -103,7 +103,17 @@
 .question-body-textarea {
     min-height: 10rem;
     max-height: 30rem;
+    padding: 10px;
+    outline: none;
+    overflow-y: scroll;
+    max-width: 50rem;
+    resize: vertical;
 }
+
+.question-body-textarea:focus {
+    border-color: #ccc;
+}
+
 
 .question-title-input {
     width: 45rem;

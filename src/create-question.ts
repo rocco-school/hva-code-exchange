@@ -65,116 +65,182 @@ async function setup(): Promise<void> {
     });
 
 
+    const textarea: HTMLDivElement | null = document.querySelector(".question-body-textarea");
+    const boldButton: HTMLButtonElement | null = document.querySelector(".bold");
+    const italicButton: HTMLButtonElement | null = document.querySelector(".italic");
+    const underlineButton: HTMLButtonElement | null = document.querySelector(".underline");
+    const inlineCodeButton: HTMLButtonElement | null = document.querySelector(".inline-code");
+    const codeBlockButton: HTMLButtonElement | null = document.querySelector(".code-block");
+    const listButton: HTMLButtonElement | null = document.querySelector(".list");
+    const colorPickerButton: HTMLButtonElement | null = document.querySelector(".color-picker");
 
-    const textarea: HTMLTextAreaElement = document.querySelector(".question-body-textarea");
-    const boldButton: HTMLElement | null = document.querySelector(".bold-button");
-    const italicButton: HTMLButtonElement | null = document.querySelector(".italic-button");
-    const underlineButton: HTMLButtonElement | null = document.querySelector(".underline-button");
-    const inlineCodeButton: HTMLButtonElement | null = document.querySelector(".inline-code-button");
-    const codeBlockButton: HTMLButtonElement | null = document.querySelector(".code-block-button");
+    if (textarea) {
+        boldButton?.addEventListener("click", () => {
+            console.log(textarea);
+            checkTextStyle(boldButton, textarea);
+        });
 
-    boldButton?.addEventListener("click", function (): void {
-        const selected: string = textarea.value.substr(textarea.selectionStart, textarea.selectionEnd - textarea.selectionStart).trim();
+        italicButton?.addEventListener("click", () => {
+            checkTextStyle(italicButton, textarea);
+        });
 
-        if (selected) {
-            const prefix: string = textarea.value.slice(0, textarea.selectionStart);
-            const suffix: string = textarea.value.slice(textarea.selectionEnd, textarea.value.length);
+        underlineButton?.addEventListener("click", () => {
+            checkTextStyle(underlineButton, textarea);
+        });
 
-            const bold: string = "<b>" + selected + "</b>";
-            const italic: string = "<i>" + selected + "</i>";
-            const underline: string = "*" + selected + "*";
-            const inlineCode: string = "<code>" + selected + "</code>";
+        inlineCodeButton?.addEventListener("click", () => {
+            checkTextStyle(inlineCodeButton, textarea);
+        });
 
-            textarea.value = prefix + italic + suffix;
-        }
+        codeBlockButton?.addEventListener("click", () => {
+            checkTextStyle(codeBlockButton, textarea);
+        });
 
+        listButton?.addEventListener("click", () => {
+            checkTextStyle(listButton, textarea);
+        });
 
-
-    });
-
-
-
-
-    //
-    //
-    // function f1(e): void {
-    //     let value: string = e.value;
-    //     textarea.style.fontSize = value + "px";
-    // }
-    // function f2(e): void {
-    //     if (textarea.style.fontWeight === "bold") {
-    //         textarea.style.fontWeight = "normal";
-    //         e.classList.remove("active");
-    //     }
-    //     else {
-    //         textarea.style.fontWeight = "bold";
-    //         e.classList.add("active");
-    //     }
-    // }
-    // function f3(e): void {
-    //     if (textarea.style.fontStyle === "italic") {
-    //         textarea.style.fontStyle = "normal";
-    //         e.classList.remove("active");
-    //     }
-    //     else {
-    //         textarea.style.fontStyle = "italic";
-    //         e.classList.add("active");
-    //     }
-    // }
-    // function f4(e): void {
-    //     if (textarea.style.textDecoration === "underline") {
-    //         textarea.style.textDecoration = "none";
-    //         e.classList.remove("active");
-    //     }
-    //     else {
-    //         textarea.style.textDecoration = "underline";
-    //         e.classList.add("active");
-    //     }
-    // }
-    // function f5(e): void {
-    //     textarea.style.textAlign = "left";
-    // }
-    // function f6(e): void {
-    //     textarea.style.textAlign = "center";
-    // }
-    // function f7(e): void {
-    //     textarea.style.textAlign = "right";
-    // }
-    // function f8(e): void {
-    //     if (textarea.style.textTransform === "uppercase") {
-    //         textarea.style.textTransform = "none";
-    //         e.classList.remove("active");
-    //     }
-    //     else {
-    //         textarea.style.textTransform = "uppercase";
-    //         e.classList.add("active");
-    //     }
-    // }
-    // function f9(): void {
-    //     textarea.style.fontWeight = "normal";
-    //     textarea.style.textAlign = "left";
-    //     textarea.style.fontStyle = "normal";
-    //     textarea.style.textTransform = "capitalize";
-    //     textarea.value = "";
-    // }
-    // function f10(e): void {
-    //     textarea.style.color = e.value;
-    // }
-    // window.addEventListener("load", (): void => {
-    //     textarea.value = "";
-    // });
-
-
-
-
-
-
-
+        colorPickerButton?.addEventListener("click", () => {
+            checkTextStyle(colorPickerButton, textarea);
+        });
+    }
 
 }
 
 // Invoke the question detail page application entry point.
 await setup();
+
+
+async function checkTextStyle(element: any, textarea: HTMLDivElement): Promise<void> {
+    // const selected: string = textarea.value.substr(textarea.selectionStart, textarea.selectionEnd - textarea.selectionStart).trim();
+
+    const selection: Selection | null = window.getSelection();
+    if (!selection || selection.rangeCount === 0) {
+        return;
+    }
+
+    const range: Range = selection.getRangeAt(0);
+    const allContent: string = textarea.innerHTML;
+
+    // Create a range to encompass the entire content
+    const allContentRange: Range = document.createRange();
+    allContentRange.selectNodeContents(textarea);
+
+    // Create a range to encompass the selected content
+    const selectedContentRange: Range = range.cloneRange();
+    selectedContentRange.selectNodeContents(range.commonAncestorContainer);
+
+    // Create a range to encompass the content before the selection
+    const beforeSelectedRange: Range = document.createRange();
+    beforeSelectedRange.setStart(allContentRange.startContainer, allContentRange.startOffset);
+    beforeSelectedRange.setEnd(range.startContainer, range.startOffset);
+
+    // Create a range to encompass the content after the selection
+    const afterSelectedRange: Range = document.createRange();
+    afterSelectedRange.setStart(range.endContainer, range.endOffset);
+    afterSelectedRange.setEnd(allContentRange.endContainer, allContentRange.endOffset);
+
+    // Extract the HTML content from the ranges
+    const selectedConte: DocumentFragment = range.cloneContents();
+
+    const beforeNice: string = getFullHtmlBeforeSelection(beforeSelectedRange);
+    const afterNice: string = getFullHtmlAfterSelection(afterSelectedRange);
+
+    console.log(beforeNice);
+    console.log(selectedConte.textContent);
+    console.log(afterNice);
+
+    console.log("NEXT");
+
+
+
+
+    function getFullHtmlBeforeSelection(beforeRange: Range): string {
+        const beforeContainer: HTMLDivElement = document.createElement("div");
+        beforeContainer.appendChild(beforeRange.cloneContents());
+
+        return beforeContainer.innerHTML;
+    }
+
+    function getFullHtmlAfterSelection(afterRange: Range): string {
+        const afterContainer: HTMLDivElement = document.createElement("div");
+        afterContainer.appendChild(afterRange.cloneContents());
+
+        return afterContainer.innerHTML;
+    }
+
+
+
+    const selected: string = selection.toString().trim();
+
+    // get tekst before selected tekst
+    const beforeSelected: Range = range.cloneRange();
+    beforeSelected.selectNodeContents(textarea);
+    beforeSelected.setEnd(range.startContainer, range.startOffset);
+    const prefix: string = beforeSelected.toString().trim();
+
+    // Get tekst after selected tekst.
+    const afterSelected: Range = range.cloneRange();
+    afterSelected.selectNodeContents(textarea);
+    afterSelected.setStart(range.endContainer, range.endOffset);
+    const suffix: string = afterSelected.toString().trim();
+
+
+    switch (true) {
+        case element.classList.contains("bold"):
+            const bold: string = " <b>" + selected + "</b> ";
+
+            textarea.innerHTML = prefix + bold + suffix;
+            break;
+
+        case element.classList.contains("italic"):
+            const italic: string = " <i>" + selected + "</i> ";
+
+            textarea.innerHTML = prefix + italic + suffix;
+            break;
+
+        case element.classList.contains("underline"):
+            const underline: string = " <span style='text-decoration: underline'>" + selected + "</span> ";
+
+            textarea.innerHTML = prefix + underline + suffix;
+            break;
+
+        case element.classList.contains("inline-code"):
+            const inlineCode: string = " <code>" + selected + "</code> ";
+
+            textarea.innerHTML = prefix + inlineCode + suffix;
+            break;
+
+        case element.classList.contains("code-block"):
+            const codeBlock: string = " <code>" + selected + "</code> ";
+
+            textarea.innerHTML = prefix + codeBlock + suffix;
+            break;
+
+
+        case element.classList.contains("list"):
+            const list: string = " <ul><li>" + selected + "</li></ul> ";
+
+            textarea.innerHTML = prefix + list + suffix;
+            break;
+
+
+        case element.classList.contains("color-picker"):
+            const colorPicker: HTMLInputElement = element as HTMLInputElement;
+
+            colorPicker.addEventListener("change", function (event: Event): void {
+                const selectedColor: string = (event.target as HTMLInputElement).value;
+
+                const colorPicker: string = ` <span style="color: ${selectedColor}">` + selected + "</span> ";
+
+                textarea.innerHTML = prefix + colorPicker + suffix;
+                return; // Use return to exit the event listener early
+
+            });
+            break;
+    }
+}
+
 
 async function populateTagSelect(optionsBody: Element): Promise<void> {
     const codingTags: CodingTag[] | string = await CodingTag.getCodingTags();

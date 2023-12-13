@@ -121,6 +121,8 @@ function clearSearchInput(
 
     if (noResultMessage) {
         noResultMessage.classList.add("hidden");
+        noResultMessage.classList.remove("block");
+
     }
 }
 
