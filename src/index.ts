@@ -38,7 +38,7 @@ async function setup(): Promise<void> {
 
     homeButton?.addEventListener("click", () => {
         // Redirect to the home page
-        redirect("index.html");
+        redirect("homepage.html");
     });
 
     aboutButton?.addEventListener("click", () => {
