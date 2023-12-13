@@ -64,6 +64,113 @@ async function setup(): Promise<void> {
         });
     });
 
+
+
+    const textarea: HTMLTextAreaElement = document.querySelector(".question-body-textarea");
+    const boldButton: HTMLElement | null = document.querySelector(".bold-button");
+    const italicButton: HTMLButtonElement | null = document.querySelector(".italic-button");
+    const underlineButton: HTMLButtonElement | null = document.querySelector(".underline-button");
+    const inlineCodeButton: HTMLButtonElement | null = document.querySelector(".inline-code-button");
+    const codeBlockButton: HTMLButtonElement | null = document.querySelector(".code-block-button");
+
+    boldButton?.addEventListener("click", function (): void {
+        const selected: string = textarea.value.substr(textarea.selectionStart, textarea.selectionEnd - textarea.selectionStart).trim();
+
+        if (selected) {
+            const prefix: string = textarea.value.slice(0, textarea.selectionStart);
+            const suffix: string = textarea.value.slice(textarea.selectionEnd, textarea.value.length);
+
+            const bold: string = "<b>" + selected + "</b>";
+            const italic: string = "<i>" + selected + "</i>";
+            const underline: string = "*" + selected + "*";
+            const inlineCode: string = "<code>" + selected + "</code>";
+
+            textarea.value = prefix + italic + suffix;
+        }
+
+
+
+    });
+
+
+
+
+    //
+    //
+    // function f1(e): void {
+    //     let value: string = e.value;
+    //     textarea.style.fontSize = value + "px";
+    // }
+    // function f2(e): void {
+    //     if (textarea.style.fontWeight === "bold") {
+    //         textarea.style.fontWeight = "normal";
+    //         e.classList.remove("active");
+    //     }
+    //     else {
+    //         textarea.style.fontWeight = "bold";
+    //         e.classList.add("active");
+    //     }
+    // }
+    // function f3(e): void {
+    //     if (textarea.style.fontStyle === "italic") {
+    //         textarea.style.fontStyle = "normal";
+    //         e.classList.remove("active");
+    //     }
+    //     else {
+    //         textarea.style.fontStyle = "italic";
+    //         e.classList.add("active");
+    //     }
+    // }
+    // function f4(e): void {
+    //     if (textarea.style.textDecoration === "underline") {
+    //         textarea.style.textDecoration = "none";
+    //         e.classList.remove("active");
+    //     }
+    //     else {
+    //         textarea.style.textDecoration = "underline";
+    //         e.classList.add("active");
+    //     }
+    // }
+    // function f5(e): void {
+    //     textarea.style.textAlign = "left";
+    // }
+    // function f6(e): void {
+    //     textarea.style.textAlign = "center";
+    // }
+    // function f7(e): void {
+    //     textarea.style.textAlign = "right";
+    // }
+    // function f8(e): void {
+    //     if (textarea.style.textTransform === "uppercase") {
+    //         textarea.style.textTransform = "none";
+    //         e.classList.remove("active");
+    //     }
+    //     else {
+    //         textarea.style.textTransform = "uppercase";
+    //         e.classList.add("active");
+    //     }
+    // }
+    // function f9(): void {
+    //     textarea.style.fontWeight = "normal";
+    //     textarea.style.textAlign = "left";
+    //     textarea.style.fontStyle = "normal";
+    //     textarea.style.textTransform = "capitalize";
+    //     textarea.value = "";
+    // }
+    // function f10(e): void {
+    //     textarea.style.color = e.value;
+    // }
+    // window.addEventListener("load", (): void => {
+    //     textarea.value = "";
+    // });
+
+
+
+
+
+
+
+
 }
 
 // Invoke the question detail page application entry point.

@@ -15,6 +15,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="./assets/css/create-question.css"/>
+    <link rel="stylesheet" href="./assets/css/text-editor.css"/>
 </head>
 <body>
 <!-- This HTML page is called first when the website is called in the browser -->
@@ -39,11 +40,45 @@
         <!-- Section for Question Body -->
         <section class="question-section question-body-section">
             <div class="question-container">
-                <div class="custom-text-field">
-                    <label for="problemDescription" class="label">Problem</label>
-
-                    <textarea id="problemDescription" name="problemDescription"
-                              class="question-body-textarea"></textarea>
+                <div class="question-container--inner">
+                    <div class="row">
+                        <div class="col">
+                            <div class="first box">
+                                <button type="button">
+                                    <i class="fa fa-header" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="third box">
+                                <button type="button" class="bold-button">
+                                    <i class="fa fa-bold" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="italic-button">
+                                    <i class="fa fa-italic" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="underline-button">
+                                    <i class="fa fa-underline" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="inline-code-button">
+                                    <i class="fa fa-code" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="code-block-button">
+                                    <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="fourth box">
+                                <button type="button" class="list-button">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </button>
+                                <input type="color" class="color-picker">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <textarea class="question-body-textarea" placeholder="Your text here "></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
