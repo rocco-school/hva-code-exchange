@@ -1,0 +1,19 @@
+/* Resetting default padding and margin for all elements */
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.recentQuestion {
+    height: auto;
+    width: 100%;
+}
+
+.recentQuestions .container {
+    display: flex;
+    justify-content: center;
+}
+
+.recentQuestion .container .questionBox {
+    align-self: start;
+}
