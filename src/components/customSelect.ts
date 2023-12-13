@@ -18,6 +18,16 @@ export function addClickListenersToOptions(customSelect: Element): void {
     // Add click event listeners to all options within the custom select
     customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
         option.addEventListener("click", optionClickHandler);
+
+        // Event listener for keydown event (e.g., Enter key)
+        option.addEventListener("keydown", (event: Event) => {
+            const keyDown: KeyboardEvent = event as KeyboardEvent;
+            if (keyDown.key === "Enter") {
+                optionClickHandler(event);
+            }
+        });
+
+
     });
 }
 
@@ -34,77 +44,151 @@ export function setupCustomSelect(customSelect: Element): void {
     const allTagsOption: HTMLDivElement | null = customSelect.querySelector(".option.all-tags");
     const clearButton: HTMLButtonElement | null = customSelect.querySelector(".clear");
 
-    // Event listener for 'All Tags' option
+    // Event listener for 'All Tags' option click
     allTagsOption?.addEventListener("click", function (): void {
-        const isActive: boolean = allTagsOption.classList.contains("active");
+        toggleAllTagsOption(allTagsOption, customSelect);
+    });
 
-        // Toggle 'active' class for all options (excluding 'All Tags')
-        customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
-            if (option !== allTagsOption) {
-                option.classList.toggle("active", !isActive);
-            }
-        });
-
-        // Update the selected options display
-        updateSelectedOptions(customSelect);
+    // Event listener for keydown event (e.g., Enter key) on 'All Tags' option
+    allTagsOption?.addEventListener("keydown", function (event: KeyboardEvent): void {
+        if (event.key === "Enter") {
+            toggleAllTagsOption(allTagsOption, customSelect);
+        }
     });
 
     // Event listener for 'Clear' button
     clearButton?.addEventListener("click", function (): void {
-        // Clear the search input value
-        if (searchInput) {
-            searchInput.value = "";
+        clearSearchInput(searchInput, customSelect, noResultMessage);
+    });
+
+    // Event listener for keydown event (e.g., Enter key)
+    clearButton?.addEventListener("keydown", function (event: KeyboardEvent): void {
+        if (event.key === "Enter") {
+            clearSearchInput(searchInput, customSelect, noResultMessage);
         }
-
-        // Show all options and hide 'No Result' message
-        customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
-            option.classList.add("block");
-        });
-
-        noResultMessage?.classList.add("hidden");
     });
 
     // Event listener for search input
-    searchInput?.addEventListener("input", function (): void {
-        // Get the lowercase search term
-        const searchTerm: string = searchInput?.value.toLowerCase();
+    searchInput?.addEventListener("input", (): void => {
+        handleSearchInput(searchInput, customSelect, noResultMessage, optionsContainer);
+    });
 
-        // Filter options based on the search term
-        customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
-            if (option.textContent) {
-                const optionText: string = option.textContent.trim();
-                const shouldShow: boolean = optionText.toLowerCase().includes(searchTerm);
 
-                // Show or hide options based on the search result
-                if (shouldShow) {
-                    if (option.classList.contains("hidden")) {
-                        option.classList.remove("hidden");
-                    }
-                    option.classList.add("block");
-                } else {
-                    if (option.classList.contains("block")) {
-                        option.classList.remove("block");
-                    }
-                    option.classList.add("hidden");
-                }
-            }
-        });
+}
 
-        // Check if any options match the search term
-        const options: NodeListOf<Element> = customSelect.querySelectorAll(".option");
-        const anyOptionsMatch: boolean = Array.from(options).some(option => option.classList.contains("block"));
 
-        // Show or hide 'No Result' message based on search results
-        if (anyOptionsMatch) noResultMessage?.classList.add("hidden");
-        if (!anyOptionsMatch) noResultMessage?.classList.add("block");
-
-        // Toggle class based on whether there's a search term
-        if (searchTerm) {
-            optionsContainer?.classList.add("option-search-active");
-        } else {
-            optionsContainer?.classList.remove("option-search-active");
+/**
+ * Toggles the 'active' class for all options excluding the 'All Tags' option.
+ *
+ * @param {Element} allTagsOption - The 'All Tags' option element.
+ * @param {Element} customSelect - The custom select element.
+ */
+function toggleAllTagsOption(allTagsOption: Element, customSelect: Element): void {
+    // Toggle 'active' class for all options (excluding 'All Tags')
+    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+        if (option !== allTagsOption) {
+            option.classList.toggle("active");
         }
     });
+
+    // Update the selected options display
+    updateSelectedOptions(customSelect);
+}
+
+
+/**
+ * Clears the search input and resets the options display.
+ *
+ * @param {HTMLInputElement | null} searchInput - The search input element.
+ * @param {Element} customSelect - The custom select element.
+ * @param {Element | null} noResultMessage - The element to display when there are no search results.
+ */
+function clearSearchInput(
+    searchInput: HTMLInputElement | null,
+    customSelect: Element,
+    noResultMessage: Element | null
+): void {
+    if (!searchInput) return;
+
+    // Clear the search input value
+    searchInput.value = "";
+
+    // Show all options and hide 'No Result' message
+    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+        option.classList.add("block");
+        option.classList.remove("hidden");
+    });
+
+    if (noResultMessage) {
+        noResultMessage.classList.add("hidden");
+    }
+}
+
+
+/**
+ * Handles the input event on a search input, filtering options in a custom select.
+ *
+ * @param {HTMLInputElement | null} searchInput - The search input element.
+ * @param {Element} customSelect - The custom select element.
+ * @param {Element | null} noResultMessage - The element to display when there are no search results.
+ * @param {HTMLDivElement | null} optionsContainer - The container for the options.
+ */
+function handleSearchInput(
+    searchInput: HTMLInputElement | null,
+    customSelect: Element,
+    noResultMessage: Element | null,
+    optionsContainer: HTMLDivElement | null
+): void {
+    // Check if any required elements are missing
+    if (!searchInput || !customSelect || !noResultMessage || !optionsContainer) return;
+
+    // Get the lowercase search term
+    const searchTerm: string = searchInput.value.toLowerCase();
+
+    // Filter options based on the search term
+    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+        if (option.textContent) {
+            const optionText: string = option.textContent.trim();
+            const shouldShow: boolean = optionText.toLowerCase().includes(searchTerm);
+
+            // Show or hide options based on the search result
+            if (shouldShow) {
+                if (option.classList.contains("hidden")) {
+                    option.classList.remove("hidden");
+                }
+                option.classList.add("block");
+            } else {
+                if (option.classList.contains("block")) {
+                    option.classList.remove("block");
+                }
+                option.classList.add("hidden");
+            }
+        }
+    });
+
+    // Check if any options match the search term
+    const options: NodeListOf<Element> = customSelect.querySelectorAll(".option");
+    const anyOptionsMatch: boolean = Array.from(options).some(option => option.classList.contains("block"));
+
+    console.log(anyOptionsMatch);
+
+    // Show or hide 'No Result' message based on search results
+    if (anyOptionsMatch) {
+        noResultMessage.classList.remove("block");
+        noResultMessage.classList.add("hidden");
+    }
+
+    if (!anyOptionsMatch) {
+        noResultMessage.classList.remove("hidden");
+        noResultMessage.classList.add("block");
+    }
+
+    // Toggle class based on whether there's a search term
+    if (searchTerm) {
+        optionsContainer.classList.add("option-search-active");
+    } else {
+        optionsContainer.classList.remove("option-search-active");
+    }
 }
 
 
@@ -158,21 +242,33 @@ export function setupSelectBoxClickHandling(selectBoxes: NodeListOf<Element>): v
      *
      * @param {Event} event - The click event.
      */
-    function selectBoxClickHandler(event: Event): void {
-        const targetElem: HTMLElement = event.target as HTMLElement;
+    function selectBoxClickHandler(event: MouseEvent | KeyboardEvent): void {
+        if (event.type === "click" || (event.type === "keydown" && (event as KeyboardEvent).key === "Enter")) {
+            const targetElem: HTMLElement = event.target as HTMLElement;
 
-        // Check if the clicked element is not inside a ".tag" element
-        if (!targetElem.closest(".tag")) {
-            const parentElem: HTMLElement | null = targetElem.parentElement;
-            if (parentElem) {
-                parentElem.classList.toggle("open");
+            // Check if the clicked element is not inside a ".tag" element
+            if (!targetElem.closest(".tag")) {
+                const parentElem: HTMLElement | null = targetElem.parentElement;
+                if (parentElem) {
+                    parentElem.classList.toggle("open");
+                }
+            }
+
+            if (targetElem.classList.contains("open-select-box")) {
+                const customSelect: Element | null = document.querySelector(".custom-select");
+
+                if (customSelect) {
+                    customSelect.classList.toggle("open");
+                }
             }
         }
     }
 
     // Add click event listeners to all select boxes
     selectBoxes.forEach(function (selectBox: Element): void {
-        selectBox.addEventListener("click", selectBoxClickHandler);
+        const select: HTMLDivElement = selectBox as HTMLDivElement;
+        select.addEventListener("click", selectBoxClickHandler);
+        select.addEventListener("keydown", selectBoxClickHandler);
     });
 }
 
@@ -306,7 +402,7 @@ export function updateSelectedOptions(customSelect: Element): void {
 
     // Generate HTML for displaying selected tags
     if (selectedOptions.length === 0) {
-        tagsHtml = "<span class=\"holder\">Select the tags</span>";
+        tagsHtml = "<span class=\"holder open-select-box\">Select the tags</span>";
     } else {
         const maxTagsToShow: number = 4;
         let additionalTagsCount: number = 0;

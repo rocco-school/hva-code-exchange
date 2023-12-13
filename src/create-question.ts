@@ -184,7 +184,7 @@ async function populateTagSelect(optionsBody: Element): Promise<void> {
     for (const codingTag of codingTags) {
         const tag: CodingTag = codingTag as CodingTag;
 
-        const newOption: string = "<div class=\"option\" data-value=\"" + tag.tagId + "\">" + tag.tagName + "</div>";
+        const newOption: string = "<div class=\"option\" tabindex=\"0\" data-value=\"" + tag.tagId + "\">" + tag.tagName + "</div>";
         optionsBody.innerHTML += newOption;
     }
 }
