@@ -1,3 +1,4 @@
+// Import necessary modules and configurations
 import "./config";
 import { api } from "@hboictcloud/api";
 import { QUESTION_QUERY } from "./query/question.query";
@@ -8,15 +9,15 @@ async function getMostRecentQuestions(): Promise<void> {
     try {
         // Fetch recent questions from the database using an API call
         const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_FIVE_QUESTIONS) as [Question];
-        
+
         // Select the HTML element where recent questions will be displayed
         const recentQuestionsBody: HTMLElement | null = document.querySelector(".recentQuestions");
-        
+
         // Log the fetched recent questions to the console for debugging
         console.log(recentQuestions);
-        
+
         // Iterate through each recent question and render it in the UI
-        recentQuestions.forEach((question): void => {
+        recentQuestions.forEach(async (question): Promise<void> => {
             // Create a new Question object based on the fetched question data
             const singleQuestion: Question = new Question(
                 question.questionId,
@@ -41,61 +42,91 @@ async function getMostRecentQuestions(): Promise<void> {
                 ul.classList.add("questionBox");
 
                 // Question Stats
-                const QuestionStatsContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
-                QuestionStatsContainer.classList.add("questionStats");
+                const questionStatsContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
+                questionStatsContainer.classList.add("questionStats");
 
                 // Create UI elements for question stats (upvote, downvote, votes count, answers count, posted at, updated at)
-                const questionUpvote: HTMLButtonElement = QuestionStatsContainer.appendChild(document.createElement("button"));
+
+                // Upvote Button
+                const liQuestionUpvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
+                const questionUpvote: HTMLButtonElement = liQuestionUpvote.appendChild(document.createElement("button"));
                 questionUpvote.id = "questionUpvote";
-                questionUpvote.innerHTML = "upvote";
+                questionUpvote.innerHTML = "upvote"; // TODO add a row in the database for upvotes
 
-                const questionVotes: HTMLDivElement = QuestionStatsContainer.appendChild(document.createElement("div"));
+                // Votes Count
+                const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
+                const questionVotes: HTMLDivElement = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.id = "questionVotes";
-                questionVotes.innerHTML = "0";
+                questionVotes.innerHTML = "0"; // TODO a function to calculate the amount of votes 
 
-                const questionDownvote: HTMLButtonElement = QuestionStatsContainer.appendChild(document.createElement("button"));
+                // Downvote Button
+                const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
+                const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
                 questionDownvote.id = "questionDownvote";
-                questionDownvote.innerHTML = "Downvote";
+                questionDownvote.innerHTML = "Downvote"; // TODO add a row in the database for downvotes
 
-                const questionAnswers: HTMLDivElement = QuestionStatsContainer.appendChild(document.createElement("div"));
+                // Answers Count
+                const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
+                const questionAnswers: HTMLDivElement = liquestionAnswers.appendChild(document.createElement("div"));
                 questionAnswers.id = "questionAnswers";
-                questionAnswers.innerHTML = "answers:" + 0;
+                questionAnswers.innerHTML = "answers:" + 0; 
 
-                const questionPostedAt: HTMLDivElement = QuestionStatsContainer.appendChild(document.createElement("div"));
+                // Posted At
+                const liquestionPostedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
+                const questionPostedAt: HTMLDivElement = liquestionPostedAt.appendChild(document.createElement("div"));
                 questionPostedAt.id = "questionPostedAt";
-                
+
                 // Display the posted timestamp for the question
                 if (questionPostedAt) {
                     questionPostedAt.innerHTML = "posted at: " + singleQuestion.createdAt;
                 }
 
-                const questionUpdatedAt: HTMLDivElement = QuestionStatsContainer.appendChild(document.createElement("div"));
+                // Updated At
+                const liquestionUpdatedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
+                const questionUpdatedAt: HTMLDivElement = liquestionUpdatedAt.appendChild(document.createElement("div"));
                 questionUpdatedAt.id = "questionUpdatedAt";
                 questionUpdatedAt.innerHTML = "updated at: " + singleQuestion.createdAt;
 
                 // Question Content
-                const QuestionContentContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
-                QuestionContentContainer.classList.add("questionContent");
+                const questionContentContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
+                questionContentContainer.classList.add("questionContent");
 
                 // Display the question title
-                const questionTitle: HTMLHeadElement = QuestionContentContainer.appendChild(document.createElement("h3"));
+                const liQuestionTitle: HTMLLIElement = questionContentContainer.appendChild(document.createElement("li"));
+                const questionTitle: HTMLHeadElement = liQuestionTitle.appendChild(document.createElement("h3"));
                 questionTitle.id = "questionTitle";
-                
+
                 if (questionTitle) {
                     questionTitle.innerHTML = singleQuestion.questionTitle;
                 }
 
                 // Display an example of the question body
-                const questionBodyExample: HTMLParagraphElement = QuestionContentContainer.appendChild(document.createElement("p"));
+                const liQuestionBodyExample: HTMLLIElement = questionContentContainer.appendChild(document.createElement("li"));
+                const questionBodyExample: HTMLParagraphElement = liQuestionBodyExample.appendChild(document.createElement("p"));
                 questionBodyExample.id = "questionBodyExample";
-                
+
                 if (questionBodyExample) {
                     questionBodyExample.innerHTML = singleQuestion.questionBody;
                 }
 
                 // Question User
-                const QuestionUserContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
-                QuestionUserContainer.classList.add("questionUser");
+                const questionUserContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
+                questionUserContainer.classList.add("questionUser"); 
+
+                // Question Creator Picture
+                const liQuestionCreatorPicture: HTMLLIElement = questionUserContainer.appendChild(document.createElement("li"));
+                const questionCreatorPicture: HTMLImageElement = liQuestionCreatorPicture.appendChild(document.createElement("img"));
+                questionCreatorPicture.id = "creatorPicture";
+
+                // Question Creator
+                const liQuestionCreator: HTMLLIElement = questionUserContainer.appendChild(document.createElement("li"));
+                const questionCreator: HTMLDivElement = liQuestionCreator.appendChild(document.createElement("div"));
+                questionCreator.id = "questionCreator";
+
+                if (questionCreator) {
+                }
+
+                // TODO integrate tags into the questions
             }
         });
 
@@ -107,3 +138,5 @@ async function getMostRecentQuestions(): Promise<void> {
 
 // Invoke the function to fetch and display the most recent questions
 getMostRecentQuestions();
+
+
