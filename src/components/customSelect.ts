@@ -323,27 +323,19 @@ export function validateCustomSelects(customSelects: NodeListOf<Element>): boole
  */
 export function handleButtonClick(): Promise<string | null> {
     return new Promise((resolve): void => {
-        const submitButton: Element | null = document.querySelector(".btn_submit");
+        const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
+        const isValid: boolean = validateCustomSelects(customSelects);
 
-        // Check if the submit button is found
-        if (submitButton) {
-            submitButton.addEventListener("click", function (): void {
-                // Logic to handle the click event
-                const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
-                const isValid: boolean = validateCustomSelects(customSelects);
+        if (isValid) {
+            const tagsInput: HTMLInputElement = document.querySelector(".tags_input") as HTMLInputElement;
+            const customSelectInput: string = tagsInput.value;
+            resetCustomSelects();
 
-                if (isValid) {
-                    const tagsInput: HTMLInputElement = document.querySelector(".tags_input") as HTMLInputElement;
-                    const customSelectInput: string = tagsInput.value;
-                    resetCustomSelects();
-
-                    // Resolve the promise with the result
-                    resolve(customSelectInput);
-                } else {
-                    // Resolve the promise with null if not valid
-                    resolve(null);
-                }
-            });
+            // Resolve the promise with the result
+            resolve(customSelectInput);
+        } else {
+            // Resolve the promise with null if not valid
+            resolve(null);
         }
     });
 }

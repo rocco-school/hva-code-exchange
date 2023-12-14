@@ -8,6 +8,10 @@ import {
     updateSelectedOptions
 } from "./components/customSelect";
 import {CodingTag} from "./models/codingTag";
+import {JWTPayload} from "jose";
+import {security} from "./components/security";
+import {url} from "@hboictcloud/api";
+import {Question} from "./models/question";
 
 /**
  * The main application entry point for the create-question page.
@@ -18,11 +22,31 @@ import {CodingTag} from "./models/codingTag";
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
+    // Check the security status by calling the 'security' function.
+    const loginStatus: JWTPayload | boolean = await security();
+
+    // If the user is authenticated (loginStatus is true), redirect them to the index.html page.
+    if (!loginStatus) {
+        url.redirect("/question-list.html");
+    }
+
     const selectOptions: Element | null = document.querySelector(".options");
     if (selectOptions) await populateTagSelect(selectOptions);
 
     // Select all elements with the class "custom-select"
     const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
+    const postButton: HTMLButtonElement | null = document.querySelector(".btn_submit");
+    const textarea: HTMLDivElement | null = document.querySelector(".question-body-textarea");
+    const questionTitleInput: HTMLInputElement | null = document.querySelector(".question-title-input");
+    const boldButton: HTMLButtonElement | null = document.querySelector(".bold");
+    const italicButton: HTMLButtonElement | null = document.querySelector(".italic");
+    const underlineButton: HTMLButtonElement | null = document.querySelector(".underline");
+    const inlineCodeButton: HTMLButtonElement | null = document.querySelector(".inline-code");
+    const codeBlockButton: HTMLButtonElement | null = document.querySelector(".code-block");
+    const listButton: HTMLButtonElement | null = document.querySelector(".list");
+    const colorPickerButton: HTMLButtonElement | null = document.querySelector(".color-picker");
+    const selectBoxes: NodeListOf<Element> = document.querySelectorAll(".select-box");
+
 
     // Update selected options for each custom select
     customSelects.forEach(item => {
@@ -38,69 +62,95 @@ async function setup(): Promise<void> {
     // Add a click event listener to the document for handling custom select elements and removing tags
     document.addEventListener("click", handleDocumentClick);
 
-    // Select all elements with the class "select-box"
-    const selectBoxes: NodeListOf<Element> = document.querySelectorAll(".select-box");
-
     // Set up click event handling for select boxes
     setupSelectBoxClickHandling(selectBoxes);
 
     // Update selected options for the first custom select (assuming there's at least one)
     updateSelectedOptions(customSelects[0]);
 
-    // Select the submit button with the class "btn_submit"
-    const submitButton: Element | null = document.querySelector(".btn_submit");
-
     // Add a click event listener to the submit button to handle the click
-    submitButton?.addEventListener("click", async function (): Promise<void> {
+    postButton!.addEventListener("click", async function (): Promise<void> {
+        let questionTags: any[] = [];
+        let questionTitle: string = "";
+        let questionBody: string = "";
         // Use the async function handleButtonClick when the submit button is clicked
-        handleButtonClick().then((result: string | null): void => {
+        await handleButtonClick().then((result: string | null): void => {
             if (result !== null) {
                 // Handle the valid result
-                console.log(result);
+                const tags: string[] = result.split(", ");
+
+                for (const tagsKey in tags) {
+                    questionTags.push(tags[tagsKey]);
+                }
+
             } else {
                 // Handle the case where the input is not valid
                 console.log("Input is not valid.");
             }
         });
+
+        if (questionTitleInput) {
+            questionTitle = questionTitleInput.value;
+        }
+
+        if (textarea) {
+            questionBody = textarea.innerHTML;
+        }
+
+        if (questionTitle && questionBody && questionTags.length !== 0) {
+            const userId: number = loginStatus["userId"];
+
+            const questionObject: Question = new Question(
+                null,
+                userId,
+                questionTitle,
+                questionBody,
+                false,
+                null,
+                null,
+            );
+
+            const question: Question[] | string = await questionObject.saveQuestion();
+
+            const questionId: number = question["insertId"];
+            if (questionId) {
+                const createQuestionTags: number | string = await Question.insertQuestionTag(questionId, questionTags);
+
+                console.log(createQuestionTags);
+            }
+        }
     });
 
-
-    const textarea: HTMLDivElement | null = document.querySelector(".question-body-textarea");
-    const boldButton: HTMLButtonElement | null = document.querySelector(".bold");
-    const italicButton: HTMLButtonElement | null = document.querySelector(".italic");
-    const underlineButton: HTMLButtonElement | null = document.querySelector(".underline");
-    const inlineCodeButton: HTMLButtonElement | null = document.querySelector(".inline-code");
-    const codeBlockButton: HTMLButtonElement | null = document.querySelector(".code-block");
-    const listButton: HTMLButtonElement | null = document.querySelector(".list");
-    const colorPickerButton: HTMLButtonElement | null = document.querySelector(".color-picker");
-
     if (textarea) {
-        boldButton?.addEventListener("click", () => {
-            console.log(textarea);
+
+        boldButton!.addEventListener("click", (): void => {
             checkTextStyle(boldButton, textarea);
         });
 
-        italicButton?.addEventListener("click", () => {
+        italicButton!.addEventListener("click", (): void => {
             checkTextStyle(italicButton, textarea);
         });
 
-        underlineButton?.addEventListener("click", () => {
+
+        underlineButton!.addEventListener("click", (): void => {
             checkTextStyle(underlineButton, textarea);
         });
 
-        inlineCodeButton?.addEventListener("click", () => {
+        inlineCodeButton!.addEventListener("click", (): void => {
             checkTextStyle(inlineCodeButton, textarea);
         });
 
-        codeBlockButton?.addEventListener("click", () => {
+        codeBlockButton!.addEventListener("click", (): void => {
             checkTextStyle(codeBlockButton, textarea);
         });
 
-        listButton?.addEventListener("click", () => {
-            checkTextStyle(listButton, textarea);
-        });
+        if (listButton) {
+            listButton!.addEventListener("click", (): void => {
+                checkTextStyle(listButton, textarea);
+            });
+        }
 
-        colorPickerButton?.addEventListener("click", () => {
+        colorPickerButton!.addEventListener("click", (): void => {
             checkTextStyle(colorPickerButton, textarea);
         });
     }
@@ -119,6 +169,30 @@ async function checkTextStyle(element: any, textarea: HTMLDivElement): Promise<v
         return;
     }
 
+    let surroundedTag: string | null = null;
+
+    if (selection && selection.rangeCount > 0) {
+        const range: Range = selection.getRangeAt(0);
+        const startContainer: Node = range.startContainer;
+        const endContainer: Node = range.endContainer;
+
+        let currentNode: Node | null = startContainer.parentNode;
+        const surroundingTags: string[] = [];
+
+        while (currentNode && currentNode !== endContainer.parentNode) {
+            if (currentNode instanceof Element) {
+                surroundingTags.push(currentNode.tagName.toLowerCase());
+            }
+            currentNode = currentNode.parentNode;
+        }
+
+        if (surroundingTags.length > 0) {
+            surroundedTag = surroundingTags.join(", ");
+            console.log(`The selected text is surrounded by the following tags: ${surroundingTags.join(", ")}`);
+        } else {
+            console.log("The selected text is not surrounded by any tags.");
+        }
+    }
     const range: Range = selection.getRangeAt(0);
     const allContent: string = textarea.innerHTML;
 
@@ -141,19 +215,10 @@ async function checkTextStyle(element: any, textarea: HTMLDivElement): Promise<v
     afterSelectedRange.setEnd(allContentRange.endContainer, allContentRange.endOffset);
 
     // Extract the HTML content from the ranges
-    const selectedConte: DocumentFragment = range.cloneContents();
+    const selected: string = range.cloneContents().textContent.trim();
 
-    const beforeNice: string = getFullHtmlBeforeSelection(beforeSelectedRange);
-    const afterNice: string = getFullHtmlAfterSelection(afterSelectedRange);
-
-    console.log(beforeNice);
-    console.log(selectedConte.textContent);
-    console.log(afterNice);
-
-    console.log("NEXT");
-
-
-
+    const beforeContent: string = getFullHtmlBeforeSelection(beforeSelectedRange);
+    const afterContent: string = getFullHtmlAfterSelection(afterSelectedRange);
 
     function getFullHtmlBeforeSelection(beforeRange: Range): string {
         const beforeContainer: HTMLDivElement = document.createElement("div");
@@ -169,57 +234,54 @@ async function checkTextStyle(element: any, textarea: HTMLDivElement): Promise<v
         return afterContainer.innerHTML;
     }
 
+    const before: string = beforeContent.replace(/<[^\/>][^>]*>\s*<\/[^>]+>/g, "");
+    const after: string = afterContent.replace(/<[^\/>][^>]*>\s*<\/[^>]+>/g, "");
 
+    let prefix: string = before;
+    let suffix: string = after;
 
-    const selected: string = selection.toString().trim();
+    if (surroundedTag) {
+        const startTag: string = "<" + surroundedTag + ">";
+        const endTag: string = "</" + surroundedTag + ">";
 
-    // get tekst before selected tekst
-    const beforeSelected: Range = range.cloneRange();
-    beforeSelected.selectNodeContents(textarea);
-    beforeSelected.setEnd(range.startContainer, range.startOffset);
-    const prefix: string = beforeSelected.toString().trim();
-
-    // Get tekst after selected tekst.
-    const afterSelected: Range = range.cloneRange();
-    afterSelected.selectNodeContents(textarea);
-    afterSelected.setStart(range.endContainer, range.endOffset);
-    const suffix: string = afterSelected.toString().trim();
-
+        prefix = before + startTag;
+        suffix = endTag + after;
+    }
 
     switch (true) {
         case element.classList.contains("bold"):
-            const bold: string = " <b>" + selected + "</b> ";
+            const bold: string = "<b>" + selected + "</b> ";
 
             textarea.innerHTML = prefix + bold + suffix;
             break;
 
         case element.classList.contains("italic"):
-            const italic: string = " <i>" + selected + "</i> ";
+            const italic: string = "<i>" + selected + "</i> ";
 
             textarea.innerHTML = prefix + italic + suffix;
             break;
 
         case element.classList.contains("underline"):
-            const underline: string = " <span style='text-decoration: underline'>" + selected + "</span> ";
+            const underline: string = "<span style='text-decoration: underline'>" + selected + "</span> ";
 
             textarea.innerHTML = prefix + underline + suffix;
             break;
 
         case element.classList.contains("inline-code"):
-            const inlineCode: string = " <code>" + selected + "</code> ";
+            const inlineCode: string = "<code>" + selected + "</code> ";
 
             textarea.innerHTML = prefix + inlineCode + suffix;
             break;
 
         case element.classList.contains("code-block"):
-            const codeBlock: string = " <code>" + selected + "</code> ";
+            const codeBlock: string = "<code>" + selected + "</code> ";
 
             textarea.innerHTML = prefix + codeBlock + suffix;
             break;
 
 
         case element.classList.contains("list"):
-            const list: string = " <ul><li>" + selected + "</li></ul> ";
+            const list: string = "<ul><li>" + selected + "</li></ul> ";
 
             textarea.innerHTML = prefix + list + suffix;
             break;

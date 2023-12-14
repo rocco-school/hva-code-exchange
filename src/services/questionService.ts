@@ -90,6 +90,32 @@ export class QuestionService {
     }
 
     /**
+     * Inserts tags for a given question into the database.
+     *
+     * @param {number} questionId - The ID of the question.
+     * @param {number[]} tagIds - An array of tag IDs to associate with the question.
+     * @returns {Promise<number>} A Promise resolving to the question ID.
+     * @throws {Error} Throws an error if the database insertion was not successful.
+     */
+    public static async insertQuestionTag(questionId: number, tagIds: number[]): Promise<number> {
+        for (const tagId of tagIds) {
+            const questionTagData: [number, number] = [questionId, tagId];
+
+            // Query the database to insert the question-tag association.
+            const createdQuestionTag: any = await api.queryDatabase(
+                QUESTION_QUERY.CREATE_QUESTION_TAG,
+                ...questionTagData
+            ) as any;
+
+            // Check if the database insertion was successful.
+            if (!createdQuestionTag) {
+                throw new Error(`Failed to insert question tags for question with ID: ${questionId}`);
+            }
+        }
+        return questionId;
+    }
+
+    /**
      * delete a question in the database.
      *
      * @returns {Promise<[Question]>} A Promise resolving to the deleted question.

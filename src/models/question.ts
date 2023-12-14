@@ -148,6 +148,25 @@ export class Question {
         }
     }
 
+
+    /**
+     * Inserts tags for a given question into the database.
+     *
+     * @param {number} questionId - The ID of the question.
+     * @param {number[]} tagIds - An array of tag IDs to associate with the question.
+     * @returns {Promise<number | string>} A Promise resolving to either the question ID or an error message.
+     * @throws {Error} Throws an error if the insertion operation fails.
+     */
+    public static async insertQuestionTag(questionId: number, tagIds: number[]): Promise<number | string> {
+        try {
+            // Call the insertQuestionTag method from the service.
+            return await QuestionService.insertQuestionTag(questionId, tagIds);
+        } catch (error) {
+            // Handle any errors that occur during the process.
+            return `Error inserting question tags: ${error}`;
+        }
+    }
+
     /**
      * Deletes a question from the database using the service.
      *
