@@ -65,13 +65,13 @@
     overflow: visible;
 }
 
-.recentQuestions .questionBox .questionContent #questionTags{
+.recentQuestions .questionBox .questionContent .questionTags{
     display: flex;
     flex-direction: row;
     align-content: center;
 }
 
-.recentQuestions .questionBox .questionContent #questionTags li{
+.recentQuestions .questionBox .questionContent #questionTag li{
     margin-right: 0.5rem ;
 }
 
