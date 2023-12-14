@@ -38,13 +38,13 @@ async function setup(): Promise<void> {
     const postButton: HTMLButtonElement | null = document.querySelector(".btn_submit");
     const textarea: HTMLDivElement | null = document.querySelector(".question-body-textarea");
     const questionTitleInput: HTMLInputElement | null = document.querySelector(".question-title-input");
-    const boldButton: HTMLButtonElement | null = document.querySelector(".bold");
-    const italicButton: HTMLButtonElement | null = document.querySelector(".italic");
-    const underlineButton: HTMLButtonElement | null = document.querySelector(".underline");
-    const inlineCodeButton: HTMLButtonElement | null = document.querySelector(".inline-code");
-    const codeBlockButton: HTMLButtonElement | null = document.querySelector(".code-block");
-    const listButton: HTMLButtonElement | null = document.querySelector(".list");
-    const colorPickerButton: HTMLButtonElement | null = document.querySelector(".color-picker");
+    const boldButton: HTMLElement | null = document.querySelector(".bold");
+    const italicButton: HTMLElement | null = document.querySelector(".italic");
+    const underlineButton: HTMLElement | null = document.querySelector(".underline");
+    const inlineCodeButton: HTMLElement | null = document.querySelector(".inline-code");
+    const codeBlockButton: HTMLElement | null = document.querySelector(".code-block");
+    const listButton: HTMLElement | null = document.querySelector(".list");
+    const colorPickerButton: HTMLElement | null = document.querySelector(".color-picker");
     const selectBoxes: NodeListOf<Element> = document.querySelectorAll(".select-box");
 
 
@@ -124,24 +124,24 @@ async function setup(): Promise<void> {
     if (textarea) {
 
         boldButton!.addEventListener("click", (): void => {
-            checkTextStyle(boldButton, textarea);
+            checkTextStyle(boldButton as HTMLElement, textarea);
         });
 
         italicButton!.addEventListener("click", (): void => {
-            checkTextStyle(italicButton, textarea);
+            checkTextStyle(italicButton as HTMLElement, textarea);
         });
 
 
         underlineButton!.addEventListener("click", (): void => {
-            checkTextStyle(underlineButton, textarea);
+            checkTextStyle(underlineButton as HTMLElement, textarea);
         });
 
         inlineCodeButton!.addEventListener("click", (): void => {
-            checkTextStyle(inlineCodeButton, textarea);
+            checkTextStyle(inlineCodeButton as HTMLElement, textarea);
         });
 
         codeBlockButton!.addEventListener("click", (): void => {
-            checkTextStyle(codeBlockButton, textarea);
+            checkTextStyle(codeBlockButton as HTMLElement, textarea);
         });
 
         if (listButton) {
@@ -151,7 +151,7 @@ async function setup(): Promise<void> {
         }
 
         colorPickerButton!.addEventListener("click", (): void => {
-            checkTextStyle(colorPickerButton, textarea);
+            checkTextStyle(colorPickerButton as HTMLElement, textarea);
         });
     }
 
@@ -161,16 +161,64 @@ async function setup(): Promise<void> {
 await setup();
 
 
-async function checkTextStyle(element: any, textarea: HTMLDivElement): Promise<void> {
-    // const selected: string = textarea.value.substr(textarea.selectionStart, textarea.selectionEnd - textarea.selectionStart).trim();
-
+/**
+ * Checks the surrounding tags of the selected text in a textarea and modifies the content accordingly.
+ *
+ * @param {HTMLElement} element - The element triggering the text style change.
+ * @param {HTMLDivElement} textarea - The textarea element.
+ * @returns {Promise<void>} A Promise resolving after the content modification is complete.
+ */
+async function checkTextStyle(element: HTMLElement, textarea: HTMLDivElement): Promise<void> {
     const selection: Selection | null = window.getSelection();
     if (!selection || selection.rangeCount === 0) {
         return;
     }
 
-    let surroundedTag: string | null = null;
+    const surroundedTag: string | null = getSurroundedTag(selection);
 
+    const {beforeContent, afterContent} = extractBeforeAfterContent(selection, textarea);
+
+    const {prefix, suffix} = getPrefixSuffix(beforeContent, afterContent, surroundedTag);
+
+    switch (true) {
+        case element.classList.contains("bold"):
+            applyTextStyle(textarea, prefix, suffix, "b", selection);
+            break;
+
+        case element.classList.contains("italic"):
+            applyTextStyle(textarea, prefix, suffix, "i", selection);
+            break;
+
+        case element.classList.contains("underline"):
+            applyTextStyle(textarea, prefix, suffix, "span style='text-decoration: underline'", selection);
+            break;
+
+        case element.classList.contains("inline-code"):
+            applyTextStyle(textarea, prefix, suffix, "code", selection);
+            break;
+
+        case element.classList.contains("code-block"):
+            applyTextStyle(textarea, prefix, suffix, "code", selection);
+            break;
+
+        case element.classList.contains("list"):
+            applyListStyle(textarea, prefix, suffix, selection);
+            break;
+
+        case element.classList.contains("color-picker"):
+            applyColorPicker(textarea, prefix, suffix, element);
+            break;
+    }
+}
+
+
+/**
+ * Gets the tag(s) that surround the selected text.
+ *
+ * @param {Selection} selection - The current text selection.
+ * @returns {string | null} The surrounded tag(s) or null if none.
+ */
+function getSurroundedTag(selection: Selection): string | null {
     if (selection && selection.rangeCount > 0) {
         const range: Range = selection.getRangeAt(0);
         const startContainer: Node = range.startContainer;
@@ -186,121 +234,153 @@ async function checkTextStyle(element: any, textarea: HTMLDivElement): Promise<v
             currentNode = currentNode.parentNode;
         }
 
-        if (surroundingTags.length > 0) {
-            surroundedTag = surroundingTags.join(", ");
-            console.log(`The selected text is surrounded by the following tags: ${surroundingTags.join(", ")}`);
-        } else {
-            console.log("The selected text is not surrounded by any tags.");
-        }
+        return surroundingTags.length > 0 ? surroundingTags.join(", ") : null;
     }
+
+    return null;
+}
+
+/**
+ * Extracts the content before and after the selected text.
+ *
+ * @param {Selection} selection - The current text selection.
+ * @param {HTMLDivElement} textarea - The textarea element.
+ * @returns {Object} An object containing `beforeContent` and `afterContent`.
+ */
+function extractBeforeAfterContent(selection: Selection, textarea: HTMLDivElement): {
+    beforeContent: string,
+    afterContent: string
+} {
     const range: Range = selection.getRangeAt(0);
     const allContent: string = textarea.innerHTML;
 
-    // Create a range to encompass the entire content
     const allContentRange: Range = document.createRange();
     allContentRange.selectNodeContents(textarea);
 
-    // Create a range to encompass the selected content
-    const selectedContentRange: Range = range.cloneRange();
-    selectedContentRange.selectNodeContents(range.commonAncestorContainer);
-
-    // Create a range to encompass the content before the selection
     const beforeSelectedRange: Range = document.createRange();
     beforeSelectedRange.setStart(allContentRange.startContainer, allContentRange.startOffset);
     beforeSelectedRange.setEnd(range.startContainer, range.startOffset);
 
-    // Create a range to encompass the content after the selection
     const afterSelectedRange: Range = document.createRange();
     afterSelectedRange.setStart(range.endContainer, range.endOffset);
     afterSelectedRange.setEnd(allContentRange.endContainer, allContentRange.endOffset);
 
-    // Extract the HTML content from the ranges
-    const selected: string = range.cloneContents().textContent.trim();
+    const beforeContent: string = getFullHtmlBeforeSelection(beforeSelectedRange).replace(/<[^\/>][^>]*>\s*<\/[^>]+>/g, "");
+    const afterContent: string = getFullHtmlAfterSelection(afterSelectedRange).replace(/<[^\/>][^>]*>\s*<\/[^>]+>/g, "");
 
-    const beforeContent: string = getFullHtmlBeforeSelection(beforeSelectedRange);
-    const afterContent: string = getFullHtmlAfterSelection(afterSelectedRange);
+    return {beforeContent, afterContent};
+}
 
-    function getFullHtmlBeforeSelection(beforeRange: Range): string {
-        const beforeContainer: HTMLDivElement = document.createElement("div");
-        beforeContainer.appendChild(beforeRange.cloneContents());
-
-        return beforeContainer.innerHTML;
-    }
-
-    function getFullHtmlAfterSelection(afterRange: Range): string {
-        const afterContainer: HTMLDivElement = document.createElement("div");
-        afterContainer.appendChild(afterRange.cloneContents());
-
-        return afterContainer.innerHTML;
-    }
-
-    const before: string = beforeContent.replace(/<[^\/>][^>]*>\s*<\/[^>]+>/g, "");
-    const after: string = afterContent.replace(/<[^\/>][^>]*>\s*<\/[^>]+>/g, "");
-
-    let prefix: string = before;
-    let suffix: string = after;
+/**
+ * Gets the prefix and suffix for modifying content based on surrounded tags.
+ *
+ * @param {string} beforeContent - The content before the selected text.
+ * @param {string} afterContent - The content after the selected text.
+ * @param {string | null} surroundedTag - The surrounded tag(s).
+ * @returns {Object} An object containing `prefix` and `suffix`.
+ */
+function getPrefixSuffix(beforeContent: string, afterContent: string, surroundedTag: string | null): {
+    prefix: string,
+    suffix: string
+} {
+    let prefix: string = beforeContent;
+    let suffix: string = afterContent;
 
     if (surroundedTag) {
-        const startTag: string = "<" + surroundedTag + ">";
-        const endTag: string = "</" + surroundedTag + ">";
+        const startTag: string = `<${surroundedTag}>`;
+        const endTag: string = `</${surroundedTag}>`;
 
-        prefix = before + startTag;
-        suffix = endTag + after;
+        prefix = beforeContent + startTag;
+        suffix = endTag + afterContent;
     }
 
-    switch (true) {
-        case element.classList.contains("bold"):
-            const bold: string = "<b>" + selected + "</b> ";
+    return {prefix, suffix};
+}
 
-            textarea.innerHTML = prefix + bold + suffix;
-            break;
+/**
+ * Gets the full HTML content before the selection.
+ *
+ * @param {Range} beforeRange - The range representing the content before the selection.
+ * @returns {string} The HTML content before the selection.
+ */
+function getFullHtmlBeforeSelection(beforeRange: Range): string {
+    const beforeContainer: HTMLDivElement = document.createElement("div");
+    beforeContainer.appendChild(beforeRange.cloneContents());
 
-        case element.classList.contains("italic"):
-            const italic: string = "<i>" + selected + "</i> ";
+    return beforeContainer.innerHTML;
+}
 
-            textarea.innerHTML = prefix + italic + suffix;
-            break;
+/**
+ * Gets the full HTML content after the selection.
+ *
+ * @param {Range} afterRange - The range representing the content after the selection.
+ * @returns {string} The HTML content after the selection.
+ */
+function getFullHtmlAfterSelection(afterRange: Range): string {
+    const afterContainer: HTMLDivElement = document.createElement("div");
+    afterContainer.appendChild(afterRange.cloneContents());
 
-        case element.classList.contains("underline"):
-            const underline: string = "<span style='text-decoration: underline'>" + selected + "</span> ";
+    return afterContainer.innerHTML;
+}
 
-            textarea.innerHTML = prefix + underline + suffix;
-            break;
+/**
+ * Applies text style to the textarea content.
+ *
+ * @param {HTMLDivElement} textarea - The textarea element.
+ * @param {string} prefix - The content before the selected text.
+ * @param {string} suffix - The content after the selected text.
+ * @param {string} tag - The HTML tag for text styling.
+ * @param {Selection} selection - The current text selection.
+ */
+function applyTextStyle(textarea: HTMLDivElement, prefix: string, suffix: string, tag: string, selection: Selection): void {
+    const range: Range = selection.getRangeAt(0);
+    const selected: string = range.cloneContents().textContent.trim();
 
-        case element.classList.contains("inline-code"):
-            const inlineCode: string = "<code>" + selected + "</code> ";
+    const styledText: string = `<${tag}>${selected}</${tag}>`;
 
-            textarea.innerHTML = prefix + inlineCode + suffix;
-            break;
+    textarea.innerHTML = prefix + styledText + suffix;
+}
 
-        case element.classList.contains("code-block"):
-            const codeBlock: string = "<code>" + selected + "</code> ";
+/**
+ * Applies color styling to the textarea content.
+ *
+ * @param {HTMLDivElement} textarea - The textarea element.
+ * @param {string} prefix - The content before the selected text.
+ * @param {string} suffix - The content after the selected text.
+ * @param {HTMLElement} element - The color picker element.
+ */
+function applyColorPicker(textarea: HTMLDivElement, prefix: string, suffix: string, element: HTMLElement): void {
+    const colorPicker: HTMLInputElement = element as HTMLInputElement;
+    const selection: Selection | null = window.getSelection();
 
-            textarea.innerHTML = prefix + codeBlock + suffix;
-            break;
+    if (selection && selection.rangeCount > 0) {
+        const range: Range = selection.getRangeAt(0);
+        const selected: string = range.cloneContents().textContent.trim();
+        const selectedColor: string = colorPicker.value;
 
+        const colorPickerText: string = ` <span style="color: ${selectedColor}">${selected}</span> `;
 
-        case element.classList.contains("list"):
-            const list: string = "<ul><li>" + selected + "</li></ul> ";
-
-            textarea.innerHTML = prefix + list + suffix;
-            break;
-
-
-        case element.classList.contains("color-picker"):
-            const colorPicker: HTMLInputElement = element as HTMLInputElement;
-
-            colorPicker.addEventListener("change", function (event: Event): void {
-                const selectedColor: string = (event.target as HTMLInputElement).value;
-
-                const colorPicker: string = ` <span style="color: ${selectedColor}">` + selected + "</span> ";
-
-                textarea.innerHTML = prefix + colorPicker + suffix;
-                return; // Use return to exit the event listener early
-
-            });
-            break;
+        textarea.innerHTML = prefix + colorPickerText + suffix;
     }
+
+    // Handle the case where no selection is present if needed
+}
+
+/**
+ * Applies list style to the textarea content.
+ *
+ * @param {HTMLDivElement} textarea - The textarea element.
+ * @param {string} prefix - The content before the selected text.
+ * @param {string} suffix - The content after the selected text.
+ * @param {Selection} selection - The current text selection.
+ */
+function applyListStyle(textarea: HTMLDivElement, prefix: string, suffix: string, selection: Selection): void {
+    const range: Range = selection.getRangeAt(0);
+    const selected: string = range.cloneContents().textContent.trim();
+
+    const list: string = `<ul><li>${selected}</li></ul>`;
+
+    textarea.innerHTML = prefix + list + suffix;
 }
 
 
