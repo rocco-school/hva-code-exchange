@@ -3,6 +3,8 @@ import "./config";
 import { api } from "@hboictcloud/api";
 import { QUESTION_QUERY } from "./query/question.query";
 import { Question } from "./models/question";
+import { USER_QUERY } from "./query/user.query";
+import { User } from "./models/user";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -69,7 +71,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionAnswers: HTMLDivElement = liquestionAnswers.appendChild(document.createElement("div"));
                 questionAnswers.id = "questionAnswers";
-                questionAnswers.innerHTML = "answers:" + 0; 
+                questionAnswers.innerHTML = "answers: " + 0; 
 
                 // Posted At
                 const liquestionPostedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -78,14 +80,19 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 // Display the posted timestamp for the question
                 if (questionPostedAt) {
-                    questionPostedAt.innerHTML = "posted at: " + singleQuestion.createdAt;
+                    const datePostedAt: any = singleQuestion.createdAt;
+                    questionPostedAt.innerHTML = "posted at: " + datePostedAt.slice(0,10);
                 }
 
                 // Updated At
                 const liquestionUpdatedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionUpdatedAt: HTMLDivElement = liquestionUpdatedAt.appendChild(document.createElement("div"));
                 questionUpdatedAt.id = "questionUpdatedAt";
-                questionUpdatedAt.innerHTML = "updated at: " + singleQuestion.createdAt;
+                
+                if (questionUpdatedAt) {
+                    const dateUpdatedAt: any = singleQuestion.createdAt;
+                    questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.slice(0,10);
+                }
 
                 // Question Content
                 const questionContentContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
@@ -124,6 +131,22 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionCreator.id = "questionCreator";
 
                 if (questionCreator) {
+                    console.log(singleQuestion.userId);
+                    const searchForUserId: number = singleQuestion.userId;
+                    const userData: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, searchForUserId) as [User];
+                    userData.forEach((user): void => {
+                        const userAttribute: User = new User(
+                            user.id,
+                            user.username,
+                            user.email,
+                            user.firstname,
+                            user.lastname
+                        );
+
+                        console.log(userAttribute.username);
+
+                        questionCreator.innerHTML = userAttribute.username;
+                    });
                 }
 
                 // TODO integrate tags into the questions
@@ -138,5 +161,6 @@ async function getMostRecentQuestions(): Promise<void> {
 
 // Invoke the function to fetch and display the most recent questions
 getMostRecentQuestions();
+
 
 
