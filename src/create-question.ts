@@ -73,6 +73,7 @@ async function setup(): Promise<void> {
         let questionTags: any[] = [];
         let questionTitle: string = "";
         let questionBody: string = "";
+
         // Use the async function handleButtonClick when the submit button is clicked
         await handleButtonClick().then((result: string | null): void => {
             if (result !== null) {
@@ -82,13 +83,13 @@ async function setup(): Promise<void> {
                 for (const tagsKey in tags) {
                     questionTags.push(tags[tagsKey]);
                 }
-
             } else {
                 // Handle the case where the input is not valid
                 console.log("Input is not valid.");
             }
         });
 
+        // Get values from input fields
         if (questionTitleInput) {
             questionTitle = questionTitleInput.value;
         }
@@ -97,9 +98,12 @@ async function setup(): Promise<void> {
             questionBody = textarea.innerHTML;
         }
 
+        // Check if necessary data is available
         if (questionTitle && questionBody && questionTags.length !== 0) {
+            // Get user ID from login status
             const userId: number = loginStatus["userId"];
 
+            // Create a new Question object
             const questionObject: Question = new Question(
                 null,
                 userId,
@@ -110,10 +114,14 @@ async function setup(): Promise<void> {
                 null,
             );
 
+            // Save the question and get the result
             const question: Question[] | string = await questionObject.saveQuestion();
 
+            // Get the question ID from the result
             const questionId: number = question["insertId"];
+
             if (questionId) {
+                // Insert question tags associated with the question
                 const createQuestionTags: number | string = await Question.insertQuestionTag(questionId, questionTags);
 
                 console.log(createQuestionTags);
@@ -121,8 +129,9 @@ async function setup(): Promise<void> {
         }
     });
 
+    // Check and apply text styles for the textarea
     if (textarea) {
-
+        // Event listeners for different text styles
         boldButton!.addEventListener("click", (): void => {
             checkTextStyle(boldButton as HTMLElement, textarea);
         });
@@ -130,7 +139,6 @@ async function setup(): Promise<void> {
         italicButton!.addEventListener("click", (): void => {
             checkTextStyle(italicButton as HTMLElement, textarea);
         });
-
 
         underlineButton!.addEventListener("click", (): void => {
             checkTextStyle(underlineButton as HTMLElement, textarea);
@@ -154,7 +162,6 @@ async function setup(): Promise<void> {
             checkTextStyle(colorPickerButton as HTMLElement, textarea);
         });
     }
-
 }
 
 // Invoke the question detail page application entry point.
@@ -163,6 +170,10 @@ await setup();
 
 /**
  * Checks the surrounding tags of the selected text in a textarea and modifies the content accordingly.
+ *
+ * This function is used to apply different text styles and list formats to the selected text in a textarea.
+ * It determines the current text style and the surrounding tags by calling the `getSurroundedTag` function.
+ * Based on the selected text style and the surrounding tags, the function calls the appropriate helper function to modify the text content.
  *
  * @param {HTMLElement} element - The element triggering the text style change.
  * @param {HTMLDivElement} textarea - The textarea element.
@@ -211,9 +222,15 @@ async function checkTextStyle(element: HTMLElement, textarea: HTMLDivElement): P
     }
 }
 
-
 /**
  * Gets the tag(s) that surround the selected text.
+ *
+ * This function is used to determine the HTML tags that surround the current text selection.
+ * It does this by starting from the parent node of the start container of the selection range,
+ * and moving up the parent hierarchy until it reaches the parent node of the end container of the selection range.
+ * The function collects the tags of the nodes it encounters during this traversal.
+ *
+ * If no surrounding tags are found, the function returns null.
  *
  * @param {Selection} selection - The current text selection.
  * @returns {string | null} The surrounded tag(s) or null if none.
@@ -242,6 +259,13 @@ function getSurroundedTag(selection: Selection): string | null {
 
 /**
  * Extracts the content before and after the selected text.
+ *
+ * This function is used to extract the content that appears before and after the current text selection.
+ * It does this by creating ranges that cover the content before and after the selected text,
+ * and then obtaining the HTML content of those ranges.
+ *
+ * The extracted content is also cleaned up by removing any self-closing tags and their content,
+ * such as empty `<br>` or `<span>` tags.
  *
  * @param {Selection} selection - The current text selection.
  * @param {HTMLDivElement} textarea - The textarea element.
@@ -274,9 +298,13 @@ function extractBeforeAfterContent(selection: Selection, textarea: HTMLDivElemen
 /**
  * Gets the prefix and suffix for modifying content based on surrounded tags.
  *
+ * This function is used to obtain the `prefix` and `suffix` strings for modifying the content.
+ * The `prefix` and `suffix` are determined by analyzing the `beforeContent` and `afterContent` parameters,
+ * as well as the `surroundedTag` parameter.
+ *
  * @param {string} beforeContent - The content before the selected text.
  * @param {string} afterContent - The content after the selected text.
- * @param {string | null} surroundedTag - The surrounded tag(s).
+ * @param {string | null} surroundedTag - The surrounded tag(s). If it is `null`, no tag will be considered surrounded.
  * @returns {Object} An object containing `prefix` and `suffix`.
  */
 function getPrefixSuffix(beforeContent: string, afterContent: string, surroundedTag: string | null): {
@@ -300,6 +328,10 @@ function getPrefixSuffix(beforeContent: string, afterContent: string, surrounded
 /**
  * Gets the full HTML content before the selection.
  *
+ * This function is used to obtain the HTML content that comes before the current text selection.
+ * It does this by creating a new div element, appending the range representing the content before the selection,
+ * and then retrieving the innerHTML of the new div element.
+ *
  * @param {Range} beforeRange - The range representing the content before the selection.
  * @returns {string} The HTML content before the selection.
  */
@@ -313,6 +345,10 @@ function getFullHtmlBeforeSelection(beforeRange: Range): string {
 /**
  * Gets the full HTML content after the selection.
  *
+ * This function is used to obtain the HTML content that comes after the current text selection.
+ * It does this by creating a new div element, appending the range representing the content after the selection,
+ * and then retrieving the innerHTML of the new div element.
+ *
  * @param {Range} afterRange - The range representing the content after the selection.
  * @returns {string} The HTML content after the selection.
  */
@@ -322,6 +358,7 @@ function getFullHtmlAfterSelection(afterRange: Range): string {
 
     return afterContainer.innerHTML;
 }
+
 
 /**
  * Applies text style to the textarea content.
@@ -336,13 +373,15 @@ function applyTextStyle(textarea: HTMLDivElement, prefix: string, suffix: string
     const range: Range = selection.getRangeAt(0);
     const selected: string = range.cloneContents().textContent.trim();
 
+    // Create a tagged element with the selected text content
     const styledText: string = `<${tag}>${selected}</${tag}>`;
 
+    // Wrap the selected text with the tagged element to apply the text styling
     textarea.innerHTML = prefix + styledText + suffix;
 }
 
 /**
- * Applies color styling to the textarea content.
+ * Applies color styling to the selected textarea content.
  *
  * @param {HTMLDivElement} textarea - The textarea element.
  * @param {string} prefix - The content before the selected text.
@@ -358,16 +397,17 @@ function applyColorPicker(textarea: HTMLDivElement, prefix: string, suffix: stri
         const selected: string = range.cloneContents().textContent.trim();
         const selectedColor: string = colorPicker.value;
 
+        // Create a span element with the selected text content and the selected color
         const colorPickerText: string = ` <span style="color: ${selectedColor}">${selected}</span> `;
 
+        // Wrap the selected text with the span element to apply the color styling
         textarea.innerHTML = prefix + colorPickerText + suffix;
     }
 
-    // Handle the case where no selection is present if needed
 }
 
 /**
- * Applies list style to the textarea content.
+ * Applies list style to the selected textarea content.
  *
  * @param {HTMLDivElement} textarea - The textarea element.
  * @param {string} prefix - The content before the selected text.
@@ -375,28 +415,44 @@ function applyColorPicker(textarea: HTMLDivElement, prefix: string, suffix: stri
  * @param {Selection} selection - The current text selection.
  */
 function applyListStyle(textarea: HTMLDivElement, prefix: string, suffix: string, selection: Selection): void {
-    const range: Range = selection.getRangeAt(0);
+    // Create a copy of the selection range to avoid modifying the original one
+    const range: Range = selection.getRangeAt(0).cloneRange();
+
+    // Get the selected text
     const selected: string = range.cloneContents().textContent.trim();
 
+    // Create an unordered list with the selected text as a list item
     const list: string = `<ul><li>${selected}</li></ul>`;
 
+    // Update the textarea content by combining the prefix, list, and suffix
     textarea.innerHTML = prefix + list + suffix;
 }
 
 
+/**
+ * Fetches the list of coding tags and populates the select options.
+ *
+ * @param {Element} optionsBody - The container element where the select options will be appended.
+ * @returns {Promise<void>} - A Promise that resolves to undefined when the function completes.
+ */
 async function populateTagSelect(optionsBody: Element): Promise<void> {
+    // Fetch the list of coding tags from the server
     const codingTags: CodingTag[] | string = await CodingTag.getCodingTags();
 
+    // If no coding tags were returned, return early
     if (codingTags.length === 0) return;
 
+    // Iterate over each coding tag
     for (const codingTag of codingTags) {
+        // Type assertion to ensure codingTag is an instance of CodingTag
         const tag: CodingTag = codingTag as CodingTag;
 
+        // Create a new select option with the coding tag's name and id
         const newOption: string = "<div class=\"option\" tabindex=\"0\" data-value=\"" + tag.tagId + "\">" + tag.tagName + "</div>";
+
+        // Append the new option to the options container
         optionsBody.innerHTML += newOption;
     }
 }
-
-
 
 
