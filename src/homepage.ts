@@ -18,7 +18,9 @@ async function getMostRecentQuestions(): Promise<void> {
         // Log the fetched recent questions to the console for debugging
         console.log(recentQuestions);
 
+        // Iterate over each recent question
         for (const question of recentQuestions) {
+            // Create a Question instance from the retrieved data
             const singleQuestion: Question = new Question(
                 question.questionId,
                 question.userId,
@@ -28,19 +30,6 @@ async function getMostRecentQuestions(): Promise<void> {
                 question.createdAt,
                 question.updatedAt
             );
-        
-        // // Iterate through each recent question and render it in the UI
-        // recentQuestions.forEach(async (question): Promise<void> => {
-        //     // Create a new Question object based on the fetched question data
-        //     const singleQuestion: Question = new Question(
-        //         question.questionId,
-        //         question.userId,
-        //         question.questionTitle,
-        //         question.questionBody,
-        //         question.isClosed,
-        //         question.createdAt,
-        //         question.updatedAt
-        //     );
 
             // Create a container for each question in the UI
             const container: HTMLUListElement | undefined = recentQuestionsBody?.appendChild(document.createElement("ul"));
@@ -70,7 +59,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionVotes: HTMLDivElement = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.id = "questionVotes";
-                questionVotes.innerHTML = "0"; // TODO a function to calculate the amount of votes 
+                questionVotes.innerHTML = "0"; // TODO a function to calculate the amount of votes
 
                 // Downvote Button
                 const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -82,7 +71,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionAnswers: HTMLDivElement = liquestionAnswers.appendChild(document.createElement("div"));
                 questionAnswers.id = "questionAnswers";
-                questionAnswers.innerHTML = "answers: " + 0; 
+                questionAnswers.innerHTML = "answers: " + 0;
 
                 // Posted At
                 const liquestionPostedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -92,14 +81,14 @@ async function getMostRecentQuestions(): Promise<void> {
                 // Display the posted timestamp for the question
                 if (questionPostedAt) {
                     const datePostedAt: any = singleQuestion.createdAt;
-                    questionPostedAt.innerHTML = "posted at: " + datePostedAt.slice(0,10);
+                    questionPostedAt.innerHTML = "posted at: " + datePostedAt.slice(0, 10);
                 }
 
                 // Updated At
                 const liquestionUpdatedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionUpdatedAt: HTMLDivElement = liquestionUpdatedAt.appendChild(document.createElement("div"));
                 questionUpdatedAt.id = "questionUpdatedAt";
-                
+
                 if (questionUpdatedAt) {
                     const dateUpdatedAt: any = singleQuestion.updatedAt;
                     questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.slice(0, -14);
@@ -129,7 +118,7 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 // Question User
                 const questionUserContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
-                questionUserContainer.classList.add("questionUser"); 
+                questionUserContainer.classList.add("questionUser");
 
                 // Question Creator Picture
                 const liQuestionCreatorPicture: HTMLLIElement = questionUserContainer.appendChild(document.createElement("li"));
@@ -142,19 +131,23 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionCreator.id = "questionCreator";
 
                 if (questionCreator) {
+                    // Log the user ID to the console for debugging
                     console.log(singleQuestion.userId);
+
+                    // Search for the user data based on the user ID
                     const searchForUserId: number = singleQuestion.userId;
                     const userData: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, searchForUserId) as [User];
 
+                    // Check if user data is available
                     if (userData.length < 0) return;
 
+                    // Display the username of the question creator
                     questionCreator.innerHTML = userData[0].username;
-
                 }
 
                 // TODO integrate tags into the questions
             }
-        };
+        }
 
     } catch (e) {
         // Handle any errors that occur during the execution of the function
