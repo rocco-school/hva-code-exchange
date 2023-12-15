@@ -51,18 +51,14 @@ class User {
         +deleteCodingTag()
     }
 
-    class QuestionTag {
-        -number questionTagId
-        -number questionId
-        -number tagId
 
-        +toString()
-        +associateTag()
-        +disassociateTag()
-    }
+    User "1" --* "0..*" Question
+    User "1" --* "0..*" Answer
+
+    Question "1" --* "0..*" Answer
 
     User "1" --* "0..*" Post
     Question --|> Post
     Answer --|> Post
-    Question "1" --* "0..*" QuestionTag
-    CodingTag "1" --* "0..*" QuestionTag
+    Question "0..*" --* "1..*" CodingTag
+    User "0..*" --* "0..*" CodingTag
