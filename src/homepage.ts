@@ -90,8 +90,8 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionUpdatedAt.id = "questionUpdatedAt";
                 
                 if (questionUpdatedAt) {
-                    const dateUpdatedAt: any = singleQuestion.createdAt;
-                    questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.slice(0,10);
+                    const dateUpdatedAt: any = singleQuestion.updatedAt;
+                    questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.slice(0, -14);
                 }
 
                 // Question Content
