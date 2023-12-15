@@ -61,7 +61,7 @@ class User {
         +disassociateTag()
     }
 
-    User --|> Post
+    User "1" --* "0..*" Post
     Question --|> Post
     Answer --|> Post
     Question "1" --* "0..*" QuestionTag
