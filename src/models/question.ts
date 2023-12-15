@@ -86,10 +86,33 @@ export class Question {
     /**
      * Saves the question to the database using the service.
      *
-     * @returns {Promise<Question[] | string>} A Promise resolving to either the saved questions or an error message.
+     * @returns {Promise<Question | string>} A Promise resolving to either the saved question or an error message.
      * @throws {Error} Throws an error if the save operation fails.
+     *
+     * @description
+     * This method leverages the QuestionService to save the current instance of the Question to the database.
+     * It handles the save operation asynchronously and returns a Promise that resolves to the saved question
+     * or an error message if the save fails.
+     *
+     * @example
+     * const newQuestion = new Question(
+     *   null, // questionId is null for a new question (auto_increment in the database)
+     *   userId,
+     *   questionTitle,
+     *   questionBody,
+     *   isClosed,
+     *   null, // createdAt (auto-updated in the database)
+     *   null // updatedAt (auto-updated in the database)
+     * );
+     *
+     * try {
+     *   const savedQuestion = await newQuestion.saveQuestion();
+     *   console.log('Question saved successfully:', savedQuestion);
+     * } catch (error) {
+     *   console.error('Failed to save question:', error.message);
+     * }
      */
-    public async saveQuestion(): Promise<Question[] | string> {
+    public async saveQuestion(): Promise<Question | string> {
         try {
             // Calling the saveQuestion method from the service
             return await QuestionService.saveQuestion(this);
@@ -102,10 +125,33 @@ export class Question {
     /**
      * Updates the question in the database using the service.
      *
-     * @returns {Promise<Question[] | string>} A Promise resolving to either the updated questions or an error message.
+     * @returns {Promise<Question | string>} A Promise resolving to either the updated question or an error message.
      * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This method leverages the QuestionService to update the current instance of the Question in the database.
+     * It handles the update operation asynchronously and returns a Promise that resolves to the updated question
+     * or an error message if the update fails.
+     *
+     * @example
+     * const questionToUpdate = new Question(
+     *   questionId,
+     *   userId,
+     *   questionTitle,
+     *   questionBody,
+     *   isClosed,
+     *   null, // createdAt
+     *   null, // updatedAt auto-updates in the database
+     * );
+     *
+     * try {
+     *   const updatedQuestion = await questionToUpdate.updateQuestion();
+     *   console.log('Question updated successfully:', updatedQuestion);
+     * } catch (error) {
+     *   console.error('Failed to update question:', error.message);
+     * }
      */
-    public async updateQuestion(): Promise<Question[] | string> {
+    public async updateQuestion(): Promise<Question | string> {
         try {
             // Calling the updateQuestion method from the service.
             return await QuestionService.updateQuestion(this);
@@ -120,6 +166,20 @@ export class Question {
      *
      * @returns {Promise<Question[] | string>} A Promise resolving to either the retrieved questions or an error message.
      * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the QuestionService to retrieve questions from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * an array of retrieved questions or an error message if the retrieval fails.
+     *
+     * @example
+     * try {
+     *   // Example: Retrieve questions from the database
+     *   const questions = await Question.getQuestions();
+     *   console.log('Questions retrieved successfully:', questions);
+     * } catch (error) {
+     *   console.error('Failed to retrieve questions:', error.message);
+     * }
      */
     public static async getQuestions(): Promise<Question[] | string> {
         try {
@@ -135,10 +195,24 @@ export class Question {
      * Retrieves a question from the database using the service.
      *
      * @param {number} questionId - The ID of the question to retrieve.
-     * @returns {Promise<Question[] | string>} A Promise resolving to either the retrieved question or an error message.
+     * @returns {Promise<Question | string>} A Promise resolving to either the retrieved question or an error message.
      * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the QuestionService to retrieve a specific question from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * the retrieved question or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve a question by its ID
+     * try {
+     *   const result = await Question.retrieveQuestion(questionId);
+     *   console.log('Question retrieved successfully:', result);
+     * } catch (error) {
+     *   console.error('Failed to retrieve question:', error.message);
+     * }
      */
-    public static async retrieveQuestion(questionId: number): Promise<Question[] | string> {
+    public static async retrieveQuestion(questionId: number): Promise<Question | string> {
         try {
             // Calling the retrieveQuestion method from the service.
             return await QuestionService.retrieveQuestion(questionId);
@@ -148,16 +222,34 @@ export class Question {
         }
     }
 
-
     /**
      * Inserts tags for a given question into the database.
      *
      * @param {number} questionId - The ID of the question.
      * @param {number[]} tagIds - An array of tag IDs to associate with the question.
-     * @returns {Promise<number | string>} A Promise resolving to either the question ID or an error message.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the insertion status or an error message.
      * @throws {Error} Throws an error if the insertion operation fails.
+     *
+     * @description
+     * This static method leverages the QuestionService to insert tags for a specific question into the database.
+     * It handles the insertion operation asynchronously and returns a Promise that resolves to either
+     * the insertion status (true if successful) or an error message if the insertion fails.
+     *
+     * @example
+     * // Example: Insert tags for a question
+     * try {
+     *   const questionTags: number[] = [1, 2, 3]; // coding_tag ids.
+     *   const insertStatus = await Question.insertQuestionTag(questionId, questionTags);
+     *   if (insertStatus) {
+     *     console.log('Question tags inserted successfully.');
+     *   } else {
+     *     console.log('Failed to insert question tags.');
+     *   }
+     * } catch (error) {
+     *   console.error('Error inserting question tags:', error.message);
+     * }
      */
-    public static async insertQuestionTag(questionId: number, tagIds: number[]): Promise<number | string> {
+    public static async insertQuestionTag(questionId: number, tagIds: number[]): Promise<boolean | string> {
         try {
             // Call the insertQuestionTag method from the service.
             return await QuestionService.insertQuestionTag(questionId, tagIds);
@@ -171,10 +263,28 @@ export class Question {
      * Deletes a question from the database using the service.
      *
      * @param {number} questionId - The ID of the question to delete.
-     * @returns {Promise<Question[] | string>} A Promise resolving to either delete the questions or an error message.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the deletion status or an error message.
      * @throws {Error} Throws an error if the deletion operation fails.
+     *
+     * @description
+     * This static method leverages the QuestionService to delete a specific question from the database.
+     * It handles the deletion operation asynchronously and returns a Promise that resolves to either
+     * the deletion status (true if successful, false if the question was not found) or an error message if the deletion fails.
+     *
+     * @example
+     * // Example: Delete a question by its ID
+     * try {
+     *   const deleteStatus = await Question.deleteQuestion(questionId);
+     *   if (deleteStatus) {
+     *     console.log('Question deleted successfully.');
+     *   } else {
+     *     console.log('Question with the specified ID not found.');
+     *   }
+     * } catch (error) {
+     *   console.error('Failed to delete question:', error.message);
+     * }
      */
-    public static async deleteQuestion(questionId: number): Promise<Question[] | string> {
+    public static async deleteQuestion(questionId: number): Promise<boolean | string> {
         try {
             // Calling the deleteQuestion method from the service.
             return await QuestionService.deleteQuestion(questionId);
