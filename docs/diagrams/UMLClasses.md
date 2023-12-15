@@ -3,25 +3,30 @@
 title: Class Diagram
 ---
 classDiagram
-    class User {
+class User {
+-number userId
+-string firstname
+-string lastname
+-string username
+-string password
+-string email
+
+        +toString()
+    }
+
+    class Post {
+        -number postId
         -number userId
-        -string firstname
-        -string lastname
-        -string username
-        -string password
-        -string email
+        -Date createdAt
+        -Date updatedAt
 
         +toString()
     }
 
     class Question {
-        -number questionId
-        -number userId
         -string questionTitle
         -string questionBody
-        -boolean isCLosed
-        -Date createdAt
-        -Date updatedAt
+        -boolean isClosed
 
         +toString()
         +saveQuestion()
@@ -30,16 +35,10 @@ classDiagram
         +retrieveQuestion()
         +insertQuestionTag()
         +deleteQuestion()
-
     }
 
     class Answer {
-        -number answerId
-        -number questionId
-        -number userId
-        -String answerBody
-        -Date createdAt
-        -Date updatedAt
+        -string answerBody
 
         +toString()
     }
@@ -51,15 +50,23 @@ classDiagram
 
         +toString()
         +saveCodingTag()
-        +updateQuestion()
         +getCodingTags()
         +retrieveCodingTags()
         +deleteCodingTag()
-
     }
 
-    Question "0..*" ..> "1" User
-    Answer "0..*" ..> "1" Question
-    Answer "0..*" ..> "1" User
-    CodingTag "1..*" ..> "1" Question
-    CodingTag "0..*" ..> "1" User
+    class QuestionTag {
+        -number questionTagId
+        -number questionId
+        -number tagId
+
+        +toString()
+        +associateTag()
+        +disassociateTag()
+    }
+
+    User --|> Post
+    Question --|> Post
+    Answer --|> Post
+    Question "1" --* "0..*" QuestionTag
+    CodingTag "1" --* "0..*" QuestionTag
