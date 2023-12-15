@@ -56,7 +56,7 @@ classDiagram
     }
 
     Question "0..*" ..> "1" User
-    Answer "0..*" ..> "1" Question
-    Answer "0..*" ..> "1" User
-    CodingTag "1..*" ..> "1" Question
     CodingTag "0..*" ..> "1" User
+    Answer "0..*" ..> "1" User
+    Answer "0..*" ..> "1" Question
+    CodingTag "1..*" ..> "1" Question
