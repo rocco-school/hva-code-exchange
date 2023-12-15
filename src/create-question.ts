@@ -115,16 +115,19 @@ async function setup(): Promise<void> {
             );
 
             // Save the question and get the result
-            const question: Question[] | string = await questionObject.saveQuestion();
+            const question: Question | string = await questionObject.saveQuestion();
 
-            // Get the question ID from the result
-            const questionId: number = question["insertId"];
-
-            if (questionId) {
+            if (question instanceof Question) {
                 // Insert question tags associated with the question
-                const createQuestionTags: number | string = await Question.insertQuestionTag(questionId, questionTags);
 
-                console.log(createQuestionTags);
+                if (!question.questionId) return;
+
+                const createQuestionTags: boolean | string = await Question.insertQuestionTag(question.questionId, questionTags);
+
+                if (createQuestionTags) {
+                    console.log("success!", createQuestionTags);
+                }
+
             }
         }
     });

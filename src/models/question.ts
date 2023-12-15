@@ -95,12 +95,12 @@ export class Question {
      * or an error message if the save fails.
      *
      * @example
-     * const newQuestion = new Question(
+     * const newQuestion: Question = new Question(
      *   null, // questionId is null for a new question (auto_increment in the database)
-     *   userId,
-     *   questionTitle,
-     *   questionBody,
-     *   isClosed,
+     *   'userId',
+     *   'questionTitle',
+     *   'questionBody',
+     *   False, // isClosed = True / False
      *   null, // createdAt (auto-updated in the database)
      *   null // updatedAt (auto-updated in the database)
      * );
