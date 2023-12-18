@@ -30,7 +30,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 question.questionBody,
                 question.isClosed,
                 question.createdAt,
-                question.updatedAt
+                question.updatedAt,
             );
 
             // Create a container for each question in the UI
@@ -71,7 +71,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionDownvote.id = "questionDownvote";
                 questionDownvote.innerHTML = "Downvote"; // TODO add a row in the database for downvotes
 
-                questionUpvote.addEventListener("click", () => {
+                questionUpvote.addEventListener("click", async () => {
                     votes ++;
                     questionVotes.innerHTML = votes;
                     votesColor();
@@ -137,7 +137,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionBodyExample.id = "questionBodyExample";
 
                 if (questionBodyExample) {
-                    questionBodyExample.innerHTML = singleQuestion.questionBody;
+                    questionBodyExample.innerHTML = singleQuestion.questionBody.slice(0, 40);
                 }
 
                 // Question User
