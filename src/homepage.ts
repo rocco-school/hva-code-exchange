@@ -6,6 +6,8 @@ import { Question } from "./models/question";
 import { USER_QUERY } from "./query/user.query";
 import { User } from "./models/user";
 
+
+
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
     try {
@@ -36,6 +38,8 @@ async function getMostRecentQuestions(): Promise<void> {
 
             // Check if the container was successfully created
             if (container) {
+                let votes: number = 0;
+
                 // Add styling to the container
                 container.classList.add("container");
 
@@ -53,11 +57,11 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liQuestionUpvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionUpvote: HTMLButtonElement = liQuestionUpvote.appendChild(document.createElement("button"));
                 questionUpvote.id = "questionUpvote";
-                questionUpvote.innerHTML = "upvote"; // TODO add a row in the database for upvotes
+                questionUpvote.innerHTML = "upvote";
 
                 // Votes Count
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
-                const questionVotes: HTMLDivElement = liquestionVotes.appendChild(document.createElement("div"));
+                const questionVotes: HTMLDivElement | any = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.id = "questionVotes";
                 questionVotes.innerHTML = "0"; // TODO a function to calculate the amount of votes
 
@@ -67,11 +71,31 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionDownvote.id = "questionDownvote";
                 questionDownvote.innerHTML = "Downvote"; // TODO add a row in the database for downvotes
 
+                questionUpvote.addEventListener("click", () => {
+                    votes ++;
+                    questionVotes.innerHTML = votes;
+                    votesColor();
+                });
+
+                questionDownvote.addEventListener("click", () => {
+                    votes --;
+                    questionVotes.innerHTML = votes;
+                    votesColor();
+                });
+
+                function votesColor(): void {
+                    if (votes > 0) {
+                        questionVotes.style.color = "green";
+                    } else if (votes < 0) {
+                        questionVotes.style.color = "red";
+                    }
+                }
+
                 // Answers Count
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionAnswers: HTMLDivElement = liquestionAnswers.appendChild(document.createElement("div"));
                 questionAnswers.id = "questionAnswers";
-                questionAnswers.innerHTML = "answers: " + 0;
+                questionAnswers.innerHTML = "answers: ";
 
                 // Posted At
                 const liquestionPostedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -81,7 +105,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 // Display the posted timestamp for the question
                 if (questionPostedAt) {
                     const datePostedAt: any = singleQuestion.createdAt;
-                    questionPostedAt.innerHTML = "posted at: " + datePostedAt.slice(0, 10);
+                    questionPostedAt.innerHTML = "posted at: " + datePostedAt.replace("T", "  ").slice(0, -8);
                 }
 
                 // Updated At
@@ -91,7 +115,7 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 if (questionUpdatedAt) {
                     const dateUpdatedAt: any = singleQuestion.updatedAt;
-                    questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.slice(0, -14);
+                    questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.replace("T", "  ").slice(0, -8);
                 }
 
                 // Question Content
@@ -154,6 +178,8 @@ async function getMostRecentQuestions(): Promise<void> {
         console.error(e);
     }
 }
+
+
 
 // Invoke the function to fetch and display the most recent questions
 getMostRecentQuestions();
