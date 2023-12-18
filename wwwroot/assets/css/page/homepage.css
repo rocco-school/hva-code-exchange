@@ -62,13 +62,13 @@
     width: 100%;
     /* background-color: greenyellow; */
     margin-left: auto;
-    overflow: visible;
 }
 
 .recentQuestions .questionBox .questionContent .questionTags{
     display: flex;
     flex-direction: row;
     align-content: center;
+    margin-top: auto;
 }
 
 .recentQuestions .questionBox .questionContent #questionTag li{

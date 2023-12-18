@@ -5,6 +5,12 @@ import { QUESTION_QUERY } from "./query/question.query";
 import { Question } from "./models/question";
 import { USER_QUERY } from "./query/user.query";
 import { User } from "./models/user";
+import { Answer } from "./models/answer";
+import { ANSWER_QUERY } from "./query/answer.query";
+import { CODING_TAG_QUERY } from "./query/codingTag.query";
+import { QUESTIONTAG_QUERY } from "./query/questionTag.query";
+import { QuestionTag } from "./models/questionTag";
+import { CodingTag } from "./models/codingTag";
 
 
 
@@ -63,13 +69,13 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionVotes: HTMLDivElement | any = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.id = "questionVotes";
-                questionVotes.innerHTML = "0"; // TODO a function to calculate the amount of votes
+                questionVotes.innerHTML = "0"; 
 
                 // Downvote Button
                 const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
                 questionDownvote.id = "questionDownvote";
-                questionDownvote.innerHTML = "Downvote"; // TODO add a row in the database for downvotes
+                questionDownvote.innerHTML = "Downvote"; 
 
                 questionUpvote.addEventListener("click", async () => {
                     votes ++;
@@ -88,6 +94,8 @@ async function getMostRecentQuestions(): Promise<void> {
                         questionVotes.style.color = "green";
                     } else if (votes < 0) {
                         questionVotes.style.color = "red";
+                    } else if (votes === 0) {
+                        questionVotes.style.color = "black";
                     }
                 }
 
@@ -95,7 +103,14 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionAnswers: HTMLDivElement = liquestionAnswers.appendChild(document.createElement("div"));
                 questionAnswers.id = "questionAnswers";
-                questionAnswers.innerHTML = "answers: ";
+
+                if (questionAnswers) {
+                    const answerData: [Answer] = await api.queryDatabase(ANSWER_QUERY.SELECT_ANSWERS_FROM_QUESTION, question.questionId) as [Answer];
+
+                    if (answerData.length < 0) return;
+    
+                    questionAnswers.innerHTML = "answers: " + answerData.length;
+                }
 
                 // Posted At
                 const liquestionPostedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -137,7 +152,23 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionBodyExample.id = "questionBodyExample";
 
                 if (questionBodyExample) {
-                    questionBodyExample.innerHTML = singleQuestion.questionBody.slice(0, 40);
+                    questionBodyExample.innerHTML = singleQuestion.questionBody.slice(0, 120);
+                }
+
+                const divQuestionTags: HTMLDivElement = questionContentContainer.appendChild(document.createElement("div"));
+                divQuestionTags.classList.add("questionTags");
+                const liQuestionTags: HTMLLIElement = divQuestionTags.appendChild(document.createElement("li"));
+                const questionTags: HTMLDivElement = liQuestionTags.appendChild(document.createElement("div"));
+                questionTags.id = "questionTag";
+
+                if (questionTags) {
+                    const questionTagData: [QuestionTag] = await api.queryDatabase(QUESTIONTAG_QUERY.SELECT_QUESTIONTAG_FROM_QUESTION, question.questionId) as [QuestionTag];
+                    console.log(questionTagData);
+                    const codingTagData: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.SELECT_CODING_TAG, questionTagData[0].tagId) as [CodingTag];
+
+                    for (const tag of questionTagData) {
+
+                    } //TODO FIX QUESTIONTAGS
                 }
 
                 // Question User
@@ -155,9 +186,6 @@ async function getMostRecentQuestions(): Promise<void> {
                 questionCreator.id = "questionCreator";
 
                 if (questionCreator) {
-                    // Log the user ID to the console for debugging
-                    console.log(singleQuestion.userId);
-
                     // Search for the user data based on the user ID
                     const searchForUserId: number = singleQuestion.userId;
                     const userData: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, searchForUserId) as [User];
