@@ -1,6 +1,6 @@
 import {QuestionService} from "../services/questionService";
-import {Answer} from "./answer";
 import {AnswerService} from "../services/answerService";
+import {AnswerWithUser} from "./interface/answerWithUser";
 
 export class Question {
     // private fields
@@ -301,7 +301,7 @@ export class Question {
      * Retrieve answers connected to a specific question from the database.
      *
      * @param {string} questionId - The ID of the question for which answers are to be retrieved.
-     * @returns {Promise<Answer[] | string>} A Promise resolving to either the retrieved answers or an error message.
+     * @returns {Promise<AnswerWithUser[] | string>} A Promise resolving to either the retrieved answers or an error message.
      * @throws {Error} Throws an error if the retrieval operation fails.
      *
      * @description
@@ -319,7 +319,7 @@ export class Question {
      *   console.error('Failed to retrieve answers:', error.message);
      * }
      */
-    public static async getAnswersForQuestion(questionId: string): Promise<Answer[] | string> {
+    public static async getAnswersForQuestion(questionId: string): Promise<AnswerWithUser[] | string> {
         try {
             // Calling the getAnswersForQuestion method from the service.
             return await AnswerService.getAnswersForQuestion(questionId);

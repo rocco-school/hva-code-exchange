@@ -171,4 +171,28 @@ export class QuestionService {
         // If affectedRows is not 0 or greater than 0, something unexpected happened.
         throw new Error(`Failed to delete question with ID: ${questionId}`);
     }
+
+    /**
+     * Retrieve questions connected to a specific question from the database.
+     *
+     * @param {string} userId - The ID of the question for which answers are to be retrieved.
+     * @returns {Promise<[AnswerWithUser]>} A Promise resolving to the retrieved answer(s).
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves answers connected to a specific question from the database.
+     * It queries the database to retrieve answers based on the provided question ID and returns
+     * a Promise that resolves to an array of retrieved answers.
+     */
+    public static async getQuestionsCountByUser(userId: number): Promise<number> {
+        // Querying the database to retrieve questions for the specified question.
+        const questions: any = await api.queryDatabase(QUESTION_QUERY.GET_TOTAL_QUESTIONS_BY_USER, userId);
+
+        // Checking if the database retrieval was successful.
+        if (!questions) {
+            throw new Error(`Failed to retrieve total question count for user ${userId} from Database!`);
+        }
+
+        return questions[0].totalQuestions;
+    }
 }

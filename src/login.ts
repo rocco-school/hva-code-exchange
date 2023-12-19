@@ -38,7 +38,7 @@ async function setup(): Promise<void> {
 
             if (data) {
                 // Redirect the user to the home page
-                // url.redirect("/question-list.html");
+                // url.redirect("/questions.html");
             } else {
                 // If the user does not exist, give notification to user by setting display to block in the css (bootstrap)
                 document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: block");
@@ -89,6 +89,8 @@ async function loginFromDatabase(email: string, password: string): Promise<User 
 
         // If the password is correct, assign a JWT to the user.
         await assignToken(user[0]);
+
+        location.reload();
 
         // Return the user object if login is successful.
         return user[0];

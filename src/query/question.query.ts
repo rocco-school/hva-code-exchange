@@ -5,7 +5,7 @@ export const QUESTION_QUERY: {
     UPDATE_QUESTION: string;
     DELETE_QUESTION: string;
     CREATE_QUESTION_TAG: string;
-
+    GET_TOTAL_QUESTIONS_BY_USER: string;
 } = {
     SELECT_QUESTIONS: "SELECT * FROM question LIMIT 50",
     SELECT_QUESTION: "SELECT * FROM question WHERE questionId = ?",
@@ -13,4 +13,5 @@ export const QUESTION_QUERY: {
     UPDATE_QUESTION: "UPDATE question SET questionTitle = ?, questionBody = ?, isClosed = ? WHERE questionId = ?",
     DELETE_QUESTION: "DELETE FROM question WHERE questionId = ?",
     CREATE_QUESTION_TAG: "INSERT INTO question_tag (questionId, tagId) VALUES(?, ?)",
+    GET_TOTAL_QUESTIONS_BY_USER: "SELECT COUNT(questionId) as totalQuestions FROM question WHERE userId = ?",
 };

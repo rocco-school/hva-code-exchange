@@ -1,6 +1,7 @@
 import {api} from "@hboictcloud/api";
 import {Answer} from "../models/answer";
 import {ANSWER_QUERY} from "../query/answer.query";
+import {AnswerWithUser} from "../models/interface/answerWithUser";
 
 /**
  * A service class for handling operations related to answers in the database.
@@ -122,7 +123,7 @@ export class AnswerService {
      * Retrieve answers connected to a specific question from the database.
      *
      * @param {string} questionId - The ID of the question for which answers are to be retrieved.
-     * @returns {Promise<[Answer]>} A Promise resolving to the retrieved answer(s).
+     * @returns {Promise<[AnswerWithUser]>} A Promise resolving to the retrieved answer(s).
      * @throws {Error} Throws an error if the database retrieval was not successful.
      *
      * @description
@@ -130,9 +131,9 @@ export class AnswerService {
      * It queries the database to retrieve answers based on the provided question ID and returns
      * a Promise that resolves to an array of retrieved answers.
      */
-    public static async getAnswersForQuestion(questionId: string): Promise<[Answer]> {
+    public static async getAnswersForQuestion(questionId: string): Promise<[AnswerWithUser]> {
         // Querying the database to retrieve answers for the specified question.
-        const answers: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_FROM_QUESTION, questionId) as [Answer];
+        const answers: [AnswerWithUser] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_AND_USERS_FROM_QUESTION, questionId) as [AnswerWithUser];
 
         // Checking if the database retrieval was successful.
         if (!answers) {
@@ -140,5 +141,29 @@ export class AnswerService {
         }
 
         return answers;
+    }
+
+    /**
+     * Retrieve answers connected to a specific question from the database.
+     *
+     * @param {string} userId - The ID of the question for which answers are to be retrieved.
+     * @returns {Promise<[AnswerWithUser]>} A Promise resolving to the retrieved answer(s).
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves answers connected to a specific question from the database.
+     * It queries the database to retrieve answers based on the provided question ID and returns
+     * a Promise that resolves to an array of retrieved answers.
+     */
+    public static async getAnswersCountByUser(userId: number): Promise<number> {
+        // Querying the database to retrieve answers for the specified question.
+        const answers: any = await api.queryDatabase(ANSWER_QUERY.GET_TOTAL_ANSWERS_BY_USER, userId);
+
+        // Checking if the database retrieval was successful.
+        if (!answers) {
+            throw new Error(`Failed to retrieve total answer count for user ${userId} from Database!`);
+        }
+
+        return answers[0].totalAnswers;
     }
 }
