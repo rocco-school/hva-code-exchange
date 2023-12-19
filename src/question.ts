@@ -139,7 +139,7 @@ async function populateQuestionTable(): Promise<void> {
 
                 // Populating the question text.
                 if (questionText) {
-                    questionText.innerHTML = singleQuestion.questionBody;
+                    questionText.innerHTML = singleQuestion.questionBody.substring(0, 100) + "...";
                 }
 
                 // Adding a click event listener to redirect to the question detail page.

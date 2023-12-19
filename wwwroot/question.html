@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <!-- Use bootstrap -->
     <link
         rel="stylesheet"
@@ -11,15 +11,98 @@
         crossorigin="anonymous"
     />
     <title>SE Code Exchange</title>
-    <link rel="stylesheet" href="./assets/css/index.css" />
-    <link rel="stylesheet" href="./assets/css/general.css" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/general.css"/>
+    <link rel="stylesheet" href="assets/css/question.css"/>
+    <link rel="stylesheet" href="assets/css/text-editor.css"/>
 </head>
 <body>
 <!-- This HTML page is called first when the website is called in the browser -->
 <main>
     <div class="container">
         <h1 class="question-title"></h1>
-        <p class="question-body"></p>
+        <hr>
+
+        <div class="question">
+            <div class="vote">
+                <img class="arrow" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                <span class="upvote-count">0</span>
+                <img class="arrow arrow-down" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+            </div>
+            <p class="question-body"></p>
+        </div>
+        <hr>
+
+        <div>
+            <span class="answer-count">0</span>
+            <span>Answers</span>
+        </div>
+
+
+        <div class="answers">
+
+            <div class="answer">
+                <div class="answer-container">
+                    <div class="vote">
+                        <img class="arrow" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                        <span class="upvote-count">0</span>
+                        <img class="arrow arrow-down" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                    </div>
+                    <span>Why not just use substring... string.substring(0, 7); The first argument (0) is the starting point. The second argument (7) is the ending point (exclusive). More info here.</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="new-answer-title">new Answer</h2>
+
+        <!-- Section for Question Body -->
+        <section class="question-section question-body-section">
+            <div class="question-container">
+                <div class="question-container--inner">
+                    <div class="row">
+                        <div class="col">
+                            <div class="first box">
+                                <button type="button">
+                                    <i class="fa fa-header" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="third box">
+                                <button type="button" class="bold">
+                                    <i class="fa fa-bold" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="italic">
+                                    <i class="fa fa-italic" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="underline">
+                                    <i class="fa fa-underline" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="inline-code">
+                                    <i class="fa fa-code" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="code-block">
+                                    <i class="fa fa-file-code-o" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="fourth box">
+                                <button type="button" class="list-button">
+                                    <i class="fa fa-list" aria-hidden="true"></i>
+                                </button>
+                                <input type="color" class="color-picker">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <div class="question-body-textarea" contenteditable="true"
+                                 aria-placeholder="Your text here "></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </main>
 <!--  This typescript file (single-question.ts) is called and executed here -->
