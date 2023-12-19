@@ -23,9 +23,6 @@ async function getMostRecentQuestions(): Promise<void> {
         // Select the HTML element where recent questions will be displayed
         const recentQuestionsBody: HTMLElement | null = document.querySelector(".recentQuestions");
 
-        // Log the fetched recent questions to the console for debugging
-        console.log(recentQuestions);
-
         // Iterate over each recent question
         for (const question of recentQuestions) {
             // Create a Question instance from the retrieved data
@@ -157,19 +154,23 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 const divQuestionTags: HTMLDivElement = questionContentContainer.appendChild(document.createElement("div"));
                 divQuestionTags.classList.add("questionTags");
-                const liQuestionTags: HTMLLIElement = divQuestionTags.appendChild(document.createElement("li"));
-                const questionTags: HTMLDivElement = liQuestionTags.appendChild(document.createElement("div"));
-                questionTags.id = "questionTag";
 
-                if (questionTags) {
-                    const questionTagData: [QuestionTag] = await api.queryDatabase(QUESTIONTAG_QUERY.SELECT_QUESTIONTAG_FROM_QUESTION, question.questionId) as [QuestionTag];
-                    console.log(questionTagData);
-                    const codingTagData: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.SELECT_CODING_TAG, questionTagData[0].tagId) as [CodingTag];
+                const questionTagData: [QuestionTag] = await api.queryDatabase(QUESTIONTAG_QUERY.SELECT_TAG_ID_FROM_QUESTION, question.questionId) as [QuestionTag];
 
-                    for (const tag of questionTagData) {
-
-                    } //TODO FIX QUESTIONTAGS
+                if (questionTagData.length > 0) {
+                    for (const getTagId of questionTagData) {
+                        const codingTagData: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.SELECT_CODING_TAG_NAME, getTagId.tagId) as [CodingTag];
+                        if (codingTagData.length > 0) {
+                            for (const getCodingName of codingTagData) {
+                                const liQuestionTags: HTMLLIElement = divQuestionTags.appendChild(document.createElement("li"));
+                                const questionTags: HTMLDivElement = liQuestionTags.appendChild(document.createElement("div"));
+                                questionTags.id = "questionTag";
+                                questionTags.innerHTML = getCodingName.tagName;
+                            }
+                        } 
+                    }
                 }
+                
 
                 // Question User
                 const questionUserContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));

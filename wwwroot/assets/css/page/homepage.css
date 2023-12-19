@@ -80,6 +80,7 @@
     border: gray 1px solid;
     border-radius: 2rem;
     margin-top: 2rem;
+    margin-left: 0.5rem ;
 }
 
 .recentQuestions .questionBox .questionUser {
