@@ -10,8 +10,8 @@ export async function handleRedirectToQuestionDetail(row: HTMLTableRowElement): 
     const id: string = row.getAttribute("id")!;
 
     if (id) {
-        const url: string = utils.createUrl("single-question.html", {
-            question: id,
+        const url: string = utils.createUrl("question.html", {
+            id,
         });
         if (url) {
             window.location.href = url;

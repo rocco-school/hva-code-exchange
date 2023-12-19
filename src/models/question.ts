@@ -1,4 +1,6 @@
 import {QuestionService} from "../services/questionService";
+import {Answer} from "./answer";
+import {AnswerService} from "../services/answerService";
 
 export class Question {
     // private fields
@@ -291,6 +293,39 @@ export class Question {
         } catch (error) {
             // Handling any errors that occur during the process.
             return `Error deleting question: ${error}`;
+        }
+    }
+
+
+    /**
+     * Retrieve answers connected to a specific question from the database.
+     *
+     * @param {string} questionId - The ID of the question for which answers are to be retrieved.
+     * @returns {Promise<Answer[] | string>} A Promise resolving to either the retrieved answers or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the AnswerService to retrieve answers connected to a specific question from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * an array of retrieved answers or an error message if the retrieval fails.
+     *
+     * @example
+     * try {
+     *   // Example: Retrieve answers for a specific question
+     *   const questionId = 'exampleQuestionId';
+     *   const answers = await Question.getAnswersForQuestion(questionId);
+     *   console.log('Answers retrieved successfully:', answers);
+     * } catch (error) {
+     *   console.error('Failed to retrieve answers:', error.message);
+     * }
+     */
+    public static async getAnswersForQuestion(questionId: string): Promise<Answer[] | string> {
+        try {
+            // Calling the getAnswersForQuestion method from the service.
+            return await AnswerService.getAnswersForQuestion(questionId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving answers: ${error}`;
         }
     }
 }

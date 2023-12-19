@@ -25,6 +25,24 @@ async function setup(): Promise<void> {
     // Check the security status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean = await security();
 
+    try {
+        const firstQuestion: Question[] | string = await Question.getQuestions();
+        if (firstQuestion[0]) {
+            const question: Question = firstQuestion[0] as Question;
+            const newDate: Date | null = question.createdAt;
+
+            if (newDate !== null) {
+                const theDate: Date = new Date(newDate);
+
+                console.log(theDate.toISOString().slice(0, 10));
+            }
+        }
+
+
+    } catch (e) {
+        console.error(e);
+    }
+
     // If the user is authenticated (loginStatus is true), redirect them to the index.html page.
     if (!loginStatus) {
         url.redirect("/question-list.html");

@@ -1,7 +1,6 @@
 import "./config";
 import {Question} from "./models/question";
-import {getQuestion} from "./components/utils/getQuestion";
-
+import {QuestionService} from "./services/questionService";
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -18,7 +17,7 @@ async function setup(): Promise<void> {
     await checkURLParams();
 
     // Retrieves a question from the database based on the URL parameter question ID.
-    const question: Question | undefined = await getQuestion(questionId);
+    const question: Question = await QuestionService.retrieveQuestion(questionId);
 
     if (!question) location.replace("index.html");
 
@@ -46,7 +45,7 @@ async function checkURLParams(): Promise<void> {
         let params: URLSearchParams = new URLSearchParams(location.search);
 
         // Check if the "questionId" parameter exists in the URL.
-        const checkedParam: string | null = params.get("question");
+        const checkedParam: string | null = params.get("id");
 
         if (checkedParam) {
             // Set the global "questionId" variable to the retrieved value.
