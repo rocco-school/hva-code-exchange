@@ -6,13 +6,16 @@
     padding: 5px;
     box-shadow: #00000059 0px 5px 15px;
 }
+
 .box {
     display: inline-block;
     padding: 0 5px;
 }
+
 .first {
     border-right: 2px solid #40576d33;
 }
+
 input[type=number] {
     outline: none;
     border: none;
@@ -22,9 +25,11 @@ input[type=number] {
     padding: 10px 0px;
     margin-left: 10px;
 }
+
 .second {
     border-right: 2px solid #40576d33;
 }
+
 .button {
     border: none;
     color: #131c35;
@@ -44,9 +49,11 @@ input[type=number] {
     background-color: #73b1e333;
     color: #5271ff;
 }
+
 .third {
     border-right: 2px solid #40576d33;
 }
+
 .third button:focus {
     background-color: #73b1e333;
     color: #5271ff;
@@ -76,10 +83,12 @@ input[type=number] {
     margin-top: -0.4rem;
     margin-right: 1rem;
 }
+
 .color-picker::-webkit-color-swatch {
     border-radius: .5rem;
     border: none;
 }
+
 .color-picker::-moz-color-swatch {
     border-radius: .5rem;
     border: none;

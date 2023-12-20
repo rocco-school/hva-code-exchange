@@ -146,7 +146,7 @@ async function setup(): Promise<void> {
 
                 if (createQuestionTags) {
 
-                    await showSuccessMessage("Successfully created Question!", 5000, "success");
+                    await showSuccessMessage("Successfully created Question!", 5000, "success", null, null);
                     await handleRedirectToQuestionDetail(question.questionId);
                 }
 

@@ -5,8 +5,6 @@ import {hashPassword} from "./components/hashPassword";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
-import {getUserById} from "./components/utils/getUser";
-
 
 /**
  * The main application entry point for the signup page.
@@ -235,7 +233,7 @@ async function signUpDatabase(firstnameInput: string, lastnameInput: string, use
         return user
             .then((databaseResponse) => {
                 const insertId: number = databaseResponse.insertId;
-                return getUserById(insertId);
+                return User.retrieveUser(insertId);
             })
             .catch((error: Error) => {
                 console.error("Error inserting user:", error);

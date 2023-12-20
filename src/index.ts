@@ -1,63 +1,57 @@
-import "./config";
-import { api, session, url } from "@hboictcloud/api";
-import { User } from "./models/user";
-import {security} from "./components/security";
-import {JWTPayload} from "jose";
+import {redirect} from "./components/handleRedirects";
 
 /**
- * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurd helemaal onderin!
+ * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
  */
 async function setup(): Promise<void> {
-    // Maak een actie aan voor de logout knop. Als je hier op drukt wordt de logout functie aangeroepen
-    document.querySelector(".logout-btn")?.addEventListener("click", logout);
+    // Get references to various HTML elements
+    const signupButton: HTMLButtonElement | null = document.querySelector("#signupButton");
+    const loginButton: HTMLButtonElement | null = document.querySelector("#loginButton");
 
-    // Haal alle gegevens van de gebruiker op uit de database en stop dat in het model User
-    const user: User | undefined = await getUserInfo(session.get("user"));
+    const burgerMenu: HTMLImageElement | null = document.querySelector("#burgerMenu");
+    const sidebarClose: HTMLImageElement | null = document.querySelector("#sidebarClose");
+    const sidebarMenu: HTMLElement | null = document.querySelector(".sidebarMenu");
 
-    // vul naam is uit het object in de sessie
-    if (user) {
-        document.querySelector(".name")!.innerHTML = user.firstname + " " + user.lastname;
-    }
-}
+    const homeButton: HTMLButtonElement | null = document.querySelector("#homeButton");
+    const aboutButton: HTMLButtonElement | null = document.querySelector("#aboutButton");
+    const questionsButton: HTMLButtonElement | null = document.querySelector("#questionsButton");
 
-/**
- * Haal alle gegevens van de gebruiker op uit de database
- * @param id
- * @returns user object
- */
-async function getUserInfo(userid: number): Promise<User | undefined> {
-    try {
-        const data: any = await api.queryDatabase("SELECT * FROM user WHERE id = ?", userid);
+    // Add event listeners for various buttons
+    signupButton?.addEventListener("click", () => {
+        redirect("signup.html");
+    });
 
-        if (data.length > 0) {
-            const user: User = new User(
-                data[0]["id"],
-                data[0]["username"],
-                data[0]["email"],
-                data[0]["firstname"],
-                data[0]["lastname"]
-            );
-            return user;
-        }
-        return undefined;
-    } catch (error) {
-        console.error(error);
+    loginButton?.addEventListener("click", () => {
+        redirect("login.html");
+    });
 
-        return undefined;
-    }
-}
+    burgerMenu?.addEventListener("click", () => {
+        // Show the sidebar menu when the burger menu is clicked
+        sidebarMenu?.classList.add("show");
+        console.log("class added");
+    });
 
-/**
- * Logout van de gebruiker door de sessie te verwijderen
- * De methode geeft niets terug (void) en heeft daarom geen return statement
- */
-function logout(): void {
-    // Verwijder de sessies
-    session.remove("user");
+    sidebarClose?.addEventListener("click", () => {
+        // Hide the sidebar menu when the close button is clicked
+        sidebarMenu?.classList.remove("show");
+    });
 
-    // Stuur de gebruiker door naar de login pagina
-    url.redirect("login.html");
+    homeButton?.addEventListener("click", () => {
+        // Redirect to the home page
+        redirect("homepage.html");
+    });
+
+    aboutButton?.addEventListener("click", () => {
+        // Redirect to the about page (or '#' if not specified)
+        redirect("#");
+    });
+
+    questionsButton?.addEventListener("click", () => {
+        // Redirect to the questions page
+        redirect("homepage.html");
+    });
 }
 
 // Run bij het opstarten de setup functie
-await setup();
+// Run the setup function when the page is loaded
+setup();
