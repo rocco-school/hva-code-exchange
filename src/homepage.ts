@@ -181,6 +181,8 @@ async function getMostRecentQuestions(): Promise<void> {
 
                     // Display the username of the question creator
                     questionCreator.innerHTML = userData[0].username;
+
+                    questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData[0].username;
                 }
 
                 // TODO integrate tags into the questions

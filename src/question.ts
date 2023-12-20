@@ -191,7 +191,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 answer.answerId!,
                 answer.answerBody,
                 date,
-                "https://ui-avatars.com/api/?name=" + username,
+                    "https://ui-avatars.com/api/?name=" + username,
                 username,
                 totalAnswers,
                 totalQuestions,
