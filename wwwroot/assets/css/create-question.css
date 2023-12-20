@@ -1,5 +1,6 @@
-.container {
+.create-question-container {
     max-width: calc(100% - 10rem);
+    margin: auto;
 }
 
 .title {

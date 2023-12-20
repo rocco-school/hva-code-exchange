@@ -1,4 +1,4 @@
-import { api } from "@hboictcloud/api";
+import {api} from "@hboictcloud/api";
 
 try {
     //TODO: Pas het bestand .env en .env.production aan met de gegevens van HBO-ICT.Cloud

@@ -1,11 +1,20 @@
-.container {
-    margin-top: 5rem;
+.create-question-container {
+    max-width: calc(100% - 20rem);
+    margin: 5rem auto auto;
 }
 
 .answer-container {
     margin: 2rem;
     display: flex;
     gap: 3rem;
+}
+
+.answer {
+    border-bottom: 1px solid grey;
+}
+
+.answer:last-of-type {
+    border-bottom: 0;
 }
 
 .vote {

@@ -1,11 +1,10 @@
-// Import necessary modules and configurations
-import "./config";
 import {api} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
 import {Question} from "./models/question";
 import {USER_QUERY} from "./query/user.query";
 import {User} from "./models/user";
 import {ANSWER_QUERY} from "./query/answer.query";
+import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -38,6 +37,11 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 // Add styling to the container
                 container.classList.add("container");
+                container.id = question.questionId?.toString();
+
+                container.addEventListener("click", (): void => {
+                    handleRedirectToQuestionDetail(question.questionId);
+                });
 
                 // Create a list element for the question content
                 const ul: HTMLUListElement = container.appendChild(document.createElement("ul"));

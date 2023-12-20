@@ -44,6 +44,7 @@ body {
     transition: background-color .6s ease;
     overflow: hidden;
     border: 0;
+    cursor: pointer;
 }
 
 .submit-button:after {
@@ -215,4 +216,26 @@ body {
 
 .hidden {
     display: none;
+}
+
+.create-question {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    font-size: 1rem;
+    font-weight: 400;
+    border-radius: .5rem;
+    width: 10rem;
+    background-color: transparent;
+    border-color: darkgray;
+    cursor: pointer;
+}
+
+.create-question:hover {
+    background-color: darkgray;
+    color: white;
 }
