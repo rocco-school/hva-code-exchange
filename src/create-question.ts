@@ -12,6 +12,8 @@ import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import {url} from "@hboictcloud/api";
 import {Question} from "./models/question";
+import {showSuccessMessage} from "./components/successMessage";
+import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 
 /**
  * The main application entry point for the create-question page.
@@ -143,7 +145,9 @@ async function setup(): Promise<void> {
                 const createQuestionTags: boolean | string = await Question.insertQuestionTag(question.questionId, questionTags);
 
                 if (createQuestionTags) {
-                    console.log("success!", createQuestionTags);
+
+                    await showSuccessMessage("Successfully created Question!", 5000, "success");
+                    await handleRedirectToQuestionDetail(question.questionId);
                 }
 
             }

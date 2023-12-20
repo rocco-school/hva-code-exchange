@@ -98,6 +98,8 @@
     justify-content: end;
     font-size: .8rem;
     margin-top: 2rem;
+    grid-column-start: 4;
+    grid-column-end: 6;
 }
 
 .person {
@@ -114,4 +116,24 @@
 .personal-information {
     display: flex;
     flex-direction: column;
+}
+
+.action-buttons {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: flex;
+    justify-content: center;
+}
+
+.edit-button {
+    padding: 0;
+}
+
+.delete-button {
+    padding: 0;
+}
+
+.answer-info {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
 }

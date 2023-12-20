@@ -144,7 +144,7 @@ async function populateQuestionTable(): Promise<void> {
 
                 // Adding a click event listener to redirect to the question detail page.
                 tr.addEventListener("click", (): void => {
-                    handleRedirectToQuestionDetail(tr);
+                    handleRedirectToQuestionDetail(question.questionId);
                 });
             }
         });
