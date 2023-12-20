@@ -5,14 +5,7 @@ import { QUESTION_QUERY } from "./query/question.query";
 import { Question } from "./models/question";
 import { USER_QUERY } from "./query/user.query";
 import { User } from "./models/user";
-import { Answer } from "./models/answer";
 import { ANSWER_QUERY } from "./query/answer.query";
-import { CODING_TAG_QUERY } from "./query/codingTag.query";
-import { QUESTIONTAG_QUERY } from "./query/questionTag.query";
-import { QuestionTag } from "./models/questionTag";
-import { CodingTag } from "./models/codingTag";
-
-
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -59,60 +52,49 @@ async function getMostRecentQuestions(): Promise<void> {
                 // Upvote Button
                 const liQuestionUpvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionUpvote: HTMLButtonElement = liQuestionUpvote.appendChild(document.createElement("button"));
-                questionUpvote.id = "questionUpvote";
+                questionUpvote.classList.add("questionUpvote");
                 questionUpvote.innerHTML = "upvote";
 
                 // Votes Count
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionVotes: HTMLDivElement | any = liquestionVotes.appendChild(document.createElement("div"));
-                questionVotes.id = "questionVotes";
+                questionVotes.classList.add("questionVotes");
                 questionVotes.innerHTML = "0"; 
 
                 // Downvote Button
                 const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
-                questionDownvote.id = "questionDownvote";
+                questionDownvote.classList.add("questionDownvote");
                 questionDownvote.innerHTML = "Downvote"; 
 
+                // Attach event listeners to upvote and downvote buttons
                 questionUpvote.addEventListener("click", async () => {
                     votes ++;
                     questionVotes.innerHTML = votes;
-                    votesColor();
+                    votesColor(votes, questionVotes);
                 });
 
                 questionDownvote.addEventListener("click", () => {
                     votes --;
                     questionVotes.innerHTML = votes;
-                    votesColor();
+                    votesColor(votes, questionVotes);
                 });
-
-                function votesColor(): void {
-                    if (votes > 0) {
-                        questionVotes.style.color = "green";
-                    } else if (votes < 0) {
-                        questionVotes.style.color = "red";
-                    } else if (votes === 0) {
-                        questionVotes.style.color = "black";
-                    }
-                }
 
                 // Answers Count
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionAnswers: HTMLDivElement = liquestionAnswers.appendChild(document.createElement("div"));
-                questionAnswers.id = "questionAnswers";
+                questionAnswers.classList.add("questionAnswers");
 
                 if (questionAnswers) {
-                    const answerData: [Answer] = await api.queryDatabase(ANSWER_QUERY.SELECT_ANSWERS_FROM_QUESTION, question.questionId) as [Answer];
-
-                    if (answerData.length < 0) return;
-    
-                    questionAnswers.innerHTML = "answers: " + answerData.length;
+                    // Fetch the number of answers for the current question
+                    const answerAmount: any = await api.queryDatabase(ANSWER_QUERY.COUNT_ANSWERS_FROM_QUESTION, question.questionId);
+                    questionAnswers.innerHTML = "answers: " + answerAmount[0].answerCount;
                 }
 
                 // Posted At
                 const liquestionPostedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionPostedAt: HTMLDivElement = liquestionPostedAt.appendChild(document.createElement("div"));
-                questionPostedAt.id = "questionPostedAt";
+                questionPostedAt.classList.add("questionPostedAt");
 
                 // Display the posted timestamp for the question
                 if (questionPostedAt) {
@@ -123,8 +105,9 @@ async function getMostRecentQuestions(): Promise<void> {
                 // Updated At
                 const liquestionUpdatedAt: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionUpdatedAt: HTMLDivElement = liquestionUpdatedAt.appendChild(document.createElement("div"));
-                questionUpdatedAt.id = "questionUpdatedAt";
+                questionUpdatedAt.classList.add("questionUpdatedAt");
 
+                // Display the updated timestamp for the question
                 if (questionUpdatedAt) {
                     const dateUpdatedAt: any = singleQuestion.updatedAt;
                     questionUpdatedAt.innerHTML = "updated at: " + dateUpdatedAt.replace("T", "  ").slice(0, -8);
@@ -137,40 +120,38 @@ async function getMostRecentQuestions(): Promise<void> {
                 // Display the question title
                 const liQuestionTitle: HTMLLIElement = questionContentContainer.appendChild(document.createElement("li"));
                 const questionTitle: HTMLHeadElement = liQuestionTitle.appendChild(document.createElement("h3"));
-                questionTitle.id = "questionTitle";
+                questionTitle.classList.add("questionTitle");
 
                 if (questionTitle) {
                     questionTitle.innerHTML = singleQuestion.questionTitle;
                 }
 
-                // Display an example of the question body
+                // Display an excerpt of the question body
                 const liQuestionBodyExample: HTMLLIElement = questionContentContainer.appendChild(document.createElement("li"));
                 const questionBodyExample: HTMLParagraphElement = liQuestionBodyExample.appendChild(document.createElement("p"));
-                questionBodyExample.id = "questionBodyExample";
+                questionBodyExample.classList.add("questionBodyExample");
 
                 if (questionBodyExample) {
-                    questionBodyExample.innerHTML = singleQuestion.questionBody.slice(0, 120);
-                }
-
-                const divQuestionTags: HTMLDivElement = questionContentContainer.appendChild(document.createElement("div"));
-                divQuestionTags.classList.add("questionTags");
-
-                const questionTagData: [QuestionTag] = await api.queryDatabase(QUESTIONTAG_QUERY.SELECT_TAG_ID_FROM_QUESTION, question.questionId) as [QuestionTag];
-
-                if (questionTagData.length > 0) {
-                    for (const getTagId of questionTagData) {
-                        const codingTagData: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.SELECT_CODING_TAG_NAME, getTagId.tagId) as [CodingTag];
-                        if (codingTagData.length > 0) {
-                            for (const getCodingName of codingTagData) {
-                                const liQuestionTags: HTMLLIElement = divQuestionTags.appendChild(document.createElement("li"));
-                                const questionTags: HTMLDivElement = liQuestionTags.appendChild(document.createElement("div"));
-                                questionTags.id = "questionTag";
-                                questionTags.innerHTML = getCodingName.tagName;
-                            }
-                        } 
+                    questionBodyExample.innerHTML = singleQuestion.questionBody.substring(0, 350);
+                    // Truncate long question bodies and add ellipsis
+                    if (questionBodyExample.innerHTML.length > 200) {
+                        questionBodyExample.innerHTML += "...";
                     }
                 }
+
+                // Display question tags
+                const divQuestionTags: HTMLDivElement = questionContentContainer.appendChild(document.createElement("div"));
+                divQuestionTags.classList.add("questionTags");
+                const questionTags: any = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_TAG, question.questionId);
                 
+                if (questionTags.length > 0) {
+                    for (const getTagId of questionTags) {
+                        const liQuestionTags: HTMLLIElement = divQuestionTags.appendChild(document.createElement("li"));
+                        const questionTag: HTMLDivElement = liQuestionTags.appendChild(document.createElement("div"));
+                        questionTag.classList.add("questionTag");
+                        questionTag.innerHTML = getTagId.tagName;
+                    }
+                }
 
                 // Question User
                 const questionUserContainer: HTMLDivElement = ul.appendChild(document.createElement("div"));
@@ -179,12 +160,12 @@ async function getMostRecentQuestions(): Promise<void> {
                 // Question Creator Picture
                 const liQuestionCreatorPicture: HTMLLIElement = questionUserContainer.appendChild(document.createElement("li"));
                 const questionCreatorPicture: HTMLImageElement = liQuestionCreatorPicture.appendChild(document.createElement("img"));
-                questionCreatorPicture.id = "creatorPicture";
+                questionCreatorPicture.classList.add("creatorPicture");
 
                 // Question Creator
                 const liQuestionCreator: HTMLLIElement = questionUserContainer.appendChild(document.createElement("li"));
                 const questionCreator: HTMLDivElement = liQuestionCreator.appendChild(document.createElement("div"));
-                questionCreator.id = "questionCreator";
+                questionCreator.classList.add("questionCreator");
 
                 if (questionCreator) {
                     // Search for the user data based on the user ID
@@ -208,10 +189,20 @@ async function getMostRecentQuestions(): Promise<void> {
     }
 }
 
-
+// Function to change the color of the vote count based on the number of votes
+function votesColor(votes: number, questionVotes: HTMLElement): void {
+    if (votes > 0) {
+        questionVotes.style.color = "green";
+    } else if (votes < 0) {
+        questionVotes.style.color = "red";
+    } else if (votes === 0) {
+        questionVotes.style.color = "black";
+    }
+}
 
 // Invoke the function to fetch and display the most recent questions
 getMostRecentQuestions();
+
 
 
 

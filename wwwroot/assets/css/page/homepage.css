@@ -46,7 +46,6 @@
     align-items: center;
 
     width: 30%;
-    /* background-color: red; */
     margin-right: auto;
 }
 
@@ -60,7 +59,6 @@
     align-items: center;
 
     width: 100%;
-    /* background-color: greenyellow; */
     margin-left: auto;
 }
 
@@ -71,11 +69,11 @@
     margin-top: auto;
 }
 
-.recentQuestions .questionBox .questionContent #questionTag li{
+.recentQuestions .questionBox .questionContent .questionTag li{
     margin-right: 0.5rem ;
 }
 
-.recentQuestions .questionBox .questionContent #questionTag{
+.recentQuestions .questionBox .questionContent .questionTag{
     padding: 0.5rem;
     border: gray 1px solid;
     border-radius: 2rem;
@@ -89,12 +87,11 @@
     align-items: center;
 
     width: 30%;
-    /* background-color: blue; */
     margin-left: auto;
 }
 
-.recentQuestions .questionBox #creatorPicture {
+.recentQuestions .questionBox .creatorPicture {
     height: 4rem;
     width: 4rem;
-    border-radius: 2rem;
+    border-radius: 1rem;
 }

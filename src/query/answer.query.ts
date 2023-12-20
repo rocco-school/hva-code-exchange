@@ -1,5 +1,5 @@
 export const ANSWER_QUERY: {
-    SELECT_ANSWERS_FROM_QUESTION: string;
+    COUNT_ANSWERS_FROM_QUESTION: string;
 } = {
-    SELECT_ANSWERS_FROM_QUESTION: "SELECT * FROM answer WHERE questionId = ?"
+    COUNT_ANSWERS_FROM_QUESTION: "SELECT COUNT(*) AS answerCount FROM answer WHERE questionId = ?"
 };
