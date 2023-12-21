@@ -1,5 +1,5 @@
 .create-question-container {
-    max-width: calc(100% - 20rem);
+    max-width: 70%;
     margin: 5rem auto auto;
 }
 
