@@ -18,7 +18,7 @@ De mindmap op dit moment is vertakt in de volgende categorieën:
 **Benefits** die de focus heeft van wat de voordelen zijn voor het gebruiken van onze web applicatie. Wij zullen de volgende voordelen aanbieden bij het gebruiken van onze app: Je kan met onze app gemeenschappen bouwen met gebruikers die ook jou nieuwsgierigheid en interesses delen, Je kan met onze app je programmeer vaardigheden verbeteren en je kan als je wat meer ervaring hebt als programmeur jou kennis delen met anderen.
 
 ---
-![CodeExchange, mindmap](/docs/mindmap.png)
+![CodeExchange, mindmap](/docs/images/mindmap.png)
 #### foto van de mindmap die hier boven werd vermeld.
 ---
 
@@ -26,7 +26,7 @@ De mindmap op dit moment is vertakt in de volgende categorieën:
 We hebben vervolgens laten zien hoe ver we waren waren door middel van een korte demo van onze MVP, Hierbij was te zien hoe je een nieuwe vraag kan aanmaken en dat wanneer je klaar bent met het schrijven van je vraag het ook meteen kon zien in een dashboard met andere vragen die door andere gebruikers waren gesteld.
 
 ---
-![CodeExchange, sprintMVP1](mvpSprint1.png)
+![CodeExchange, sprintMVP1](/docs/images/sprint1Mvp.png)
 #### foto van de MVP in sprint 1.
 ---
 

@@ -1,6 +1,6 @@
 # STARR reflectie
 
-![Retro, picture retrospective](sprintRetro1.png)
+![Retro, picture retrospective](/docs/images/sprint1-Retro1.png)
 
 ## Situatie (S):
 
@@ -45,6 +45,6 @@ Ik heb de afgelopen sprint geleerd hoe je een gebruikersonderzoek moet doen en h
 
 En ik heb onderzoek gedaan naar hoe je een goed gebruikersonderzoek doet. hierbij heb ik onderzoek gedaan naar de doelgroep die wij willen begrijken met onze applicatie. Vervolgends heb ik dit allemaal in een mindmap verwerkt om meer duidelijkheid over ons project te creeren.
 
-![Mindmap, Mindmap code Exchange](../../diagrams/mindmap.png)
+![Mindmap, Mindmap code Exchange](/docs/images/mindmap.png)
 
 Daarnaast hebben we beiden gedurende de sprint actief gewerkt aan onze communicatie- en samenwerkingsvaardigheden. Dit resulteerde in een steeds soepeler samenwerking, waarbij eventuele struikelblokken direct besproken en opgelost konden worden
