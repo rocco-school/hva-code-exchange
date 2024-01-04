@@ -35,7 +35,7 @@ Na het presenteren van onze prototype begonnen we met de demo van onze MVP. We b
 
 We gingen hierna naar de pagina waarop je vragen kan stellen. Je kon zien dat het vergelijkbaar was met het prototype, alleen was er bij de tekst input waar je de inhoud van de vraag kon zetten een kleine editor, waarmee je jou tekst kon dik drukken of schuin zetten en onderaan bij het gedeelte van de tags was er in plaats van een button voor de tags een dropdown menu met tags uit de database.
 
-we hadden hierbij snel een vraag gemaakt en je kon zien dat de vraag meteen bovenaan kwam te staan in de homepagina, omdat dit natuurlijk de meest recente vraag werd.
+we hadden hierbij snel een vraag gemaakt en je kon zien dat de vraag meteen bovenaan kwam te staan in de homepagina, omdat die vraag natuurlijk de meest recente vraag wordt.
 
 vervolgens klikte wij op 1 van de vragen. We werden vervolgens verwezen naar de pagina voor die ene specifieke vraag. Hierbij kon je de titel van de vraag zien en de hele inhoud van de vraag. Onder de vraag waren de antwoorden te zien op de vraag en daaronder was er een tekst input waarmee je antwoord kon geven op de vraag. 
 
@@ -54,4 +54,4 @@ We hebben tijdens de productreview het volgende feedback terug gekregen. Dit wor
 - misschien een totaal aantal votes onder de upvote en downvote optie
 
 ## Slot
-Als wij nog tijd over hebben zullen wij proberen om alle suggesties die wij hadden gekregen tijdens onze productreview implementeren in onze product.
+Als wij nog tijd over hebben in de volgende sprint zullen wij proberen om alle suggesties die wij hadden gekregen tijdens onze productreview implementeren in onze product.
