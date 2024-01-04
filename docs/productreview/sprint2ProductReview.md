@@ -27,10 +27,12 @@ We klikten daarna op de "ask a question" knop die ons vervolgens verwees naar ee
 
 Hierna gingen we terug naar de homepagina waarna wij vervolgens op de eerste vraag klikte. Hierbij werden we verwezen naar de pagina die specifiek voor die ene vraag was. Hierop waren de volgende dingen te zien: Er was een vraag titel met daaronder de inhoud van de vraag. Links van de vraag en inhoud waren er ook twee knops die upvote en downvote aangaven met daartussen een nummer die het totaal berekende. Onder de inhoud van de vraag waren ook de aangegeven tags te zien die bij de vraag hoorde. Daaronder waren de antwoorden op de vraag. Ook bij de antwoorden was er een upvote en een downvote knop. Helemaal onder aan was er een tekst input met een knop waarmee je een antwoord kan geven op de vraag.
 
-![singleQuestionCodeExchangePrototype](/docs//images/singleQuestionPrototype.png)
+![singleQuestionCodeExchangePrototype](/docs/images/singleQuestionPrototype.png)
 #### screenshot van een vraag met antwoorden prototype
 
 ### Demo MVP
+Na het presenteren van onze prototype begonnen we met de demo van onze MVP. We begonnen hierbij met de homepagina van de app. Hierbij kon je de 5 meest recente vragen zien met de upvote en downvote knoppen. Links was er een sidebar menu te zien die je open en dicht kon klappen. We gingen hierna naar de pagina waarop je vragen kan stellen. 
+
 
 
 
