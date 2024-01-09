@@ -9,6 +9,6 @@ Vervolgens keken we naar onze ERD. Hierbij hadden we uitgelegd over de relaties 
 Tot slot keken we naar beide onze codes om te kijken of OOP van toepassing was op onze code. Hierbij werd Fauzan gevraagd waarom hij bij de methode retrieveQueston() als promise een string met square brackets had gebruikt, terwijl er maar 1 question terug zal komen. De reden voor was, omdat we niet bepaald keuze hadden, want de api geeft standaard een array terug uit de database ondanks de feit dat onze query alleen maar 1 vraag terug wilt krijgen. Fauzan kreeg de feedback om met de code te spelen, zodat hij het beter begreep.
 
 ---
-![feedbackExpert.jpg](/docs/images/feedback.jpg)
+![feedbackExpert.jpg](/feedbackNicoExpert.jpg)
 ---
 foto van de feedback van Nico

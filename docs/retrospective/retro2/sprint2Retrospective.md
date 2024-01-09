@@ -17,7 +17,7 @@ hieronder bevindt de documentatie van retrospective 2. De documentatie is verdee
 - Wij vinden dat we elkaars houding moeten checken, zodat wij beide als duo met een positief gevoel aan ons project kunnen werken.
 
 ---
-![retrospectiveSprint2Image.jpg](/docs/images/sprint2RetrospectiveImage.jpg)
+![retrospectiveSprint2Image.jpg](/sprint2RetrospectiveImage.jpg)
 #### foto van onze retrospective die wij hadden gemaakt voor sprint 2
 ---
 

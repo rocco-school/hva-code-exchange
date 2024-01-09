@@ -1,6 +1,6 @@
 # STARR reflectie
 
-![Retro, picture retrospective](/docs/images/sprint1-Retro1.png)
+![Retro, picture retrospective](/sprint1-Retro1.png)
 
 ## Situatie (S):
 
