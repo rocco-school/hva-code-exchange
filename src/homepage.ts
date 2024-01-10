@@ -1,11 +1,10 @@
-// Import necessary modules and configurations
-import "./config";
-import { api } from "@hboictcloud/api";
-import { QUESTION_QUERY } from "./query/question.query";
-import { Question } from "./models/question";
-import { USER_QUERY } from "./query/user.query";
-import { User } from "./models/user";
-import { ANSWER_QUERY } from "./query/answer.query";
+import {api} from "@hboictcloud/api";
+import {QUESTION_QUERY} from "./query/question.query";
+import {Question} from "./models/question";
+import {USER_QUERY} from "./query/user.query";
+import {User} from "./models/user";
+import {ANSWER_QUERY} from "./query/answer.query";
+import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -30,7 +29,7 @@ async function getMostRecentQuestions(): Promise<void> {
             );
 
             // Create a container for each question in the UI
-            const container: HTMLUListElement | undefined = recentQuestionsBody?.appendChild(document.createElement("ul"));
+            const container: HTMLUListElement | undefined | any = recentQuestionsBody?.appendChild(document.createElement("ul"));
 
             // Check if the container was successfully created
             if (container) {
@@ -38,6 +37,11 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 // Add styling to the container
                 container.classList.add("container");
+                container.id = question.questionId?.toString();
+
+                container.addEventListener("click", (): void => {
+                    handleRedirectToQuestionDetail(question.questionId);
+                });
 
                 // Create a list element for the question content
                 const ul: HTMLUListElement = container.appendChild(document.createElement("ul"));
@@ -59,23 +63,23 @@ async function getMostRecentQuestions(): Promise<void> {
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionVotes: HTMLDivElement | any = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.classList.add("questionVotes");
-                questionVotes.innerHTML = "0"; 
+                questionVotes.innerHTML = "0";
 
                 // Downvote Button
                 const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
                 questionDownvote.classList.add("questionDownvote");
-                questionDownvote.innerHTML = "Downvote"; 
+                questionDownvote.innerHTML = "Downvote";
 
                 // Attach event listeners to upvote and downvote buttons
                 questionUpvote.addEventListener("click", async () => {
-                    votes ++;
+                    votes++;
                     questionVotes.innerHTML = votes;
                     votesColor(votes, questionVotes);
                 });
 
                 questionDownvote.addEventListener("click", () => {
-                    votes --;
+                    votes--;
                     questionVotes.innerHTML = votes;
                     votesColor(votes, questionVotes);
                 });
@@ -143,7 +147,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 const divQuestionTags: HTMLDivElement = questionContentContainer.appendChild(document.createElement("div"));
                 divQuestionTags.classList.add("questionTags");
                 const questionTags: any = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_TAG, question.questionId);
-                
+
                 if (questionTags.length > 0) {
                     for (const getTagId of questionTags) {
                         const liQuestionTags: HTMLLIElement = divQuestionTags.appendChild(document.createElement("li"));
@@ -177,6 +181,8 @@ async function getMostRecentQuestions(): Promise<void> {
 
                     // Display the username of the question creator
                     questionCreator.innerHTML = userData[0].username;
+
+                    questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData[0].username + "&background=random";
                 }
 
                 // TODO integrate tags into the questions
