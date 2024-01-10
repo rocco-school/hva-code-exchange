@@ -82,6 +82,9 @@ async function populateQuestionTable(): Promise<void> {
         // Querying the database to get all questions.
 
         const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTIONS) as [Question];
+
+        console.log(questions);
+
         const questionsBody: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".questions-body"));
 
         // If there are no questions, return early.

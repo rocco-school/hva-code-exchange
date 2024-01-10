@@ -122,7 +122,7 @@ export class AnswerService {
     /**
      * Retrieve answers connected to a specific question from the database.
      *
-     * @param {string} questionId - The ID of the question for which answers are to be retrieved.
+     * @param {number} questionId - The ID of the question for which answers are to be retrieved.
      * @returns {Promise<[AnswerWithUser]>} A Promise resolving to the retrieved answer(s).
      * @throws {Error} Throws an error if the database retrieval was not successful.
      *
@@ -131,7 +131,7 @@ export class AnswerService {
      * It queries the database to retrieve answers based on the provided question ID and returns
      * a Promise that resolves to an array of retrieved answers.
      */
-    public static async getAnswersForQuestion(questionId: string): Promise<[AnswerWithUser]> {
+    public static async getAnswersForQuestion(questionId: number): Promise<[AnswerWithUser]> {
         // Querying the database to retrieve answers for the specified question.
         const answers: [AnswerWithUser] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_AND_USERS_FROM_QUESTION, questionId) as [AnswerWithUser];
 
@@ -166,4 +166,30 @@ export class AnswerService {
 
         return answers[0].totalAnswers;
     }
+
+
+    /**
+     * Retrieve answers connected to a specific question from the database.
+     *
+     * @param {number} questionId - The ID of the question for which answers are to be retrieved.
+     * @returns {Promise<[AnswerWithUser]>} A Promise resolving to the retrieved answer(s).
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves answers connected to a specific question from the database.
+     * It queries the database to retrieve answers based on the provided question ID and returns
+     * a Promise that resolves to an array of retrieved answers.
+     */
+    public static async getAnswersByQuestionId(questionId: number): Promise<[Answer]> {
+        // Querying the database to retrieve answers for the specified question.
+        const answers: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_FROM_QUESTION, questionId) as [Answer];
+
+        // Checking if the database retrieval was successful.
+        if (!answers) {
+            throw new Error(`Failed to retrieve answers for question ${questionId} from Database!`);
+        }
+
+        return answers;
+    }
+
 }

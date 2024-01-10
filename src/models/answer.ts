@@ -1,23 +1,21 @@
 import {AnswerService} from "../services/answerService";
+import {Post} from "./post";
 
-export class Answer {
+export class Answer extends Post {
     // private fields
     private _answerId: number | null;
     private _questionId: number;
     private _userId: number;
     private _answerBody: string;
-    private _createdAt: Date | null;
-    private _updatedAt: Date | null;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
     public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, createdAt: Date | null, updatedAt: Date | null) {
+        super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
         this._userId = userId;
         this._answerBody = answerBody;
-        this._createdAt = createdAt;
-        this._updatedAt = updatedAt;
     }
 
     // Getters en setters
@@ -37,14 +35,6 @@ export class Answer {
         return this._answerBody;
     }
 
-    public get createdAt(): Date | null {
-        return this._createdAt;
-    }
-
-    public get updatedAt(): Date | null {
-        return this._updatedAt;
-    }
-
     public set answerId(value: number | null) {
         this._answerId = value;
     }
@@ -59,14 +49,6 @@ export class Answer {
 
     public set answerBody(value: string) {
         this._answerBody = value;
-    }
-
-    public set createdAt(value: Date | null) {
-        this._createdAt = value;
-    }
-
-    public set updatedAt(value: Date | null) {
-        this._updatedAt = value;
     }
 
     public toString(): string {

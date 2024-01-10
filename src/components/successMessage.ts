@@ -35,6 +35,12 @@ export async function showSuccessMessage(message: string, duration: number | nul
         messageButton.id = extraID.toString();
     }
 
+    if (closeButton) {
+        closeButton.addEventListener("click", (): void => {
+            filter?.classList.add("hidden");
+        });
+    }
+
     switch (true) {
         case type === "success":
             successIcon?.classList.remove("hidden");

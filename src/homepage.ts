@@ -207,7 +207,7 @@ function votesColor(votes: number, questionVotes: HTMLElement): void {
 }
 
 // Invoke the function to fetch and display the most recent questions
-getMostRecentQuestions();
+await getMostRecentQuestions();
 
 
 

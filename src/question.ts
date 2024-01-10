@@ -63,7 +63,6 @@ async function setup(): Promise<void> {
         }
 
     });
-    document.querySelector(".close-modal-button");
 
     const postNewAnswer: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".btn_submit"));
     const newAnswerTextBody: HTMLDivElement = (<HTMLDivElement>document.querySelector(".new-answer-body-textarea"));

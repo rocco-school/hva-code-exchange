@@ -1,27 +1,25 @@
 import {QuestionService} from "../services/questionService";
 import {AnswerService} from "../services/answerService";
 import {AnswerWithUser} from "./interface/answerWithUser";
+import {Post} from "./post";
 
-export class Question {
+export class Question extends Post {
     // private fields
     private _questionId: number | null;
     private _userId: number;
     private _questionTitle: string;
     private _questionBody: string;
     private _isClosed: boolean;
-    private _createdAt: Date | null;
-    private _updatedAt: Date | null;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
     public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date | null, updatedAt: Date | null) {
+        super(createdAt, updatedAt);
         this._questionId = questionId;
         this._userId = userId;
         this._questionTitle = questionTitle;
         this._questionBody = questionBody;
         this._isClosed = isClosed;
-        this._createdAt = createdAt;
-        this._updatedAt = updatedAt;
     }
 
     // Getters en setters
@@ -45,14 +43,6 @@ export class Question {
         return this._isClosed;
     }
 
-    public get createdAt(): Date | null {
-        return this._createdAt;
-    }
-
-    public get updatedAt(): Date | null {
-        return this._updatedAt;
-    }
-
     public set questionId(value: number | null) {
         this._questionId = value;
     }
@@ -71,14 +61,6 @@ export class Question {
 
     public set isClosed(value: boolean) {
         this._isClosed = value;
-    }
-
-    public set createdAt(value: Date | null) {
-        this._createdAt = value;
-    }
-
-    public set updatedAt(value: Date | null) {
-        this._updatedAt = value;
     }
 
     public toString(): string {
