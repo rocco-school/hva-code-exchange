@@ -1,8 +1,8 @@
 import "./config";
 import {api} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
+import { homepageService } from "./services/homepageService";
 import {Question} from "./models/question";
-import {USER_QUERY} from "./query/user.query";
 import {User} from "./models/user";
 import {ANSWER_QUERY} from "./query/answer.query";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
@@ -175,15 +175,12 @@ async function getMostRecentQuestions(): Promise<void> {
                 if (questionCreator) {
                     // Search for the user data based on the user ID
                     const searchForUserId: number = singleQuestion.userId;
-                    const userData: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, searchForUserId) as [User];
-
-                    // Check if user data is available
-                    if (userData.length < 0) return;
+                    const userData: User = await homepageService.searchUserId(searchForUserId);
 
                     // Display the username of the question creator
-                    questionCreator.innerHTML = userData[0].username;
+                    questionCreator.innerHTML = userData.username;
 
-                    questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData[0].username + "&background=random";
+                    questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData.username + "&background=random";
                 }
 
                 // TODO integrate tags into the questions
