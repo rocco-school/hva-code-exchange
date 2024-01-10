@@ -1,3 +1,4 @@
+import "./config";
 import {api} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
 import {Question} from "./models/question";
