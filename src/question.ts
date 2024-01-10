@@ -147,7 +147,6 @@ async function addAnswersToPage(userId: number): Promise<void> {
 
     const answers: AnswerWithUser[] | string = await Question.getAnswersForQuestion(questionId);
 
-
     answerCount.innerHTML = String(answers.length);
 
     if (answers.length !== 0) {
