@@ -300,7 +300,7 @@ export class Question extends Post {
     /**
      * Retrieve answers connected to a specific question from the database.
      *
-     * @param {string} questionId - The ID of the question for which answers are to be retrieved.
+     * @param {number} questionId - The ID of the question for which answers are to be retrieved.
      * @returns {Promise<AnswerWithUser[] | string>} A Promise resolving to either the retrieved answers or an error message.
      * @throws {Error} Throws an error if the retrieval operation fails.
      *
@@ -312,14 +312,14 @@ export class Question extends Post {
      * @example
      * try {
      *   // Example: Retrieve answers for a specific question
-     *   const questionId = 'exampleQuestionId';
+     *   const questionId = exampleQuestionId;
      *   const answers = await Question.getAnswersForQuestion(questionId);
      *   console.log('Answers retrieved successfully:', answers);
      * } catch (error) {
      *   console.error('Failed to retrieve answers:', error.message);
      * }
      */
-    public static async getAnswersForQuestion(questionId: string): Promise<AnswerWithUser[] | string> {
+    public static async getAnswersForQuestion(questionId: number): Promise<AnswerWithUser[] | string> {
         try {
             // Calling the getAnswersForQuestion method from the service.
             return await AnswerService.getAnswersForQuestion(questionId);
