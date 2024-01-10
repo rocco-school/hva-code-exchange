@@ -7,15 +7,19 @@ export class Answer extends Post {
     private _questionId: number;
     private _userId: number;
     private _answerBody: string;
+    private _upVotes: number;
+    private _downVotes: number;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, createdAt: Date | null, updatedAt: Date | null, upVotes: number, downVotes: number) {
         super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
         this._userId = userId;
         this._answerBody = answerBody;
+        this._upVotes = upVotes;
+        this._downVotes = downVotes;
     }
 
     // Getters en setters
@@ -34,6 +38,12 @@ export class Answer extends Post {
     public get answerBody(): string {
         return this._answerBody;
     }
+    public get upVotes(): number {
+        return this._upVotes;
+    }
+    public get downVotes(): number {
+        return this._downVotes;
+    }
 
     public set answerId(value: number | null) {
         this._answerId = value;
@@ -50,9 +60,15 @@ export class Answer extends Post {
     public set answerBody(value: string) {
         this._answerBody = value;
     }
+    public set upVotes(value: number) {
+        this._upVotes = value;
+    }
+    public set downVotes(value: number) {
+        this._downVotes = value;
+    }
 
     public toString(): string {
-        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this.answerBody} ${this._createdAt} ${this._updatedAt}`;
+        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._upVotes} ${this._downVotes} ${this.createdAt} ${this.updatedAt}`;
     }
 
     /**

@@ -10,16 +10,20 @@ export class Question extends Post {
     private _questionTitle: string;
     private _questionBody: string;
     private _isClosed: boolean;
+    private _upVotes: number;
+    private _downVotes: number;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date | null, updatedAt: Date | null, upVotes: number, downVotes: number) {
         super(createdAt, updatedAt);
         this._questionId = questionId;
         this._userId = userId;
         this._questionTitle = questionTitle;
         this._questionBody = questionBody;
         this._isClosed = isClosed;
+        this._upVotes = upVotes;
+        this._downVotes = downVotes;
     }
 
     // Getters en setters
@@ -43,6 +47,13 @@ export class Question extends Post {
         return this._isClosed;
     }
 
+    public get upVotes(): number {
+        return this._upVotes;
+    }
+    public get downVotes(): number {
+        return this._downVotes;
+    }
+
     public set questionId(value: number | null) {
         this._questionId = value;
     }
@@ -63,8 +74,15 @@ export class Question extends Post {
         this._isClosed = value;
     }
 
+    public set upVotes(value: number) {
+        this._upVotes = value;
+    }
+    public set downVotes(value: number) {
+        this._downVotes = value;
+    }
+
     public toString(): string {
-        return `User: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._createdAt} ${this._updatedAt}`;
+        return `User: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._upVotes} ${this._downVotes} ${this.createdAt} ${this.updatedAt}`;
     }
 
     /**

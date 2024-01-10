@@ -25,13 +25,13 @@ async function setup(): Promise<void> {
 
 
     // Show question form on click
-    createQuestion.addEventListener("click", (): void => {
+    createQuestion?.addEventListener("click", (): void => {
         url.redirect("create-question.html");
     });
 
 
     // Cancel creating question on click
-    cancelForm.addEventListener("click", (): void => {
+    cancelForm?.addEventListener("click", (): void => {
         if (createQuestionForm) {
             createQuestionForm.classList.add("hidden");
         }
@@ -43,7 +43,7 @@ async function setup(): Promise<void> {
      * @param {Event} e - The event object representing the form submission.
      * @returns {Promise<void>} - A Promise that resolves when the function completes.
      */
-    questionForm.addEventListener("submit", async function (e): Promise<void> {
+    questionForm?.addEventListener("submit", async function (e): Promise<void> {
         e.preventDefault();
 
         const questionTitle: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("questionTitle"));

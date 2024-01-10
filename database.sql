@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`question`
     `questionTitle` VARCHAR(255) NOT NULL,
     `questionBody` TEXT NOT NULL,
     `isClosed` BOOLEAN DEFAULT FALSE,
+    `upVotes` INT DEFAULT 0 NOT NULL,
+    `downVotes` INT DEFAULT 0 NOT NULL,
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX `user_idx` (`userId` ASC),
@@ -34,6 +36,8 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`answer`
     `questionId` INT NOT NULL,
     `userId` INT NOT NULL,
     `answerBody` TEXT NOT NULL,
+    `upVotes` INT DEFAULT 0 NOT NULL,
+    `downVotes` INT DEFAULT 0 NOT NULL,
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX `question_idx` (`questionId` ASC),
@@ -93,3 +97,25 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`user_tag`
             ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`votes`
+(
+    `voteId` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` INT NOT NULL,
+    `questionId` INT NULL,
+    `answerId` INT NULL,
+    INDEX `user_idx` (`userId` ASC),
+    INDEX `question_idx` (`questionId` ASC),
+    INDEX `answer_idx` (`answerId` ASC),
+        FOREIGN KEY (`userId`)
+            REFERENCES `pb2b2324_quumuuteexaa68_live`.`user` (`userId`)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+        FOREIGN KEY (`questionId`)
+            REFERENCES `pb2b2324_quumuuteexaa68_live`.`question` (`questionId`)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+        FOREIGN KEY (`answerId`)
+            REFERENCES `pb2b2324_quumuuteexaa68_live`.`answer` (`answerId`)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
+) ENGINE = InnoDB;
