@@ -7,19 +7,19 @@ export class Answer extends Post {
     private _questionId: number;
     private _userId: number;
     private _answerBody: string;
-    private _upVotes: number;
-    private _downVotes: number;
+    private _totalUpvotes: number | null;
+    private _totalDownvotes: number | null;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, createdAt: Date | null, updatedAt: Date | null, upVotes: number, downVotes: number) {
+    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
         this._userId = userId;
         this._answerBody = answerBody;
-        this._upVotes = upVotes;
-        this._downVotes = downVotes;
+        this._totalUpvotes = totalUpvotes;
+        this._totalDownvotes = totalDownvotes;
     }
 
     // Getters en setters
@@ -38,11 +38,11 @@ export class Answer extends Post {
     public get answerBody(): string {
         return this._answerBody;
     }
-    public get upVotes(): number {
-        return this._upVotes;
+    public get totalUpvotes(): number | null {
+        return this._totalUpvotes;
     }
-    public get downVotes(): number {
-        return this._downVotes;
+    public get totalDownvotes(): number | null {
+        return this._totalDownvotes;
     }
 
     public set answerId(value: number | null) {
@@ -60,15 +60,15 @@ export class Answer extends Post {
     public set answerBody(value: string) {
         this._answerBody = value;
     }
-    public set upVotes(value: number) {
-        this._upVotes = value;
+    public set totalUpvotes(value: number | null) {
+        this._totalUpvotes = value;
     }
-    public set downVotes(value: number) {
-        this._downVotes = value;
+    public set totalDownvotes(value: number | null) {
+        this._totalDownvotes = value;
     }
 
     public toString(): string {
-        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._upVotes} ${this._downVotes} ${this.createdAt} ${this.updatedAt}`;
+        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._totalUpvotes} ${this._totalDownvotes} ${this.createdAt} ${this.updatedAt}`;
     }
 
     /**

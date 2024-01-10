@@ -195,4 +195,79 @@ export class QuestionService {
 
         return questions[0].totalQuestions;
     }
+
+
+    /**
+     * Update the total upvotes for a question in the database.
+     *
+     * @param {number} questionId - The ID of the question to update.
+     * @param {boolean} increment - If true, increment total upvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Question>} A Promise resolving to the updated question object.
+     * @throws {Error} Throws an error if the database update or retrieval fails.
+     *
+     * @description
+     * This static method updates the total upvotes for a question in the database by either incrementing or
+     * decrementing by 1. It uses a parameterized query to perform the update operation and retrieves the
+     * updated question from the database. The function returns a Promise that resolves to the updated question.
+     */
+    public static async updateTotalUpvotes(questionId: number, increment: boolean): Promise<Question> {
+        // Determine the update value based on the increment flag.
+        const updateValue: number = increment ? 1 : -1;
+
+        try {
+            // Update the total_upvotes column in the Question table.
+            const params: number[] = [updateValue, questionId];
+            await api.queryDatabase(QUESTION_QUERY.UPDATE_TOTAL_UPVOTES, ...params);
+
+            // Retrieve the updated question from the database.
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId) as [Question];
+
+            // Checking if the database retrieval was successful.
+            if (!question) {
+                new Error(`Failed to get question for ${questionId}!`);
+            }
+
+            return question[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update total question upvotes for ${questionId}: ${error}`);
+        }
+    }
+
+    /**
+     * Update the total downvotes for a question in the database.
+     *
+     * @param {number} questionId - The ID of the question to update.
+     * @param {boolean} increment - If true, increment total downvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Question>} A Promise resolving to the updated question object.
+     * @throws {Error} Throws an error if the database update or retrieval fails.
+     *
+     * @description
+     * This static method updates the total downvotes for a question in the database by either incrementing or
+     * decrementing by 1. It uses a parameterized query to perform the update operation and retrieves the
+     * updated question from the database. The function returns a Promise that resolves to the updated question.
+     */
+    public static async updateTotalDownvotes(questionId: number, increment: boolean): Promise<Question> {
+        // Determine the update value based on the increment flag.
+        const updateValue: number = increment ? 1 : -1;
+
+        try {
+            // Update the total_downvotes column in the Question table.
+            const params: number[] = [updateValue, questionId];
+            await api.queryDatabase(QUESTION_QUERY.UPDATE_TOTAL_DOWNVOTES, ...params);
+
+            // Retrieve the updated question from the database.
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId) as [Question];
+
+            // Checking if the database retrieval was successful.
+            if (!question) {
+                new Error(`Failed to get question for ${questionId}!`);
+            }
+
+            return question[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update total question downvotes for ${questionId}: ${error}`);
+        }
+    }
 }

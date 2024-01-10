@@ -10,20 +10,20 @@ export class Question extends Post {
     private _questionTitle: string;
     private _questionBody: string;
     private _isClosed: boolean;
-    private _upVotes: number;
-    private _downVotes: number;
+    private _totalUpvotes: number | null;
+    private _totalDownvotes: number | null;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, createdAt: Date | null, updatedAt: Date | null, upVotes: number, downVotes: number) {
+    public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._questionId = questionId;
         this._userId = userId;
         this._questionTitle = questionTitle;
         this._questionBody = questionBody;
         this._isClosed = isClosed;
-        this._upVotes = upVotes;
-        this._downVotes = downVotes;
+        this._totalUpvotes = totalUpvotes;
+        this._totalDownvotes = totalDownvotes;
     }
 
     // Getters en setters
@@ -47,11 +47,11 @@ export class Question extends Post {
         return this._isClosed;
     }
 
-    public get upVotes(): number {
-        return this._upVotes;
+    public get totalUpvotes(): number | null {
+        return this._totalUpvotes;
     }
-    public get downVotes(): number {
-        return this._downVotes;
+    public get totalDownvotes(): number | null {
+        return this._totalDownvotes;
     }
 
     public set questionId(value: number | null) {
@@ -74,15 +74,15 @@ export class Question extends Post {
         this._isClosed = value;
     }
 
-    public set upVotes(value: number) {
-        this._upVotes = value;
+    public set totalUpvotes(value: number | null) {
+        this._totalUpvotes = value;
     }
-    public set downVotes(value: number) {
-        this._downVotes = value;
+    public set totalDownvotes(value: number | null) {
+        this._totalDownvotes = value;
     }
 
     public toString(): string {
-        return `User: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._upVotes} ${this._downVotes} ${this.createdAt} ${this.updatedAt}`;
+        return `User: ${this._questionId} ${this._userId} ${this._questionTitle} ${this._questionBody} ${this._isClosed} ${this._totalUpvotes} ${this._totalDownvotes} ${this.createdAt} ${this.updatedAt}`;
     }
 
     /**
@@ -326,6 +326,75 @@ export class Question extends Post {
         } catch (error) {
             // Handling any errors that occur during the process.
             return `Error retrieving answers: ${error}`;
+        }
+    }
+
+
+    /**
+     * Update the total upvotes for a question using the QuestionService.
+     *
+     * @param {number} questionId - The ID of the question to update.
+     * @param {boolean} increment - If true, increment total upvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Question | string>} A Promise resolving to the updated question object or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This static method calls the updateTotalUpvotes method from the QuestionService to update
+     * the total upvotes for a question. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * the updated question object or an error message.
+     *
+     * @example
+     * // Example: Update total upvotes for a question by incrementing.
+     * const questionIdToUpdate = 123;
+     * try {
+     *   const updatedQuestion = await Question.updateTotalUpvotes(questionIdToUpdate, true);
+     *   console.log('Total upvotes updated successfully:', updatedQuestion);
+     * } catch (error) {
+     *   console.error('Failed to update total upvotes:', error);
+     * }
+     */
+    public static async updateTotalUpvotes(questionId: number, increment: boolean): Promise<Question | string> {
+        try {
+            // Calling the updateTotalUpvotes method from the service.
+            return await QuestionService.updateTotalUpvotes(questionId, increment);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating question total upvotes: ${error}`;
+        }
+    }
+
+    /**
+     * Update the total downvotes for a question using the QuestionService.
+     *
+     * @param {number} questionId - The ID of the question to update.
+     * @param {boolean} increment - If true, increment total downvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Question | string>} A Promise resolving to the updated question object or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This static method calls the updateTotalDownvotes method from the QuestionService to update
+     * the total downvotes for a question. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * the updated question object or an error message.
+     *
+     * @example
+     * // Example: Update total downvotes for a question by incrementing.
+     * const questionIdToUpdate = 123;
+     * try {
+     *   const updatedQuestion = await Question.updateTotalDownvotes(questionIdToUpdate, true);
+     *   console.log('Total downvotes updated successfully:', updatedQuestion);
+     * } catch (error) {
+     *   console.error('Failed to update total downvotes:', error);
+     * }
+     */
+    public static async updateTotalDownvotes(questionId: number, increment: boolean): Promise<Question | string> {
+        try {
+            // Calling the updateTotalDownvotes method from the service.
+            return await QuestionService.updateTotalDownvotes(questionId, increment);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating question total downvotes: ${error}`;
         }
     }
 }

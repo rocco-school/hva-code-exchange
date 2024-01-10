@@ -132,6 +132,8 @@ async function setup(): Promise<void> {
                 false,
                 null,
                 null,
+                null,
+                null,
             );
 
             // Save the question and get the result
@@ -301,7 +303,7 @@ function extractBeforeAfterContent(selection: Selection, textarea: HTMLDivElemen
     afterContent: string
 } {
     const range: Range = selection.getRangeAt(0);
-    const allContent: string = textarea.innerHTML;
+    // const allContent: string = textarea.innerHTML;
 
     const allContentRange: Range = document.createRange();
     allContentRange.selectNodeContents(textarea);

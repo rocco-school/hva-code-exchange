@@ -7,6 +7,8 @@ import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import {Answer} from "./models/answer";
 import {showSuccessMessage} from "./components/successMessage";
+import {Vote} from "./models/vote";
+import {VoteEnum} from "./enum/vote.enum";
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -28,13 +30,28 @@ async function setup(): Promise<void> {
     // Retrieves a question from the database based on the URL parameter question ID.
     const question: Question = await QuestionService.retrieveQuestion(questionId);
 
+    console.log(question);
+
     if (!question) location.replace("index.html");
 
+    if (question.totalUpvotes && question.totalDownvotes) {
+        const upvoteSum: number = question.totalUpvotes - question.totalDownvotes;
+        (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
+    }
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
 
+
     // Populate all answers by questionID
     await addAnswersToPage(loginStatus["userId"]);
+
+    document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
+        await handleQuestionUpvote(question.questionId!, loginStatus["userId"]);
+    });
+
+    document.querySelector(".downvote-question")?.addEventListener("click", async (): Promise<void> => {
+        await handleQuestionDownvote(question.questionId!, loginStatus["userId"]);
+    });
 
 
     document.querySelectorAll(".delete-button").forEach(item => {
@@ -43,7 +60,7 @@ async function setup(): Promise<void> {
         });
     });
 
-    document.querySelector(".continue-button").addEventListener("click", async (item) => {
+    document.querySelector(".continue-button")?.addEventListener("click", async (item) => {
         const target: HTMLDivElement = item.target as HTMLDivElement;
 
         if (!target.classList.contains("answer")) {
@@ -77,12 +94,15 @@ async function setup(): Promise<void> {
             await showSuccessMessage("Please enter your answer before posting answer", 3000, "danger", null, null);
             return;
         }
+        const userId: number = loginStatus["userId"];
 
         const newAnswer: Answer = new Answer(
             null,
             questionId,
-            loginStatus["userId"],
+            userId,
             newAnswerTextBody.innerHTML,
+            null,
+            null,
             null,
             null
         );
@@ -95,13 +115,142 @@ async function setup(): Promise<void> {
             location.reload();
         } catch (error) {
             await showSuccessMessage("Failed to create answer!", 3000, "danger", null, null);
-            console.error("Failed to save answer:", error.message);
+            console.error("Failed to save answer:", error);
         }
     });
 }
 
 // Invoke the question detail page application entry point.
 await setup();
+
+
+/**
+ * Handles the upvoting of a question by a user.
+ *
+ * @param {number} questionId - The ID of the question to upvote.
+ * @param {number} userId - The ID of the user performing the upvote.
+ * @returns {Promise<void>} A Promise indicating the success of the upvote operation.
+ * @throws {Error} Throws an error if any part of the upvote process fails.
+ *
+ * @description
+ * This function handles the upvoting of a question by a user. It first checks if the user has already
+ * upvoted the question. If not, it creates a new upvote and updates the total upvotes count for the question.
+ * If the user has already upvoted, it toggles the vote type, updating the existing vote and adjusting the
+ * total upvotes and downvotes accordingly.
+ */
+async function handleQuestionUpvote(questionId: number, userId: number): Promise<void> {
+    try {
+        // Check if the user has already upvoted the question.
+        const existingUserVote: Vote = await Vote.getVoteByUserAndQuestionId(userId, questionId) as Vote;
+
+        if (!existingUserVote) {
+            // If the user has not upvoted, create a new upvote and update total upvotes.
+            const newVote: Vote = new Vote(
+                null,
+                userId,
+                questionId,
+                null,
+                VoteEnum.UPVOTE,
+                null,
+                null,
+            );
+
+            const vote: string | Vote = await newVote.saveVote();
+
+            if (vote) {
+                await Question.updateTotalUpvotes(questionId, true);
+            }
+        } else if (existingUserVote.voteType !== VoteEnum.UPVOTE) {
+            // If the user has upvoted with a different vote type, update the existing vote.
+            const updatedVote: Vote = new Vote(
+                existingUserVote.voteId,
+                userId,
+                questionId,
+                null,
+                VoteEnum.UPVOTE,
+                null,
+                null,
+            );
+
+            const updateVote: string | Vote = await updatedVote.updateVote();
+
+            if (updateVote) {
+                // Update total upvotes and downvotes accordingly.
+                await Question.updateTotalUpvotes(questionId, true);
+                await Question.updateTotalDownvotes(questionId, false);
+            }
+        }
+    } catch (error) {
+        // Handle any errors that occur during the upvote process.
+        throw new Error(`Failed to handle question upvote: ${error}`);
+    }
+}
+
+
+/**
+ * Handles the downvoting of a question by a user.
+ *
+ * @param {number} questionId - The ID of the question to downvote.
+ * @param {number} userId - The ID of the user performing the downvote.
+ * @returns {Promise<void>} A Promise indicating the success of the downvote operation.
+ * @throws {Error} Throws an error if any part of the downvote process fails.
+ *
+ * @description
+ * This function handles the downvoting of a question by a user. It first checks if the user has already
+ * downvoted the question. If not, it creates a new downvote and updates the total downvotes count for the question.
+ * If the user has already downvoted, it toggles the vote type, updating the existing vote and adjusting the
+ * total upvotes and downvotes accordingly.
+ */
+async function handleQuestionDownvote(questionId: number, userId: number): Promise<void> {
+    try {
+        // Check if the user has already downvoted the question.
+        const existingUserVote: Vote = await Vote.getVoteByUserAndQuestionId(userId, questionId) as Vote;
+
+        if (!existingUserVote) {
+            // If the user has not downvoted, create a new downvote and update total downvotes.
+            const newVote: Vote = new Vote(
+                null,
+                userId,
+                questionId,
+                null,
+                VoteEnum.DOWNVOTE,
+                null,
+                null,
+            );
+
+            const vote: string | Vote = await newVote.saveVote();
+
+            if (vote) {
+                await Question.updateTotalDownvotes(questionId, true);
+            }
+        } else if (existingUserVote.voteType !== VoteEnum.DOWNVOTE) {
+            // If the user has downvoted with a different vote type, update the existing vote.
+            const updatedVote: Vote = new Vote(
+                existingUserVote.voteId,
+                userId,
+                questionId,
+                null,
+                VoteEnum.DOWNVOTE,
+                null,
+                null,
+            );
+
+            const updateVote: string | Vote = await updatedVote.updateVote();
+
+            if (updateVote) {
+                // Update total upvotes and downvotes accordingly.
+                await Question.updateTotalDownvotes(questionId, true);
+                await Question.updateTotalUpvotes(questionId, false);
+            }
+        }
+    } catch (error) {
+        // Handle any errors that occur during the downvote process.
+        throw new Error(`Failed to handle question downvote: ${error}`);
+    }
+}
+
+
+
 
 
 function createAnswerElement(answerId: number, answerText: string, createdAt: string, profilePictureSrc: string, username: string, answersCount: number, questionsCount: number, extraClass: string): string {
@@ -189,7 +338,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 answer.answerId!,
                 answer.answerBody,
                 date,
-                    "https://ui-avatars.com/api/?name=" + username,
+                "https://ui-avatars.com/api/?name=" + username,
                 username,
                 totalAnswers,
                 totalQuestions,

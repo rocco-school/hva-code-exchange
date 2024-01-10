@@ -23,7 +23,7 @@ export class VoteService {
      */
     public static async saveVote(vote: Vote): Promise<Vote> {
         // Querying the database with the new vote data.
-        const param: (string | number | boolean | null)[] = [vote.userId, vote.questionId, vote.answerId, vote.voteId];
+        const param: (string | number | boolean | null)[] = [vote.userId, vote.questionId, vote.answerId, vote.voteType, vote.voteId];
         const newVote: any = await api.queryDatabase(VOTE_QUERY.CREATE_VOTE, ...param);
 
         // Retrieving the newly created vote from the database.
@@ -55,11 +55,19 @@ export class VoteService {
         const voteData: (string | number | boolean | null)[] = [vote.userId, vote.questionId, vote.answerId, vote.voteType, vote.voteId];
 
         // Querying the database to update the vote with the given voteId.
-        const updatedVote: [Vote] = await api.queryDatabase(VOTE_QUERY.UPDATE_VOTE, ...voteData) as [Vote];
+        const updateVote: [Vote] = await api.queryDatabase(VOTE_QUERY.UPDATE_VOTE, ...voteData) as [Vote];
+
+        // Retrieve the updated vote from the database.
+        const updatedVote: [Vote] = await api.queryDatabase(VOTE_QUERY.SELECT_VOTE, vote.voteId) as [Vote];
+
+        // Checking if the database update was successful.
+        if (!updateVote) {
+            throw new Error(`Failed to update vote with ID: ${vote.voteId}`);
+        }
 
         // Checking if the database update was successful.
         if (!updatedVote) {
-            throw new Error(`Failed to update vote with ID: ${vote.voteId}`);
+            throw new Error(`Failed to retrieve vote with ID: ${vote.voteId}`);
         }
 
         return updatedVote[0];
@@ -116,5 +124,31 @@ export class VoteService {
 
         // If affectedRows is not 0 or greater than 0, something unexpected happened.
         throw new Error(`Failed to delete vote with ID: ${voteId}`);
+    }
+
+    /**
+     * Retrieves a vote from the database based on user and question IDs.
+     *
+     * @param {number} userId - The ID of the user associated with the vote.
+     * @param {number} questionId - The ID of the question associated with the vote.
+     * @returns {Promise<Vote>} A Promise resolving to the retrieved vote.
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves a specific vote from the database based on its associated
+     * user and question IDs. It queries the database to retrieve the vote with the given
+     * user and question IDs and returns a Promise that resolves to the retrieved vote.
+     */
+    public static async getVoteByUserAndQuestionId(userId: number, questionId: number): Promise<Vote> {
+        // Querying the database to retrieve the vote with the given user and question IDs.
+        const param: number[] = [userId, questionId];
+        const getVote: [Vote] = await api.queryDatabase(VOTE_QUERY.GET_VOTE_BY_USER_AND_QUESTION, ...param) as [Vote];
+
+        // Checking if the database retrieval was successful.
+        if (!getVote) {
+            throw new Error(`Failed to retrieve vote for user: ${userId} on question: ${questionId}`);
+        }
+
+        return getVote[0];
     }
 }

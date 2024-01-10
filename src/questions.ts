@@ -95,6 +95,8 @@ async function populateQuestionTable(): Promise<void> {
                 question.questionTitle,
                 question.questionBody,
                 question.isClosed,
+                question.totalUpvotes,
+                question.totalDownvotes,
                 question.createdAt,
                 question.updatedAt
             );
