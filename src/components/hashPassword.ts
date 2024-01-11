@@ -1,4 +1,4 @@
-import { bcrypt } from "bcryptjs";
+import bcrypt from "bcryptjs";
 
 /**
  * Hashes the user's password
