@@ -1,28 +1,38 @@
+import {UserService} from "../services/userService";
+import {AnswerService} from "../services/answerService";
+import {QuestionService} from "../services/questionService";
+
 export class User {
     // private fields
-    private _id: number;
-    private _username: string;
-    private _email: string;
+    private _userId: number;
     private _firstname: string;
     private _lastname: string;
+    private _username: string;
+    private _password: string;
+    private _email: string;
 
-    // De constructor wordt eenmalig aangeroepen als de class wordt geïnstantieerd.
-    // Deze constructor vult de fields bij het aanmaken van een object.
-    public constructor(id: number, username: string, email: string, firstname: string, lastname: string) {
-        this._id = id;
-        this._username = username;
-        this._email = email;
+    // The constructor is called once when the class is instantiated.
+    // This constructor fills the fields when creating an object.
+    public constructor(userId: number, username: string, password: string, email: string, firstname: string, lastname: string) {
+        this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
+        this._username = username;
+        this._password = password;
+        this._email = email;
     }
 
     // Getters en setters
-    public get id(): number {
-        return this._id;
+    public get userId(): number {
+        return this._userId;
     }
 
     public get username(): string {
         return this._username;
+    }
+
+    public get password(): string {
+        return this._password;
     }
 
     public get email(): string {
@@ -37,12 +47,16 @@ export class User {
         return this._lastname;
     }
 
-    public set id(value: number) {
-        this._id = value;
+    public set userId(value: number) {
+        this._userId = value;
     }
 
     public set username(value: string) {
         this._username = value;
+    }
+
+    public set password(value: string) {
+        this._password = value;
     }
 
     public set email(value: string) {
@@ -58,6 +72,223 @@ export class User {
     }
 
     public toString(): string {
-        return `User: ${this._id} ${this._username} ${this._email} ${this._firstname} ${this._lastname}`;
+        return `User: ${this._userId} ${this._username} ${this._password} ${this._email} ${this._firstname} ${this._lastname}`;
     }
+
+
+    /**
+     * Saves the user to the database using the service.
+     *
+     * @returns {Promise<User | string>} A Promise resolving to either the saved user or an error message.
+     * @throws {Error} Throws an error if the save operation fails.
+     *
+     * @description
+     * This method leverages the UserService to save the current instance of the user to the database.
+     * It handles the save operation asynchronously and returns a Promise that resolves to the saved user
+     * or an error message if the save fails.
+     *
+     * @example
+     * const newUser: User = new User(
+     *   null, // userId is null for a new User(auto_increment in the database)
+     *   'firstname',
+     *   'lastname',
+     *   'username',
+     *   'hashedPassword',
+     *   'email'
+     * );
+     *
+     * try {
+     *   const savedUser = await newUser.saveUser();
+     *   console.log('User saved successfully:', savedUser);
+     * } catch (error) {
+     *   console.error('Failed to save user:', error.message);
+     * }
+     */
+    public async saveUser(): Promise<User | string> {
+        try {
+            // Calling the saveUser method from the service
+            return await UserService.saveUser(this);
+        } catch (error) {
+            // Handling any errors that occur during the process
+            return `Error saving user: ${error}`;
+        }
+    }
+
+    /**
+     * Updates the user in the database using the service.
+     *
+     * @returns {Promise<User | string>} A Promise resolving to either the updated user or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This method leverages the UserService to update the current instance of the user in the database.
+     * It handles the update operation asynchronously and returns a Promise that resolves to the updated user
+     * or an error message if the update fails.
+     *
+     * @example
+     * const UserToUpdate: User = new User(
+     *   userId
+     *   firstname,
+     *   lastname,
+     *   username,
+     *   hashedPassword,
+     *   email,
+     * );
+     *
+     * try {
+     *   const updatedUser = await UserToUpdate.updateUser();
+     *   console.log('User updated successfully:', updatedUser);
+     * } catch (error) {
+     *   console.error('Failed to update user:', error.message);
+     * }
+     */
+    public async updateUser(): Promise<User | string> {
+        try {
+            // Calling the updateUser method from the service.
+            return await UserService.updateUser(this);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating user: ${error}`;
+        }
+    }
+
+    /**
+     * Retrieves a user from the database using the service.
+     *
+     * @param {number} userId - The ID of the user to retrieve.
+     * @returns {Promise<User | string>} A Promise resolving to either the retrieved user or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to retrieve a specific user from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * the retrieved user or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve a user by its ID
+     * try {
+     *   const result = await User.retrieveUser(userId);
+     *   console.log('User retrieved successfully:', result);
+     * } catch (error) {
+     *   console.error('Failed to retrieve user:', error.message);
+     * }
+     */
+    public static async retrieveUser(userId: number): Promise<User | string> {
+        try {
+            // Calling the retrieveUser method from the service.
+            return await UserService.retrieveUser(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving user: ${error}`;
+        }
+    }
+
+    /**
+     * Deletes a user from the database using the service.
+     *
+     * @param {number} userId - The ID of the user to delete.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the deletion status or an error message.
+     * @throws {Error} Throws an error if the deletion operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to delete a specific user from the database.
+     * It handles the deletion operation asynchronously and returns a Promise that resolves to either
+     * the deletion status (true if successful, false if the user was not found) or an error message if the deletion fails.
+     *
+     * @example
+     * // Example: Delete a user by its ID
+     * try {
+     *   const deleteStatus = await User.deleteUser(userId);
+     *   if (deleteStatus) {
+     *     console.log('User deleted successfully.');
+     *   } else {
+     *     console.log('User with the specified ID not found.');
+     *   }
+     * } catch (error) {
+     *   console.error('Failed to delete user:', error.message);
+     * }
+     */
+    public static async deleteUser(userId: number): Promise<boolean | string> {
+        try {
+            // Calling the deleteUser method from the service.
+            return await UserService.deleteUser(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error deleting user: ${error}`;
+        }
+    }
+
+
+    /**
+     * Deletes a user from the database using the service.
+     *
+     * @param {number} userId - The ID of the user to delete.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the deletion status or an error message.
+     * @throws {Error} Throws an error if the deletion operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to delete a specific user from the database.
+     * It handles the deletion operation asynchronously and returns a Promise that resolves to either
+     * the deletion status (true if successful, false if the user was not found) or an error message if the deletion fails.
+     *
+     * @example
+     * // Example: Delete a user by its ID
+     * try {
+     *   const deleteStatus = await User.deleteUser(userId);
+     *   if (deleteStatus) {
+     *     console.log('User deleted successfully.');
+     *   } else {
+     *     console.log('User with the specified ID not found.');
+     *   }
+     * } catch (error) {
+     *   console.error('Failed to delete user:', error.message);
+     * }
+     */
+    public static async getTotalAnswers(userId: number): Promise<number | string> {
+        try {
+            // Calling the deleteUser method from the service.
+            return await AnswerService.getAnswersCountByUser(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error deleting user: ${error}`;
+        }
+    }
+
+
+    /**
+     * Deletes a user from the database using the service.
+     *
+     * @param {number} userId - The ID of the user to delete.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the deletion status or an error message.
+     * @throws {Error} Throws an error if the deletion operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to delete a specific user from the database.
+     * It handles the deletion operation asynchronously and returns a Promise that resolves to either
+     * the deletion status (true if successful, false if the user was not found) or an error message if the deletion fails.
+     *
+     * @example
+     * // Example: Delete a user by its ID
+     * try {
+     *   const deleteStatus = await User.deleteUser(userId);
+     *   if (deleteStatus) {
+     *     console.log('User deleted successfully.');
+     *   } else {
+     *     console.log('User with the specified ID not found.');
+     *   }
+     * } catch (error) {
+     *   console.error('Failed to delete user:', error.message);
+     * }
+     */
+    public static async getTotalQuestions(userId: number): Promise<number | string> {
+        try {
+            // Calling the deleteUser method from the service.
+            return await QuestionService.getQuestionsCountByUser(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error deleting user: ${error}`;
+        }
+    }
+
 }
+
