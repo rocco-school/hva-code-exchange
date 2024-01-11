@@ -1,3 +1,4 @@
+import { delay } from "./components/delay";
 import "./config";
 import { api, session, url } from "@hboictcloud/api";
 
@@ -25,6 +26,8 @@ function setup(): void {
             } else {
                 // Als de gebruiker niet bestaat, geef melding aan gebruiker door in de css (bootstrap) de display op block te zetten
                 document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: block");
+                await delay(3000);
+                document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
 
                 // Maak de inputvelden weer leeg
                 (<HTMLInputElement>document.getElementById("username")).value = "";
