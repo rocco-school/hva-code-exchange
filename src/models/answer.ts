@@ -212,4 +212,73 @@ export class Answer extends Post {
             return `Error deleting answer: ${error}`;
         }
     }
+
+
+    /**
+     * Update the total upvotes for an answer using the AnswerService.
+     *
+     * @param {number} answerId - The ID of the answer to update.
+     * @param {boolean} increment - If true, increment total upvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Answer | string>} A Promise resolving to the updated answer object or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This static method calls the updateTotalUpvotes method from the AnswerService to update
+     * the total upvotes for a answer. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * the updated answer object or an error message.
+     *
+     * @example
+     * // Example: Update total upvotes for a answer by incrementing.
+     * const answerIdToUpdate = 123;
+     * try {
+     *   const updatedAnswer = await Answer.updateTotalUpvotes(answerIdToUpdate, true);
+     *   console.log('Total upvotes updated successfully:', updatedAnswer);
+     * } catch (error) {
+     *   console.error('Failed to update total upvotes:', error);
+     * }
+     */
+    public static async updateTotalUpvotes(answerId: number, increment: boolean): Promise<Answer | string> {
+        try {
+            // Calling the updateTotalUpvotes method from the service.
+            return await AnswerService.updateTotalUpvotes(answerId, increment);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating answer total upvotes: ${error}`;
+        }
+    }
+
+    /**
+     * Update the total downvotes for an answer using the AnswerService.
+     *
+     * @param {number} answerId - The ID of the answer to update.
+     * @param {boolean} increment - If true, increment total downvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Answer | string>} A Promise resolving to the updated answer object or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This static method calls the updateTotalDownvotes method from the AnswerService to update
+     * the total downvotes for an answer. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * the updated answer object or an error message.
+     *
+     * @example
+     * // Example: Update total downvotes for a answer by incrementing.
+     * const answerIdToUpdate = 123;
+     * try {
+     *   const updatedAnswer = await Answer.updateTotalDownvotes(answerIdToUpdate, true);
+     *   console.log('Total downvotes updated successfully:', updatedAnswer);
+     * } catch (error) {
+     *   console.error('Failed to update total downvotes:', error);
+     * }
+     */
+    public static async updateTotalDownvotes(answerId: number, increment: boolean): Promise<Answer | string> {
+        try {
+            // Calling the updateTotalDownvotes method from the service.
+            return await AnswerService.updateTotalDownvotes(answerId, increment);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating answer total downvotes: ${error}`;
+        }
+    }
 }

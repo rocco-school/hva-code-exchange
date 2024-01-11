@@ -192,4 +192,78 @@ export class AnswerService {
         return answers;
     }
 
+
+    /**
+     * Update the total upvotes for an answer in the database.
+     *
+     * @param {number} answerId - The ID of the answer to update.
+     * @param {boolean} increment - If true, increment total upvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Answer>} A Promise resolving to the updated answer object.
+     * @throws {Error} Throws an error if the database update or retrieval fails.
+     *
+     * @description
+     * This static method updates the total upvotes for an answer in the database by either incrementing or
+     * decrementing by 1. It uses a parameterized query to perform the update operation and retrieves the
+     * updated answer from the database. The function returns a Promise that resolves to the updated answer.
+     */
+    public static async updateTotalUpvotes(answerId: number, increment: boolean): Promise<Answer> {
+        // Determine the update value based on the increment flag.
+        const updateValue: number = increment ? 1 : -1;
+
+        try {
+            // Update the total_upvotes column in the Answer table.
+            const params: number[] = [updateValue, answerId];
+            await api.queryDatabase(ANSWER_QUERY.UPDATE_TOTAL_UPVOTES, ...params);
+
+            // Retrieve the updated answer from the database.
+            const answer: [Answer] = await api.queryDatabase(ANSWER_QUERY.SELECT_ANSWER, answerId) as [Answer];
+
+            // Checking if the database retrieval was successful.
+            if (!answer) {
+                new Error(`Failed to get answer for ${answerId}!`);
+            }
+
+            return answer[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update total answer upvotes for ${answerId}: ${error}`);
+        }
+    }
+
+    /**
+     * Update the total downvotes for an answer in the database.
+     *
+     * @param {number} answerId - The ID of the answer to update.
+     * @param {boolean} increment - If true, increment total downvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Answer>} A Promise resolving to the updated answer object.
+     * @throws {Error} Throws an error if the database update or retrieval fails.
+     *
+     * @description
+     * This static method updates the total downvotes for an answer in the database by either incrementing or
+     * decrementing by 1. It uses a parameterized query to perform the update operation and retrieves the
+     * updated answer from the database. The function returns a Promise that resolves to the updated answer.
+     */
+    public static async updateTotalDownvotes(answerId: number, increment: boolean): Promise<Answer> {
+        // Determine the update value based on the increment flag.
+        const updateValue: number = increment ? 1 : -1;
+
+        try {
+            // Update the total_downvotes column in the Answer table.
+            const params: number[] = [updateValue, answerId];
+            await api.queryDatabase(ANSWER_QUERY.UPDATE_TOTAL_DOWNVOTES, ...params);
+
+            // Retrieve the updated answer from the database.
+            const answer: [Answer] = await api.queryDatabase(ANSWER_QUERY.SELECT_ANSWER, answerId) as [Answer];
+
+            // Checking if the database retrieval was successful.
+            if (!answer) {
+                new Error(`Failed to get answer for ${answerId}!`);
+            }
+
+            return answer[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update total answer downvotes for ${answerId}: ${error}`);
+        }
+    }
 }

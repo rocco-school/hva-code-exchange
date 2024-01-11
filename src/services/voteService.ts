@@ -136,17 +136,43 @@ export class VoteService {
      *
      * @description
      * This static method retrieves a specific vote from the database based on its associated
-     * user and question IDs. It queries the database to retrieve the vote with the given
-     * user and question IDs and returns a Promise that resolves to the retrieved vote.
+     * user and questionId. It queries the database to retrieve the vote with the given
+     * user and questionId and returns a Promise that resolves to the retrieved vote.
      */
     public static async getVoteByUserAndQuestionId(userId: number, questionId: number): Promise<Vote> {
-        // Querying the database to retrieve the vote with the given user and question IDs.
+        // Querying the database to retrieve the vote with the given user and questionId.
         const param: number[] = [userId, questionId];
         const getVote: [Vote] = await api.queryDatabase(VOTE_QUERY.GET_VOTE_BY_USER_AND_QUESTION, ...param) as [Vote];
 
         // Checking if the database retrieval was successful.
         if (!getVote) {
             throw new Error(`Failed to retrieve vote for user: ${userId} on question: ${questionId}`);
+        }
+
+        return getVote[0];
+    }
+
+    /**
+     * Retrieves a vote from the database based on user and answerId.
+     *
+     * @param {number} userId - The ID of the user associated with the vote.
+     * @param {number} answerId - The ID of the answer associated with the vote.
+     * @returns {Promise<Vote>} A Promise resolving to the retrieved vote.
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves a specific vote from the database based on its associated
+     * user and answerId. It queries the database to retrieve the vote with the given
+     * user and answerId and returns a Promise that resolves to the retrieved vote.
+     */
+    public static async getVoteByUserAndAnswerId(userId: number, answerId: number): Promise<Vote> {
+        // Querying the database to retrieve the vote with the given user and answerId.
+        const param: number[] = [userId, answerId];
+        const getVote: [Vote] = await api.queryDatabase(VOTE_QUERY.GET_VOTE_BY_USER_AND_ANSWER, ...param) as [Vote];
+
+        // Checking if the database retrieval was successful.
+        if (!getVote) {
+            throw new Error(`Failed to retrieve vote for user: ${userId} on answer: ${answerId}`);
         }
 
         return getVote[0];

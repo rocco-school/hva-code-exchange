@@ -261,4 +261,38 @@ export class Vote {
         }
     }
 
+
+    /**
+     * Retrieves a vote from the database based on user and answer IDs using the service.
+     *
+     * @param {number} userId - The ID of the user associated with the vote.
+     * @param {number} answerId - The ID of the answer associated with the vote.
+     * @returns {Promise<Vote | string>} A Promise resolving to either the retrieved vote or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the VoteService to retrieve a specific vote from the database based on
+     * the provided user and answer ID. It handles the retrieval operation asynchronously and returns
+     * a Promise that resolves to either the retrieved vote or
+     * an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve a vote by user and answer ID
+     * try {
+     *   const getVote = await Vote.getVoteByUserAndQuestionId(userId, answerId);
+     *   console.log('Vote retrieved successfully:', getVote);
+     * } catch (error) {
+     *   console.error('Failed to retrieve vote:', error.message);
+     * }
+     */
+    public static async getVoteByUserAndAnswerId(userId: number, answerId: number): Promise<Vote | string> {
+        try {
+            // Calling the getVoteByUserAndAnswerId method from the service.
+            return await VoteService.getVoteByUserAndAnswerId(userId, answerId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving vote: ${error}`;
+        }
+    }
+
 }

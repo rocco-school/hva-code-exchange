@@ -24,6 +24,8 @@ async function getMostRecentQuestions(): Promise<void> {
                 question.questionTitle,
                 question.questionBody,
                 question.isClosed,
+                question.totalUpvotes,
+                question.totalDownvotes,
                 question.createdAt,
                 question.updatedAt,
             );
