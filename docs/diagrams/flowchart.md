@@ -1,20 +1,12 @@
+```mermaid
 classDiagram
-class User {
--number userId
--string firstname
--string lastname
--string username
--string password
--string email
-
-        +toString()
-    }
-
-    class Post {
-        -number postId
+    class User {
         -number userId
-        -Date createdAt
-        -Date updatedAt
+        -string firstname
+        -string lastname
+        -string username
+        -string password
+        -string email
 
         +toString()
     }

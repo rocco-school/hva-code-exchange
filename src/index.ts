@@ -54,5 +54,4 @@ async function setup(): Promise<void> {
 }
 
 // Run bij het opstarten de setup functie
-// Run the setup function when the page is loaded
 await setup();
