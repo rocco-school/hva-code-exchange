@@ -50,6 +50,7 @@ export class Question extends Post {
     public get totalUpvotes(): number | null {
         return this._totalUpvotes;
     }
+
     public get totalDownvotes(): number | null {
         return this._totalDownvotes;
     }
@@ -77,6 +78,7 @@ export class Question extends Post {
     public set totalUpvotes(value: number | null) {
         this._totalUpvotes = value;
     }
+
     public set totalDownvotes(value: number | null) {
         this._totalDownvotes = value;
     }
