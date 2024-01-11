@@ -88,7 +88,7 @@ async function setup(): Promise<void> {
     });
 
     const postNewAnswer: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".btn_submit"));
-    const newAnswerTextBody: HTMLDivElement = (<HTMLDivElement>document.querySelector(".new-answer-body-textarea"));
+    const newAnswerTextBody: HTMLDivElement = (<HTMLDivElement>document.querySelector("#text-input"));
 
     postNewAnswer.addEventListener("click", async (): Promise<void> => {
         if (!loginStatus) {
@@ -198,7 +198,7 @@ function createAnswerElement(answerId: number, answerText: string, upvoteCount: 
                     
                     <div class="answer-info">
                         <div class="action-buttons ${extraClass}">
-                            <button class="button delete-button" id="${answerId}">delete</button>
+                            <button class="button delete-button" id="${answerId}">Delete</button>
                         </div>
                         
                         <div class="created-info">
