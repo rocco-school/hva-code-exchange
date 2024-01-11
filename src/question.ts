@@ -11,6 +11,7 @@ import {VoteType} from "./enum/voteType";
 import {handleAnswerUpvote, handleQuestionUpvote} from "./components/handleUpvotes";
 import {PostType} from "./enum/postType";
 import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleDownvotes";
+import {initializeTextEditor} from "./components/initializeTextEditor";
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -29,27 +30,33 @@ async function setup(): Promise<void> {
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean = await security();
 
+    // @ts-ignore
+    const userId: number = loginStatus["userId"] as number;
+
     // Retrieves a question from the database based on the URL parameter question ID.
     const question: Question = await QuestionService.retrieveQuestion(questionId);
 
 
     if (!question) location.replace("index.html");
 
-    const upvoteSum: number = question.totalUpvotes - question.totalDownvotes;
+    // Initialize the text Editor.
+    await initializeTextEditor();
+
+    const upvoteSum: number = question.totalUpvotes! - question.totalDownvotes!;
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
 
 
     // Populate all answers by questionID
-    await addAnswersToPage(loginStatus["userId"]);
+    await addAnswersToPage(userId);
 
-    document.querySelector(".upvote-question").addEventListener("click", async (): Promise<void> => {
-        await handleVoting(question.questionId!, loginStatus["userId"], PostType.QUESTION, VoteType.UPVOTE);
+    document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
+        await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.UPVOTE);
     });
 
-    document.querySelector(".downvote-question").addEventListener("click", async (): Promise<void> => {
-        await handleVoting(question.questionId!, loginStatus["userId"], PostType.QUESTION, VoteType.DOWNVOTE);
+    document.querySelector(".downvote-question")?.addEventListener("click", async (): Promise<void> => {
+        await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.DOWNVOTE);
     });
 
 
@@ -93,7 +100,6 @@ async function setup(): Promise<void> {
             await showSuccessMessage("Please enter your answer before posting answer", 3000, "danger", null, null);
             return;
         }
-        const userId: number = loginStatus["userId"];
 
         const newAnswer: Answer = new Answer(
             null,
@@ -257,8 +263,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
             }
 
             const username: string = answer.firstname + " " + answer.lastname as string;
-            const upvoteCount: number = answer.totalUpvotes - answer.totalDownvotes;
-
+            const upvoteCount: number = answer.totalUpvotes! - answer.totalDownvotes!;
 
             const answerElement: string = createAnswerElement(
                 answer.answerId!,
@@ -278,15 +283,19 @@ async function addAnswersToPage(userId: number): Promise<void> {
 
         document.querySelectorAll(".answer-upvote").forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
-                const answerId: string = item.parentElement.id;
-                await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.UPVOTE);
+                if (item.parentElement) {
+                    const answerId: string = item.parentElement.id;
+                    await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.UPVOTE);
+                }
             });
         });
 
         document.querySelectorAll(".answer-downvote").forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
-                const answerId: string = item.parentElement.id;
-                await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
+                if (item.parentElement) {
+                    const answerId: string = item.parentElement.id;
+                    await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
+                }
             });
         });
     }

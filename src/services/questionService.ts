@@ -35,7 +35,7 @@ export class QuestionService {
         }
 
         // Hiding the createQuestionForm and refreshing the page.
-        return getQuestion[0];
+        return getQuestion[0] as Question;
     }
 
     /**
