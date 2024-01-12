@@ -66,6 +66,7 @@ input[type="color"]::-moz-color-swatch {
     padding: 20px;
     height: 50vh;
     overflow-y: scroll;
+    border-radius: .5rem;
 }
 
 .active {
