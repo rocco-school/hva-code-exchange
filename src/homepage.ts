@@ -1,11 +1,11 @@
 import "./config";
-import {api} from "@hboictcloud/api";
-import {QUESTION_QUERY} from "./query/question.query";
+import { api } from "@hboictcloud/api";
+import { QUESTION_QUERY } from "./query/question.query";
 import { homepageService } from "./services/homepageService";
-import {Question} from "./models/question";
-import {User} from "./models/user";
-import {ANSWER_QUERY} from "./query/answer.query";
-import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import { Question } from "./models/question";
+import { User } from "./models/user";
+import { ANSWER_QUERY } from "./query/answer.query";
+import { handleRedirectToQuestionDetail } from "./components/handleRedirects";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -25,8 +25,10 @@ async function getMostRecentQuestions(): Promise<void> {
                 question.questionTitle,
                 question.questionBody,
                 question.isClosed,
+                question.totalDownvotes,
+                question.totalUpvotes,
                 question.createdAt,
-                question.updatedAt,
+                question.updatedAt  
             );
 
             // Create a container for each question in the UI
@@ -53,23 +55,16 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 // Create UI elements for question stats (upvote, downvote, votes count, answers count, posted at, updated at)
 
-                // Upvote Button
-                const liQuestionUpvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
-                const questionUpvote: HTMLButtonElement = liQuestionUpvote.appendChild(document.createElement("button"));
-                questionUpvote.classList.add("questionUpvote");
-                questionUpvote.innerHTML = "upvote";
-
                 // Votes Count
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionVotes: HTMLDivElement | any = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.classList.add("questionVotes");
                 questionVotes.innerHTML = "0";
 
-                // Downvote Button
-                const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
-                const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
-                questionDownvote.classList.add("questionDownvote");
-                questionDownvote.innerHTML = "Downvote";
+                if (questionVotes) {
+                    const questionVoteScore: number | null = question.totalUpvotes! - question.totalDownvotes!;
+                    questionVotes.innerHTML = "total votes: " + questionVoteScore ;
+                }
 
                 // Answers Count
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -168,8 +163,6 @@ async function getMostRecentQuestions(): Promise<void> {
 
                     questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData.username + "&background=random";
                 }
-
-                // TODO integrate tags into the questions
             }
         }
 

@@ -77,7 +77,7 @@ export class QuestionService {
      * @returns {Promise<[Question]>} A Promise resolving to the retrieved question.
      * @throws {Error} Throws an error if the database retrieval was not successful.
      */
-    public static async retrieveQuestion(questionId: number): Promise<[Question]> {
+    public static async retrieveQuestion(questionId: number | null): Promise<[Question]> {
         // Querying the database to retrieve the question with the given questionId.
         const getQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId) as [Question];
 
