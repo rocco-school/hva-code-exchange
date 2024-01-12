@@ -15,14 +15,14 @@ import {Answer} from "./models/answer";
  */
 async function setup(): Promise<void> {
     // Get max number of pages for loading all questions.
-    const maxPages: number | string = await Question.getMaxQuestionPages();
-    const pageNumbers: number[] = [...Array(maxPages).keys()].map(i => i + 1);
+    const getMaxPages: number | string = await Question.getMaxQuestionPages();
+    const pageNumbers: number[] = [...Array(getMaxPages).keys()].map(i => i + 1);
 
     // populate question table.
     await populateQuestionTable();
 
     // Add pagination page numbers
-    await addPageNumbers(pageNumbers);
+    await addPagination(pageNumbers);
 
     // Get all create question form elements.
     const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
@@ -197,15 +197,12 @@ await setup();
  * @param {number[]} pageArray - An array of available page numbers.
  * @returns {Promise<void>} - A promise that resolves once the page numbers are added to the DOM.
  */
-async function addPageNumbers(pageArray: number[]): Promise<void> {
+async function addPagination(pageArray: number[]): Promise<void> {
     // Get the pagination element from the DOM
     const paginationElem: HTMLDivElement = document.querySelector(".pages") as HTMLDivElement;
 
-    // Get the current page number from the query string
-    const pageNumber: number = url.getFromQueryString("page");
-
     // Determine the current page based on the query string or default to 1
-    const currentPage: number = pageNumber ?? 1;
+    const currentPage: number = url.getFromQueryString("page") ?? 1;
 
     // Get an array of page numbers to display based on the current page
     const displayPages: number[] = displayNumbers(currentPage, pageArray);
