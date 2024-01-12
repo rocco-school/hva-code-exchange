@@ -25,5 +25,5 @@ export const QUESTION_QUERY: {
     UPDATE_TOTAL_UPVOTES: "UPDATE question SET totalUpvotes = totalUpvotes + ? WHERE questionId = ?",
     UPDATE_TOTAL_DOWNVOTES: "UPDATE question SET totalDownvotes = totalDownvotes + ? WHERE questionId = ?",
     GET_MAX_QUESTION_PAGES: "SELECT CEIL(COUNT(*) / 10) AS max_pages FROM question",
-    GET_QUESTION_BY_PAGE_NUMBER: "SELECT * FROM question ORDER BY questionId LIMIT 10 OFFSET ((? - 1) * 10)",
+    GET_QUESTION_BY_PAGE_NUMBER: "SELECT * FROM question ORDER BY questionId LIMIT 10 OFFSET ?",
 };

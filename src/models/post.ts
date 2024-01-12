@@ -58,10 +58,10 @@ export class Post {
      */
     public static async getAnswersByQuestionId(questionId: number): Promise<Answer[] | string> {
         try {
-            // Calling the getAnswersByQuestionId method from the service.
+            // Call the getAnswersByQuestionId method from the service.
             return await AnswerService.getAnswersByQuestionId(questionId);
         } catch (error) {
-            // Handling any errors that occur during the process.
+            // Handle any errors that occur during the process.
             return `Error retrieving answers: ${error}`;
         }
     }

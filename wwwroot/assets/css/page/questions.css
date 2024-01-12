@@ -69,3 +69,15 @@
     cursor: pointer;
     padding: .5rem;
 }
+
+.current {
+    font-weight: bold;
+}
+
+.page:hover {
+    transform: scale(1.3);
+}
+
+.paginate-icon:hover {
+    transform: scale(1.3);
+}
