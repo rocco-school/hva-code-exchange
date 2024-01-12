@@ -399,4 +399,36 @@ export class Question extends Post {
             return `Error updating question total downvotes: ${error}`;
         }
     }
+
+
+    /**
+     * Gets the maximum number of question pages using the QuestionService.
+     *
+     * @returns {Promise<number | string>} A Promise resolving to the maximum number of question pages or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method calls the getMaxQuestionPages method from the QuestionService to retrieve
+     * the maximum number of question pages. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * the maximum number of question pages or an error message.
+     *
+     * @example
+     * // Example: Get the maximum number of question pages.
+     * try {
+     *   const maxPages = await Question.getMaxQuestionPages();
+     *   console.log('Maximum question pages retrieved successfully:', maxPages);
+     * } catch (error) {
+     *   console.error('Failed to retrieve max question pages:', error);
+     * }
+     */
+    public static async getMaxQuestionPages(): Promise<number | string> {
+        try {
+            // Calling the getMaxQuestionPages method from the service.
+            return await QuestionService.getMaxQuestionPages();
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving max question pages: ${error}`;
+        }
+    }
 }

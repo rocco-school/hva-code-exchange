@@ -270,4 +270,27 @@ export class QuestionService {
             throw new Error(`Failed to update total question downvotes for ${questionId}: ${error}`);
         }
     }
+
+
+    /**
+     * Gets the maximum number of question pages from the database.
+     *
+     * @returns {Promise<number>} A Promise resolving to the maximum number of question pages.
+     * @throws {Error} Throws an error if the database retrieval fails.
+     *
+     * @description
+     * This static method retrieves the maximum number of question pages from the database using a specified query.
+     * It returns a Promise that resolves to the maximum number of question pages.
+     */
+    public static async getMaxQuestionPages(): Promise<number> {
+        // Querying the database to retrieve questions for the specified question.
+        const maxPages: any = await api.queryDatabase(QUESTION_QUERY.GET_MAX_QUESTION_PAGES);
+
+        // Checking if the database retrieval was successful.
+        if (!maxPages) {
+            throw new Error("Failed to retrieve max pages for question from the Database!");
+        }
+
+        return maxPages[0]["max_pages"];
+    }
 }

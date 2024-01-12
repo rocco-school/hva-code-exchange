@@ -16,19 +16,28 @@ async function setup(): Promise<void> {
     // populate question table.
     await populateQuestionTable();
 
+    await addPageNumbers();
+
     // Get all create question form elements.
     const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
 
     const createQuestionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
     const questionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-form"));
     const cancelForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".cancel-create-question"));
+    const nextButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".next-icon"));
+
+
+    // Show question form on click
+    nextButton?.addEventListener("click", (): void => {
+        console.log("clicked!");
+    });
+
 
 
     // Show question form on click
     createQuestion?.addEventListener("click", (): void => {
         url.redirect("create-question.html");
     });
-
 
     // Cancel creating question on click
     cancelForm?.addEventListener("click", (): void => {
@@ -73,12 +82,55 @@ async function setup(): Promise<void> {
 // Invoke the homepage application entry point.
 await setup();
 
+
+
+
+async function addPageNumbers(): Promise<void> {
+    const paginationElem: HTMLDivElement = (<HTMLDivElement>document.querySelector(".pages"));
+
+    // Get max number of pages for loading all questions.
+    const maxPages: number | string = await Question.getMaxQuestionPages();
+    const pages: number = 10;
+    const pageNumbers: number[] = [...Array(pages).keys()].map(i => i + 1);
+
+    const pageNumber: number = url.getFromQueryString("page");
+
+    console.log(pageNumber);
+
+    const currentPage: number = pageNumber ?? 1;
+
+    const displayPages: number[] = displayNumbers(currentPage, pageNumbers);
+
+    for (const displayPagesKey in displayPages) {
+        paginationElem.innerHTML += `<span class="page">${displayPages[displayPagesKey]}</span>`;
+    }
+
+}
+
+
+function displayNumbers(page: number, array: number[]): number[] {
+    // Assuming each page displays 3 numbers
+    const numbersPerPage: number = 3;
+
+    // Calculate start index
+    let startIndex: number = Math.max((page - 2), 0);
+
+    // Calculate end index
+    const endIndex: number = Math.min(startIndex + numbersPerPage, array.length);
+
+    // Extract the subset of numbers to display
+    return array.slice(startIndex, endIndex);
+}
+
+
+
 /**
  * Asynchronously retrieves all questions from the database and renders them in the UI.
  * @returns {Promise<void>} - A Promise that resolves when the function completes.
  */
 async function populateQuestionTable(): Promise<void> {
     try {
+
         // Querying the database to get all questions.
         const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTIONS) as [Question];
 
