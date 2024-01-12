@@ -34,7 +34,6 @@ async function getMostRecentQuestions(): Promise<void> {
 
             // Check if the container was successfully created
             if (container) {
-                let votes: number = 0;
 
                 // Add styling to the container
                 container.classList.add("container");
@@ -71,19 +70,6 @@ async function getMostRecentQuestions(): Promise<void> {
                 const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
                 questionDownvote.classList.add("questionDownvote");
                 questionDownvote.innerHTML = "Downvote";
-
-                // Attach event listeners to upvote and downvote buttons
-                questionUpvote.addEventListener("click", async () => {
-                    votes++;
-                    questionVotes.innerHTML = votes;
-                    votesColor(votes, questionVotes);
-                });
-
-                questionDownvote.addEventListener("click", () => {
-                    votes--;
-                    questionVotes.innerHTML = votes;
-                    votesColor(votes, questionVotes);
-                });
 
                 // Answers Count
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -190,17 +176,6 @@ async function getMostRecentQuestions(): Promise<void> {
     } catch (e) {
         // Handle any errors that occur during the execution of the function
         console.error(e);
-    }
-}
-
-// Function to change the color of the vote count based on the number of votes
-function votesColor(votes: number, questionVotes: HTMLElement): void {
-    if (votes > 0) {
-        questionVotes.style.color = "green";
-    } else if (votes < 0) {
-        questionVotes.style.color = "red";
-    } else if (votes === 0) {
-        questionVotes.style.color = "black";
     }
 }
 
