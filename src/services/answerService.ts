@@ -47,24 +47,32 @@ export class AnswerService {
      * @throws {Error} Throws an error if the database update was not successful.
      *
      * @description
-     * This static method updates a answer in the database using the provided answer object.
+     * This static method updates an answer in the database using the provided answer object.
      * It destructures the answer object to extract individual properties and then queries the database
      * to perform the update. The method returns a Promise that resolves to the updated answer.
      */
     public static async updateAnswer(answer: Answer): Promise<Answer> {
-        // Destructuring the answer object to get individual properties
-        const answerData: (string | number | boolean | null)[] = [answer.questionId, answer.userId, answer.answerBody];
+        try {
+            // Update the answer in the Answer table.
+            const answerData: (string | number | boolean | null)[] = [answer.answerBody, answer.answerId];
+            await api.queryDatabase(ANSWER_QUERY.UPDATE_ANSWER, ...answerData);
 
-        // Querying the database to update the answer with the given answerId.
-        const updatedAnswer: [Answer] = await api.queryDatabase(ANSWER_QUERY.UPDATE_ANSWER, ...answerData) as [Answer];
+            // Retrieve the updated answer from the database.
+            const getAnswer: [Answer] = await api.queryDatabase(ANSWER_QUERY.SELECT_ANSWER, answer.answerId) as [Answer];
 
-        // Checking if the database update was successful.
-        if (!updatedAnswer) {
-            throw new Error(`Failed to update answer with ID: ${answer.answerId}`);
+            // Checking if the database retrieval was successful.
+            if (!getAnswer) {
+                new Error(`Failed to get answer: ${answer.answerId}!`);
+            }
+
+            // Return the updated answer.
+            return getAnswer[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update answer: ${answer.answerId}: ${error}`);
         }
-
-        return updatedAnswer[0];
     }
+
 
     /**
      * Retrieve an answer from the database.

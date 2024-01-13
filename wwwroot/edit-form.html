@@ -7,13 +7,14 @@
     <title>SE Code Exchange</title>
 
     <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="assets/css/page/question.css"/>
-    <link rel="stylesheet" href="assets/css/text-editor.css"/>
     <link rel="stylesheet" href="./assets/css/general.css"/>
     <link rel="stylesheet" href="./assets/css/navbar.css"/>
     <link rel="stylesheet" href="./assets/css/sidebar.css"/>
+    <link rel="stylesheet" href="assets/css/page/create-question.css"/>
+    <link rel="stylesheet" href="assets/css/text-editor.css"/>
 </head>
 <body>
+<!-- This HTML page is called first when the website is called in the browser -->
 
 <!-- Sidebar Section -->
 <aside class="sidebarMenu">
@@ -55,7 +56,7 @@
     </ul>
 </nav>
 
-<!-- This HTML page is called first when the website is called in the browser -->
+
 <main>
 
     <!-- Success/Failed/Delete messages -->
@@ -136,41 +137,25 @@
 
 
     <div class="create-question-container">
-        <h1 class="question-title"></h1>
-        <hr>
 
-        <div class="question">
-            <div class="vote">
-                <img class="arrow upvote-question" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                <span class="upvote-count">0</span>
-                <img class="arrow arrow-down downvote-question" alt="downvote answer" src="assets/img/icons/arrow-up.svg">
+        <!-- Page Title -->
+        <h1 class="title">Edit</h1>
+
+        <!-- Section for Question Title -->
+        <section class="question-section question-title-section">
+            <div class="question-title-container">
+                <div class="custom-text-field">
+                    <label for="questionTitle" class="label">Title</label>
+
+                    <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"/>
+                </div>
             </div>
-            <div class="question-inner">
-                <p class="question-body"></p>
-                <hr class="question-divider">
-                <button class="button edit-button question-edit">Edit</button>
-            </div>
-
-        </div>
-        <hr>
-
-        <div class="answers-count">
-            <span class="answer-count">0</span>
-            <span>Answers</span>
-        </div>
-
-
-        <div class="answers">
-
-        </div>
-
-        <h2 class="new-answer-title">new Answer</h2>
+        </section>
 
         <!-- Section for Question Body -->
-        <section class="new-answer-section question-body-section">
-            <div class="new-answer-container">
-                <div class="new-answer-container--inner">
-
+        <section class="question-section question-body-section">
+            <div class="question-container">
+                <div class="question-container--inner">
                     <div class="text-editor">
                         <div class="text-editor-options">
                             <button id="bold" class="option-button format text-editor-button">
@@ -248,21 +233,57 @@
                         </div>
                         <div id="text-input" contenteditable="true"></div>
                     </div>
-
                 </div>
             </div>
         </section>
 
-        <!-- Section for submitting -->
-        <section class="new-answer-section submit-section">
-            <div class="submit-container">
-                <button class="submit-button btn_submit">Post answer</button>
+        <!-- Section for Tags -->
+        <section class="question-section tags-section">
+            <div class="tag-container">
+                <div class="custom-text-field">
+                    <label for="tags_input" class="label">Tags</label>
+                </div>
+
+                <div class="tag-container--inner">
+                    <div class="custom-select open">
+                        <div class="select-box" tabindex="0">
+                            <input type="text" class="tags_input" id="tags_input" name="tags" hidden/>
+                            <div class="selected-options">
+
+                            </div>
+                            <div class="arrow">
+                                <i class="fa fa-angle-down open-select-box"></i>
+                            </div>
+                        </div>
+                        <div class="options">
+                            <div class="option-search-tags">
+                                <input type="text" class="search-tags" placeholder="Search tags..."/>
+                                <button type="button" class="clear"><i class="fa fa-close"></i></button>
+                            </div>
+                            <div class="option all-tags" tabindex="0" data-value="All">Select All</div>
+                            <div class="no-result-message hidden">No result match</div>
+                        </div>
+                        <div class="tag_error_msg error"></div>
+                    </div>
+                </div>
             </div>
         </section>
+
+
+        <!-- Section for submitting -->
+        <section class="question-section submit-section">
+            <div class="submit-container">
+                <button class="submit-button btn_submit">Submit</button>
+
+                <a tabindex="0" class="discard-button">Discard changes</a>
+            </div>
+        </section>
+
+
     </div>
 </main>
-<!--  This typescript file (single-questions.ts) is called and executed here -->
-<script src="/src/question.ts" type="module"></script>
+<!--  This typescript file (create-questions.ts) is called and executed here -->
 <script src="/src/index.ts" type="module"></script>
+<script src="/src/edit-form.ts" type="module"></script>
 </body>
 </html>

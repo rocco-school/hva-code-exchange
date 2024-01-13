@@ -150,3 +150,11 @@
 .answers-count {
     margin-top: 1rem;
 }
+
+.question-body {
+    margin-bottom: 2rem;
+}
+
+.question-divider {
+    margin-bottom: 1rem;
+}

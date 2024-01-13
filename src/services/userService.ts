@@ -51,18 +51,25 @@ export class UserService {
      * to perform the update. The method returns a Promise that resolves to the updated user.
      */
     public static async updateUser(user: User): Promise<User> {
-        // Destructuring the user object to get individual properties
-        const userData: (string | number | boolean | null)[] = [user.firstname, user.lastname, user.username, user.password, user.email, user.userId];
+        try {
+            // Update the user in the User table.
+            const userData: (string | number | boolean | null)[] = [user.firstname, user.lastname, user.username, user.password, user.email, user.userId];
+            await api.queryDatabase(USER_QUERY.UPDATE_USER, ...userData);
 
-        // Querying the database to update the user with the given userId.
-        const updatedUser: [User] = await api.queryDatabase(USER_QUERY.UPDATE_USER, ...userData) as [User];
+            // Retrieve the updated user from the database.
+            const getUser: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, user.userId) as [User];
 
-        // Checking if the database update was successful.
-        if (!updatedUser) {
-            throw new Error(`Failed to update user with ID: ${user.userId}`);
+            // Checking if the database retrieval was successful.
+            if (!getUser) {
+                new Error(`Failed to get User: ${user.userId}!`);
+            }
+
+            // Return the updated user.
+            return getUser[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update User: ${user.userId}: ${error}`);
         }
-
-        return updatedUser[0];
     }
 
     /**
