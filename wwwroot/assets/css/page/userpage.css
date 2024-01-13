@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+}
+
+.profileHeader { 
+    margin: 0 14rem;
+    border-bottom: 1px grey solid;
+}
+
+    .profileHeaderContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+
+        padding: 1rem 2rem;
+    }
+
+        .profileNameCard {
+            display: flex;
+            flex-direction: column;
+        }
+
+            .profileNameCard img {
+                height: 8rem;
+                width: 8rem;
+                border-radius: 1rem;
+            }
+
+            .profileNameCard .nameCardUsername {
+                display: flex;
+                justify-content: center;
+
+                width: 8rem;
+                font-size: 1.5rem;
+                margin-top: 0.5rem;
+            }
+
+        .profileStats {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+            .profileStats .profileExpertise {
+                display: flex;
+                flex-direction: row;
+            }
+
+            .profileStats h3 {
+                margin-bottom: 1rem;
+            }
+
+            .profileStats ul {
+                list-style-type: none;
+            }
+
+            .profileStats li {
+                padding: 0.5rem;
+                margin: 0 0.5rem;
+                border-radius: 1rem;
+                background-color: #f1f1f1;
+            }
+
+    .profileHeaderContainer .editProfileBtn {
+        margin: 1rem;
+        width: 6rem;
+        height: 2rem;
+    }
+
+
+.profileTabs {
+    margin: 0 14rem;
+    padding: 1rem 2rem;
+}
+
+.profileTabsContainer {
+    display: flex;
+    list-style: none;
+}
+
+    .profileTabsContainer li {
+        margin-right: 1rem;
+    }
+
+    .profileTabsContainer button {
+        width: 4rem;
+        height: 1.5rem;
+    }
+
+/* editProfileSection */
+.editProfileSection {
+    margin: 0 14rem;
+    padding: 1rem 2rem;
+}
+
+    .editProfileSection h1{
+        margin-bottom: 2rem;
+    }
+
+    .editProfileSection h3{
+        line-height: 1.6;
+    }
+
+    .editProfileSection .actionButtons{
+        padding: 1rem 0rem;
+    }
+
+        .actionButtons .actionButtonsContainer {
+            display: flex;
+            flex-direction: row;
+        }
+
+            .actionButtonsContainer li {
+                list-style: none;
+                margin-right: 0.5rem;
+            }
+            
+            .actionButtons button {
+                width: 3rem;
+                height: 1.5rem;
+            }
+
+
+
+
+

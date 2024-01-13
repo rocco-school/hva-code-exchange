@@ -36,7 +36,7 @@
 }
 
 /* Styling for specific elements within the navigation bar */
-.navbar .container #burgerMenu {
+.navbar .container .burgerMenu.show {
     height: 2rem;
     cursor: pointer;
 }

@@ -1,12 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags for character set and viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon and stylesheets -->
     <link rel="icon" type="image/x-icon" href="assets/img/icons/coding-icon.png">
-    <title>userPage</title>
+    <link rel="stylesheet" href="assets/css/general.css">
+    <link rel="stylesheet" href="assets/css/page/userpage.css">
+    
+    <!-- Page title -->
+    <title>User Page - CodeExchange</title>
 </head>
 <body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <ul class="container">
+            <!-- Burger menu icon -->
+            <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
+            <!-- CodeExchange logo -->
+            <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
+            <!-- Sign up and log in buttons -->
+            <li><button id="signupButton">sign up</button></li>
+            <li><button id="loginButton">log in</button></li>
+        </ul>
+    </nav>
+
+    <!-- Sidebar menu -->
+    <aside class="sidebarMenu show">
+        <div class="container">
+            <!-- Close sidebar icon -->
+            <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg" alt="siderbarClose"></div>
+            <!-- Navigation buttons in the sidebar -->
+            <ul class="containerButtons">
+                <li><button id="homeButton">Home</button></li>
+                <li><button id="aboutButton">about</button></li>
+                <li><button id="questionsButton">Questions</button></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- User profile header -->
+    <header class="profileHeader">
+        <div class="profileHeaderContainer">
+            <!-- User's profile picture and username -->
+            <div class="profileNameCard">
+                <img src="assets/img/userPictureExample.jpg" id="profilePictureUser" alt="User's profile avatar">
+                <div class="nameCardUsername" id="usernameUser" >John Doe<!-- Insert username from DB here --></div>
+            </div>
+
+            <div class="profileStats">
+                <h3>expertise</h3>
+                <ul class="profileExpertise">
+                    <li>JavaScript</li>
+                    <li>PHP</li>
+                    <li>Python</li>
+                </ul>
+            </div>
+
+            <!-- Edit profile button -->
+            <button class="editProfileBtn" id="editProfile">Edit profile</button>
+        </div>
+    </header>
+
+    <!-- Profile tabs section -->
+    <section class="profileTabs">
+        <ul class="profileTabsContainer">
+            <!-- Profile, Questions, Answers, Settings tabs -->
+            <li><button id="userProfileBtn">Profile</button></li>
+            <li><button id="userQuestionsBtn">Questions</button></li>
+            <li><button id="userAnswersBtn">Answers</button></li>
+            <li><button id="userSettingsBtn">Edit</button></li>
+        </ul>
+    </section>
+
+    <!-- Edit profile section -->
+    <section class="editProfileSection">
+        <!-- Section title -->
+        <h1>Edit your profile</h1>
+
+        <!-- Public Information -->
+        <h2>Public Information</h2>
+
+        <!-- Input fields for username, password, email, expertise, and about me -->
+        <h3>username</h3>
+        <input type="text" name="username" id="usernameInput">
+
+        <h3>password</h3>
+        <input type="text" name="password" id="passwordInput">
+
+        <h3>email</h3>
+        <input type="text" name="email" id="emailInput">
+
+        <h3>expertise</h3>
+        <select name="expertiseOptions" id="expertiseOptions">
+            <option>HTML</option>
+            <option>CSS</option>
+            <option>JS</option>
+            <option>PHP</option>
+            <option>PY</option>
+        </select>
+
+        <h3>About Me</h3>
+        <textarea name="aboutMe" id="aboutMeInput" cols="30" rows="10"></textarea>
+
+        <!-- Personal Information -->
+        <h2>Personal Information</h2>
+
+        <!-- Input fields for firstname and lastname -->
+        <h3>firstname</h3>
+        <input type="text" name="firstname" id="firstnameInput">
     
+        <h3>lastname</h3>
+        <input type="text" name="lastname" id="lastnameInput">
+
+        <!-- Action buttons: Save, Edit, Discard -->
+        <div class="actionButtons">
+            <ul class="actionButtonsContainer">
+                <li><button id="saveBtn">Save</button></li>
+                <li><button id="editBtn">Edit</button></li>
+                <li><button id="discardBtn">Discard</button></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- JavaScript file inclusion -->
+    <script src="/src/index.ts" type="module"></script>
 </body>
 </html>

@@ -26,16 +26,16 @@ async function setup(): Promise<void> {
         url.redirect("login.html");
     });
 
-    burgerMenu?.addEventListener("click", () => {
-        // Show the sidebar menu when the burger menu is clicked
-        sidebarMenu?.classList.add("show");
-        console.log("class added");
-    });
+    // burgerMenu?.addEventListener("click", () => {
+    //     // Show the sidebar menu when the burger menu is clicked
+    //     sidebarMenu?.classList.add("show");
+    //     console.log("class added");
+    // });
 
-    sidebarClose?.addEventListener("click", () => {
-        // Hide the sidebar menu when the close button is clicked
-        sidebarMenu?.classList.remove("show");
-    });
+    // sidebarClose?.addEventListener("click", () => {
+    //     // Hide the sidebar menu when the close button is clicked
+    //     sidebarMenu?.classList.remove("show");
+    // });
 
     homeButton?.addEventListener("click", () => {
         // Redirect to the home page
