@@ -291,16 +291,40 @@ export class User {
         }
     }
 
+    /**
+     * Retrieves the expertises of a user from the database using the UserService.
+     *
+     * @param {number} userId - The ID of the user to retrieve expertises for.
+     * @returns {Promise<[CodingTag] | string>} A Promise resolving to either the user's expertises or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to retrieve the expertises of a specific user from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * the user's expertises (an array of CodingTag) or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve user expertises by user ID
+     * try {
+     *   const userExpertises = await User.getUserExpertises(userId);
+     *   if (Array.isArray(userExpertises)) {
+     *     console.log('User expertises retrieved successfully:', userExpertises);
+     *   } else {
+     *     console.error('Failed to retrieve user expertises:', userExpertises);
+     *   }
+     * } catch (error) {
+     *   console.error('Failed to retrieve user expertises:', error.message);
+     * }
+     */
     public static async getUserExpertises(userId: number): Promise<[CodingTag] | string> {
         try {
-            // Calling the deleteUser method from the service.
+            // Calling the getUserExpertises method from the service.
             return await UserService.getUserExpertises(userId);
         } catch (error) {
             // Handling any errors that occur during the process.
-            return `Error retrieving user expertise: ${error}`;
+            return `Error retrieving user expertises: ${error}`;
         }
     }
-
 }
 
 

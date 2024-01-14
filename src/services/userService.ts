@@ -36,7 +36,7 @@ export class UserService {
         }
 
         // Hiding the createUserForm and refreshing the page.
-        return getUser[0];
+        return getUser[0] as User;
     }
 
     /**
@@ -63,7 +63,7 @@ export class UserService {
             throw new Error(`Failed to update user with ID: ${user.userId}`);
         }
 
-        return updatedUser[0];
+        return updatedUser[0] as User;
     }
 
     /**
@@ -87,7 +87,7 @@ export class UserService {
             throw new Error(`Failed to retrieve answer with ID: ${userId}`);
         }
 
-        return getUser[0];
+        return getUser[0] as User;
     }
 
     /**
@@ -120,15 +120,28 @@ export class UserService {
     }
 
 
+    /**
+     * Retrieves the expertises of a user from the database.
+     *
+     * @param {number} userId - The ID of the user to retrieve expertises for.
+     * @returns {Promise<[CodingTag]>} A Promise resolving to an array of CodingTag representing the user's expertises.
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method queries the database to retrieve the expertises of a specific user based on their ID.
+     * It returns a Promise that resolves to an array of CodingTag representing the user's expertises.
+     * If the database retrieval is not successful, an error is thrown.
+     */
     public static async getUserExpertises(userId: number): Promise<[CodingTag]> {
-        // Querying the database to retrieve all user expertise with the given userId.
+        // Querying the database to retrieve all user expertises with the given userId.
         const codingTags: [CodingTag] = await api.queryDatabase(USER_QUERY.GET_USER_EXPERTISE, userId) as [CodingTag];
 
         // Checking if the database retrieval was successful.
         if (!codingTags) {
-            throw new Error("Failed to retrieve codingTags from Database!");
+            throw new Error(`Failed to retrieve codingTags from Database with userId: ${userId}!`);
         }
 
-        return codingTags;
+        return codingTags as [CodingTag];
     }
+
 }

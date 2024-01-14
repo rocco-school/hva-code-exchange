@@ -75,13 +75,13 @@ export async function initializeTextEditor(): Promise<void> {
     // Add event listener for the codeBlock button
     if (codeBlockButton) {
         codeBlockButton.addEventListener("click", (): void => {
-            const selection: Selection | null = window.getSelection();
+            const selection: Selection = window.getSelection() as Selection;
 
             if (selection) {
-                const range: Range | null = selection.getRangeAt(0);
+                const range: Range = selection.getRangeAt(0) as Range;
 
                 if (range) {
-                    const parentCodeBlock: HTMLElement | null = findParentCodeBlock(range.commonAncestorContainer);
+                    const parentCodeBlock: HTMLElement = findParentCodeBlock(range.commonAncestorContainer) as HTMLElement;
 
                     if (parentCodeBlock) {
                         // Case 3: If the cursor is inside a code block, unwrap the content
@@ -202,7 +202,7 @@ function insertCodeBlock(): void {
     };
 
     // Get the current text selection
-    const selection: Selection | null = window.getSelection();
+    const selection: Selection = window.getSelection() as Selection;
 
     if (selection) {
         // Get the range of the selection

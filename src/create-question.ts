@@ -33,18 +33,19 @@ async function setup(): Promise<void> {
         url.redirect("/question-list.html");
     }
 
-    const selectOptions: Element | null = document.querySelector(".options");
+    const selectOptions: HTMLElement = document.querySelector(".options") as HTMLElement;
     if (selectOptions) await populateTagSelect(selectOptions);
 
     // Initialize the text Editor.
     await initializeTextEditor();
 
     // Select all elements with the class "custom-select"
-    const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
-    const postButton: HTMLButtonElement | null = document.querySelector(".btn_submit");
-    const textarea: HTMLDivElement | null = document.querySelector("#text-input");
-    const questionTitleInput: HTMLInputElement | null = document.querySelector(".question-title-input");
-    const selectBoxes: NodeListOf<Element> = document.querySelectorAll(".select-box");
+    const postButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".btn_submit"));
+    const textarea: HTMLDivElement = (<HTMLDivElement>document.querySelector("#text-input"));
+    const questionTitleInput: HTMLInputElement = (<HTMLInputElement>document.querySelector(".question-title-input"));
+
+    const customSelects: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".custom-select"));
+    const selectBoxes: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".select-box"));
 
     // Update selected options for each custom select
     customSelects.forEach(item => {
@@ -116,16 +117,14 @@ async function setup(): Promise<void> {
             );
 
             // Save the question and get the result
-            const question: Question | string = await questionObject.saveQuestion() as Question;
+            const question: Question = await questionObject.saveQuestion() as Question;
 
             if (question) {
                 // Insert question tags associated with the question
 
                 if (!question.questionId) return;
 
-                const createQuestionTags: boolean | string = await Question.insertQuestionTag(question.questionId, questionTags);
-
-                console.log(createQuestionTags);
+                const createQuestionTags: boolean = await Question.insertQuestionTag(question.questionId, questionTags) as boolean;
 
                 if (createQuestionTags) {
                     await showSuccessMessage("Successfully created Question!", 5000, "success", null, null);
@@ -148,7 +147,7 @@ await setup();
  */
 async function populateTagSelect(optionsBody: Element): Promise<void> {
     // Fetch the list of coding tags from the server
-    const codingTags: CodingTag[] | string = await CodingTag.getCodingTags();
+    const codingTags: CodingTag[] = await CodingTag.getCodingTags() as CodingTag[];
 
     // If no coding tags were returned, return early
     if (codingTags.length === 0) return;

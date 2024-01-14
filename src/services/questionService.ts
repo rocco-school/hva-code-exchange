@@ -62,7 +62,7 @@ export class QuestionService {
             throw new Error(`Failed to update question with ID: ${question.questionId}`);
         }
 
-        return updatedQuestion[0];
+        return updatedQuestion[0] as Question;
     }
 
     /**
@@ -85,7 +85,7 @@ export class QuestionService {
             throw new Error("Failed to retrieve questions from Database!");
         }
 
-        return questions;
+        return questions as [Question];
     }
 
     /**
@@ -109,7 +109,7 @@ export class QuestionService {
             throw new Error(`Failed to retrieve question with ID: ${questionId}`);
         }
 
-        return getQuestion[0];
+        return getQuestion[0] as Question;
     }
 
     /**
@@ -227,7 +227,7 @@ export class QuestionService {
                 new Error(`Failed to get question for ${questionId}!`);
             }
 
-            return question[0];
+            return question[0] as Question;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update total question upvotes for ${questionId}: ${error}`);
@@ -264,7 +264,7 @@ export class QuestionService {
                 new Error(`Failed to get question for ${questionId}!`);
             }
 
-            return question[0];
+            return question[0] as Question;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update total question downvotes for ${questionId}: ${error}`);

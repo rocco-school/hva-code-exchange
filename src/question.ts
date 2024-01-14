@@ -53,23 +53,23 @@ async function setup(): Promise<void> {
     await addAnswersToPage(userId);
 
     // Add event listeners for upvoting and downvoting the question
-    document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
+    (<HTMLElement>document.querySelector(".upvote-question")).addEventListener("click", async (): Promise<void> => {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.UPVOTE);
     });
 
-    document.querySelector(".downvote-question")?.addEventListener("click", async (): Promise<void> => {
+    (<HTMLElement>document.querySelector(".downvote-question")).addEventListener("click", async (): Promise<void> => {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.DOWNVOTE);
     });
 
     // Add event listeners for delete buttons in each answer
-    document.querySelectorAll(".delete-button").forEach(item => {
+    (<NodeListOf<Element>>document.querySelectorAll(".delete-button")).forEach(item => {
         item.addEventListener("click", async (): Promise<void> => {
             await showSuccessMessage("Are you sure you want to delete this Answer?", null, "delete", parseInt(item.id), "answer");
         });
     });
 
     // Add event listener for continuing the delete operation
-    document.querySelector(".continue-button")?.addEventListener("click", async (item) => {
+    (<HTMLElement>document.querySelector(".continue-button")).addEventListener("click", async (item) => {
         const target: HTMLDivElement = item.target as HTMLDivElement;
 
         // Check if the target has the correct class
@@ -302,7 +302,9 @@ async function addAnswersToPage(userId: number): Promise<void> {
             let userExpertises: [CodingTag] = await User.getUserExpertises(answer.userId) as [CodingTag];
 
             // Extract unique tag names from user expertises
-            const tagNames: string[] = [...new Set(userExpertises.map((item: { tagName: any; }) => item.tagName))];
+            const tagNames: string[] = [...new Set(userExpertises.map((item: {
+                tagName: any;
+            }) => item.tagName))];
             let userExpertise: string = tagNames.join(", ");
 
             // Check if the user has no expertise and update the userExpertise accordingly
@@ -361,7 +363,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
         }
 
         // Add event listeners for upvoting and downvoting answers
-        document.querySelectorAll(".answer-upvote").forEach(item => {
+        (<NodeListOf<Element>>document.querySelectorAll(".answer-upvote")).forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 if (item.parentElement) {
                     const answerId: string = item.parentElement.id;
@@ -370,7 +372,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
             });
         });
 
-        document.querySelectorAll(".answer-downvote").forEach(item => {
+        (<NodeListOf<Element>>document.querySelectorAll(".answer-downvote")).forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 if (item.parentElement) {
                     const answerId: string = item.parentElement.id;
