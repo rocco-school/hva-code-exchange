@@ -1,6 +1,7 @@
 import {UserService} from "../services/userService";
 import {AnswerService} from "../services/answerService";
 import {QuestionService} from "../services/questionService";
+import {CodingTag} from "./codingTag";
 
 export class User {
     // private fields
@@ -287,6 +288,16 @@ export class User {
         } catch (error) {
             // Handling any errors that occur during the process.
             return `Error deleting user: ${error}`;
+        }
+    }
+
+    public static async getUserExpertises(userId: number): Promise<[CodingTag] | string> {
+        try {
+            // Calling the deleteUser method from the service.
+            return await UserService.getUserExpertises(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving user expertise: ${error}`;
         }
     }
 

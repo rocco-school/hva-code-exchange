@@ -1,6 +1,7 @@
 import {api} from "@hboictcloud/api";
 import {User} from "../models/user";
 import {USER_QUERY} from "../query/user.query";
+import {CodingTag} from "../models/codingTag";
 
 /**
  * A service class for handling operations related to users in the database.
@@ -116,5 +117,18 @@ export class UserService {
 
         // If affectedRows is not 0 or greater than 0, something unexpected happened.
         throw new Error(`Failed to delete user with ID: ${userId}`);
+    }
+
+
+    public static async getUserExpertises(userId: number): Promise<[CodingTag]> {
+        // Querying the database to retrieve all user expertise with the given userId.
+        const codingTags: [CodingTag] = await api.queryDatabase(USER_QUERY.GET_USER_EXPERTISE, userId) as [CodingTag];
+
+        // Checking if the database retrieval was successful.
+        if (!codingTags) {
+            throw new Error("Failed to retrieve codingTags from Database!");
+        }
+
+        return codingTags;
     }
 }
