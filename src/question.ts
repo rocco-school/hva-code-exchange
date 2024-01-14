@@ -30,27 +30,28 @@ async function setup(): Promise<void> {
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean = await security();
 
-    // @ts-ignore
+    // @ts-ignore: Extract user ID from login status
     const userId: number = loginStatus["userId"] as number;
 
     // Retrieves a question from the database based on the URL parameter question ID.
     const question: Question = await QuestionService.retrieveQuestion(questionId);
 
-
+    // If the question does not exist, redirect to the index page
     if (!question) location.replace("index.html");
 
-    // Initialize the text Editor.
+    // Initialize the text editor.
     await initializeTextEditor();
 
+    // Calculate the upvote count for the question
     const upvoteSum: number = question.totalUpvotes! - question.totalDownvotes!;
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
 
-
     // Populate all answers by questionID
     await addAnswersToPage(userId);
 
+    // Add event listeners for upvoting and downvoting the question
     document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.UPVOTE);
     });
@@ -59,22 +60,24 @@ async function setup(): Promise<void> {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.DOWNVOTE);
     });
 
-
+    // Add event listeners for delete buttons in each answer
     document.querySelectorAll(".delete-button").forEach(item => {
         item.addEventListener("click", async (): Promise<void> => {
             await showSuccessMessage("Are you sure you want to delete this Answer?", null, "delete", parseInt(item.id), "answer");
         });
     });
 
+    // Add event listener for continuing the delete operation
     document.querySelector(".continue-button")?.addEventListener("click", async (item) => {
         const target: HTMLDivElement = item.target as HTMLDivElement;
 
+        // Check if the target has the correct class
         if (!target.classList.contains("answer")) {
             await showSuccessMessage("Error while deleting answer!", 3000, "danger", null, null);
             return;
         }
 
-
+        // Delete the answer and show success/error messages accordingly
         const deleteAnswer: boolean | string = await Answer.deleteAnswer(parseInt(target.id));
 
         if (deleteAnswer === true) {
@@ -84,23 +87,27 @@ async function setup(): Promise<void> {
             await showSuccessMessage("Error while deleting answer!", 3000, "danger", null, null);
             return;
         }
-
     });
 
+    // Get references to the new answer submission button and the text input area
     const postNewAnswer: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".btn_submit"));
     const newAnswerTextBody: HTMLDivElement = (<HTMLDivElement>document.querySelector("#text-input"));
 
+    // Add event listener for posting a new answer
     postNewAnswer.addEventListener("click", async (): Promise<void> => {
+        // Check if the user is logged in
         if (!loginStatus) {
             await showSuccessMessage("Please login before creating an answer for this question!", 5000, "danger", null, null);
             return;
         }
 
+        // Check if the answer body is not empty
         if (!newAnswerTextBody.innerHTML) {
             await showSuccessMessage("Please enter your answer before posting answer", 3000, "danger", null, null);
             return;
         }
 
+        // Create a new Answer object
         const newAnswer: Answer = new Answer(
             null,
             questionId,
@@ -113,12 +120,14 @@ async function setup(): Promise<void> {
         );
 
         try {
+            // Save the new answer and show success message
             const savedAnswer: Answer | string = await newAnswer.saveAnswer();
             console.log("Answer saved successfully:", savedAnswer);
 
             await showSuccessMessage("Successfully created answer!", 3000, "success", null, null);
             location.reload();
         } catch (error) {
+            // Show error message if there's an issue saving the answer
             await showSuccessMessage("Failed to create answer!", 3000, "danger", null, null);
             console.error("Failed to save answer:", error);
         }
