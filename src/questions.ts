@@ -55,63 +55,63 @@ async function setup(): Promise<void> {
         });
     });
 
-    // Show question form on click
+    // Pagination Navigation: Show next set of questions when the "Next" button is clicked
     nextButton?.addEventListener("click", (): void => {
         // Get the current page number from the query string
         let pageNumber: string = url.getFromQueryString("page");
 
-        // Set default values for page and new page number
-        let page: number = 1;
+        // Set default values for the current page and the new page number
+        let currentPage: number = 1;
         let newPageNumber: number = parseInt(pageNumber) ? parseInt(pageNumber) + 1 : 2;
 
         // Check if the newPageNumber is within the valid range
         if (pageNumbers.includes(newPageNumber) && newPageNumber >= 1) {
-            // Set the page variable to the valid newPageNumber
-            page = newPageNumber;
+            // Set the currentPage variable to the valid newPageNumber
+            currentPage = newPageNumber;
 
             // Create a new URL with the updated page number
             const newURL: string = utils.createUrl("questions.html", {
-                page: page
+                page: currentPage
             });
 
             // Update the current URL with the new URL
             window.history.pushState({path: newURL}, "", newURL);
 
-            // Reload the page
+            // Reload the page to show the next set of questions
             location.reload();
         }
     });
 
-    // Show question form on click
+    // Pagination Navigation: Show previous set of questions when the "Previous" button is clicked
     prevButton?.addEventListener("click", (): void => {
         // Get the current page number from the query string
         let pageNumber: string = url.getFromQueryString("page");
 
-        // Set default values for page and new page number
-        let page: number = 1;
+        // Set default values for the current page and the new page number
+        let currentPage: number = 1;
         let newPageNumber: number = parseInt(pageNumber) ? parseInt(pageNumber) - 1 : 1;
 
         // Check if the newPageNumber is included in the valid page numbers
         if (pageNumbers.includes(newPageNumber) && newPageNumber >= 1) {
-            // Set the page variable to the valid newPageNumber
-            page = newPageNumber;
+            // Set the currentPage variable to the valid newPageNumber
+            currentPage = newPageNumber;
 
             // Create a new URL with the updated page number
             const newURL: string = utils.createUrl("questions.html", {
-                page: page
+                page: currentPage
             });
 
             // Update the current URL with the new URL
             window.history.pushState({path: newURL}, "", newURL);
 
-            // Reload the page
+            // Reload the page to show the previous set of questions
             location.reload();
         }
     });
 
-
+    // Pagination Navigation: Show first set of questions when the "First Page" button is clicked
     firstPageButton?.addEventListener("click", (): void => {
-        // Set default values for page and new page number
+        // Set default values for the current page and the new page number
         const firstPage: number = pageNumbers[0];
 
         // Create a new URL with the updated page number
@@ -122,12 +122,13 @@ async function setup(): Promise<void> {
         // Update the current URL with the new URL
         window.history.pushState({path: newURL}, "", newURL);
 
-        // Reload the page
+        // Reload the page to show the first set of questions
         location.reload();
     });
 
+    // Pagination Navigation: Show last set of questions when the "Last Page" button is clicked
     lastPageButton?.addEventListener("click", (): void => {
-        // Set default values for page and new page number
+        // Set default values for the current page and the new page number
         const lastPage: number = pageNumbers[pageNumbers.length - 1];
 
         // Create a new URL with the updated page number
@@ -138,7 +139,7 @@ async function setup(): Promise<void> {
         // Update the current URL with the new URL
         window.history.pushState({path: newURL}, "", newURL);
 
-        // Reload the page
+        // Reload the page to show the last set of questions
         location.reload();
     });
 
