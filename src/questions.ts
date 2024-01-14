@@ -225,7 +225,7 @@ async function addPagination(pageArray: number[]): Promise<void> {
 
 
 /**
- * Get a subset of numbers to display based on the current page.
+ * Get a subset of page numbers to display based on the current page.
  *
  * @param {number} page - The current page number.
  * @param {number[]} array - An array of available numbers.
