@@ -216,7 +216,7 @@ export class Question extends Post {
      *   console.error('Failed to retrieve question:', error.message);
      * }
      */
-    public static async retrieveQuestion(questionId: number): Promise<[Question] | string> {
+    public static async retrieveQuestion(questionId: number): Promise<Question | string> {
         try {
             // Calling the retrieveQuestion method from the service.
             return await QuestionService.retrieveQuestion(questionId);

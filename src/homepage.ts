@@ -28,7 +28,7 @@ async function getMostRecentQuestions(): Promise<void> {
                 question.totalDownvotes,
                 question.totalUpvotes,
                 question.createdAt,
-                question.updatedAt  
+                question.updatedAt
             );
 
             // Create a container for each question in the UI
@@ -36,6 +36,7 @@ async function getMostRecentQuestions(): Promise<void> {
 
             // Check if the container was successfully created
             if (container) {
+                let votes: number = 0;
 
                 // Add styling to the container
                 container.classList.add("container");
@@ -173,7 +174,7 @@ async function getMostRecentQuestions(): Promise<void> {
 }
 
 // Invoke the function to fetch and display the most recent questions
-getMostRecentQuestions();
+await getMostRecentQuestions();
 
 
 

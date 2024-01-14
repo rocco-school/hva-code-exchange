@@ -46,15 +46,35 @@ export class CodingTag {
     /**
      * Saves the codingTag to the database using the service.
      *
-     * @returns {Promise<Question[] | string>} A Promise resolving to either the saved codingTag or an error message.
+     * @returns {Promise<CodingTag | string>} A Promise resolving to either the saved codingTag or an error message.
      * @throws {Error} Throws an error if the save operation fails.
+     *
+     * @description
+     * This method asynchronously saves the current codingTag instance to the database
+     * using the CodingTagService. It returns a Promise that resolves to either the saved codingTag
+     * or an error message if the save operation fails.
+     *
+     * @example
+     * // Example: Save a codingTag instance to the database
+     * const codingTagInstance: CodingTag = new CodingTag(
+     *   null, // tagId is null for a new codingTag (auto_increment in the database)
+     *   'TagName',
+     *   'TagDescription',
+     * );
+     *
+     * try {
+     *   const savedCodingTag = await codingTagInstance.saveCodingTag();
+     *   console.log('Coding tag saved successfully:', savedCodingTag);
+     * } catch (error) {
+     *   console.error('Error saving Coding tag:', error.message);
+     * }
      */
-    public async saveCodingTag(): Promise<CodingTag[] | string> {
+    public async saveCodingTag(): Promise<CodingTag | string> {
         try {
-            // Calling the saveQuestion method from the service
+            // Calling the saveCodingTag method from the service.
             return await CodingTagService.saveCodingTag(this);
         } catch (error) {
-            // Handling any errors that occur during the process
+            // Handling any errors that occur during the process.
             return `Error saving Coding tag: ${error}`;
         }
     }
@@ -62,10 +82,25 @@ export class CodingTag {
     /**
      * Updates the Coding Tag in the database using the service.
      *
-     * @returns {Promise<Question[] | string>} A Promise resolving to either the updated Coding Tag or an error message.
+     * @returns {Promise<CodingTag | string>} A Promise resolving to either the updated Coding Tag or an error message.
      * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @description
+     * This method asynchronously updates the current codingTag instance in the database
+     * using the CodingTagService. It returns a Promise that resolves to either the updated codingTag
+     * or an error message if the update operation fails.
+     *
+     * @example
+     * // Example: Update a codingTag instance in the database
+     * const codingTagInstance = new CodingTag(tagId, 'TagName', 'TagDescription');
+     * try {
+     *   const updatedCodingTag = await codingTagInstance.updateCodingTag();
+     *   console.log('Coding tag updated successfully:', updatedCodingTag);
+     * } catch (error) {
+     *   console.error('Error updating Coding tag:', error.message);
+     * }
      */
-    public async updateQuestion(): Promise<CodingTag[] | string> {
+    public async updateCodingTag(): Promise<CodingTag | string> {
         try {
             // Calling the updateCodingTag method from the service.
             return await CodingTagService.updateCodingTag(this);
@@ -80,6 +115,20 @@ export class CodingTag {
      *
      * @returns {Promise<CodingTag[] | string>} A Promise resolving to either the retrieved coding tags or an error message.
      * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the CodingTagService to retrieve coding tags from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * an array of retrieved coding tags or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve coding tags from the database
+     * try {
+     *   const codingTags = await CodingTag.getCodingTags();
+     *   console.log('Coding tags retrieved successfully:', codingTags);
+     * } catch (error) {
+     *   console.error('Failed to retrieve coding tags:', error.message);
+     * }
      */
     public static async getCodingTags(): Promise<CodingTag[] | string> {
         try {
@@ -96,10 +145,24 @@ export class CodingTag {
      * Retrieves a Coding tag from the database using the service.
      *
      * @param {number} tagId - The ID of the coding tag to retrieve.
-     * @returns {Promise<CodingTag[] | string>} A Promise resolving to either the retrieved coding tag or an error message.
+     * @returns {Promise<CodingTag | string>} A Promise resolving to either the retrieved coding tag or an error message.
      * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the CodingTagService to retrieve a specific coding tag from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * the retrieved coding tag or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve a specific coding tag from the database
+     * try {
+     *   const codingTag = await CodingTag.retrieveCodingTag(tagId);
+     *   console.log('Coding tag retrieved successfully:', codingTag);
+     * } catch (error) {
+     *   console.error('Failed to retrieve coding tag:', error.message);
+     * }
      */
-    public static async retrieveCodingTag(tagId: number): Promise<CodingTag[] | string> {
+    public static async retrieveCodingTag(tagId: number): Promise<CodingTag | string> {
         try {
             // Calling the retrieveCodingTag method from the service.
             return await CodingTagService.retrieveCodingTag(tagId);
@@ -113,10 +176,24 @@ export class CodingTag {
      * Deletes a coding tag from the database using the service.
      *
      * @param {number} tagId - The ID of the coding tag to delete.
-     * @returns {Promise<CodingTag[] | string>} A Promise resolving to either delete the coding tag or an error message.
+     * @returns {Promise<boolean | string>} A Promise resolving to either delete the coding tag or an error message.
      * @throws {Error} Throws an error if the deletion operation fails.
+     *
+     * @description
+     * This static method leverages the CodingTagService to delete a specific coding tag from the database.
+     * It handles the deletion operation asynchronously and returns a Promise that resolves to either
+     * a boolean indicating success or an error message if the deletion fails.
+     *
+     * @example
+     * // Example: Delete a specific coding tag from the database
+     * try {
+     *   const isDeleted = await CodingTag.deleteCodingTag(tagId);
+     *   console.log('Coding tag deletion successful:', isDeleted);
+     * } catch (error) {
+     *   console.error('Failed to delete coding tag:', error.message);
+     * }
      */
-    public static async deleteCodingTag(tagId: number): Promise<CodingTag[] | string> {
+    public static async deleteCodingTag(tagId: number): Promise<boolean | string> {
         try {
             // Calling the deleteQuestion method from the service.
             return await CodingTagService.deleteCodingTag(tagId);

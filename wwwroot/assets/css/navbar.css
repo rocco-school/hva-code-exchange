@@ -1,3 +1,8 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
 /* Styling for the navigation bar */
 .navbar {
     height: 3.5rem;
@@ -13,7 +18,7 @@
     list-style: none;
 }
 
-.navbar .container li{
+.navbar .container li {
     margin: 0 0.5rem;
 }
 
@@ -33,6 +38,7 @@
 /* Styling for buttons within the navigation bar */
 .navbar .container button {
     padding: 0.5rem;
+    cursor: pointer;
 }
 
 /* Styling for specific elements within the navigation bar */

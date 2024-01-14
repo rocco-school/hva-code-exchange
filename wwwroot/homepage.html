@@ -4,6 +4,7 @@
     <!-- Meta tags for character set and viewport settings -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="assets/img/icons/coding-icon.png">
     <!-- Page title -->
     <title>Code Exchange Homepage</title>
     <!-- External stylesheet links for styling -->
@@ -13,44 +14,55 @@
 </head>
 <body>
 
-    <!-- Sidebar Section -->
-    <aside class="sidebarMenu">
-        <div class="container">
-            <!-- Close button for the sidebar -->
-            <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg" alt="siderbarClose"></div>
-            <!-- Sidebar menu buttons -->
-            <ul class="containerButtons">
-                <li><button id="homeButton">Home</button></li>
-                <li><button id="aboutButton">about</button></li>
-                <li><button id="questionsButton">Questions</button></li>
-            </ul>
-        </div>
-    </aside>
-
-    <!-- Navbar Section -->
-    <nav class="navbar">
-        <ul class="container">
-            <!-- Burger menu icon -->
-            <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
-            <!-- Code Exchange logo -->
-            <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
-            <!-- Search bar input -->
-            <li><input id="searchBarInput" type="text" placeholder="  search..."></li>
-            <!-- Sign up and log in buttons -->
-            <li><button id="signupButton">sign up</button></li>
-            <li><button id="loginButton">log in</button></li>
+<!-- Sidebar Section -->
+<aside class="sidebarMenu">
+    <div class="container">
+        <!-- Close button for the sidebar -->
+        <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg"
+                  alt="siderbarClose"></div>
+        <!-- Sidebar menu buttons -->
+        <ul class="containerButtons">
+            <li>
+                <button id="homeButton">Home</button>
+            </li>
+            <li>
+                <button id="aboutButton">about</button>
+            </li>
+            <li>
+                <button id="questionsButton">Questions</button>
+            </li>
         </ul>
-    </nav>
+    </div>
+</aside>
 
-    <!-- Main Content Section (Recent Questions) -->
-    <main class="recentQuestions">
-        <div class="container">
+<!-- Navbar Section -->
+<nav class="navbar">
+    <ul class="container">
+        <!-- Burger menu icon -->
+        <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
+        <!-- Code Exchange logo -->
+        <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
+        <!-- Search bar input -->
+        <li><input id="searchBarInput" type="text" placeholder="  search..."></li>
+        <!-- Sign up and log in buttons -->
+        <li>
+            <button id="signupButton">sign up</button>
+        </li>
+        <li>
+            <button id="loginButton">log in</button>
+        </li>
+    </ul>
+</nav>
 
-        </div>
-    </main>
+<!-- Main Content Section (Recent Questions) -->
+<main class="recentQuestions">
+    <div class="container">
 
-    <!-- TypeScript script tag -->
-    <script type="module" src="/src/index.ts"></script>
-    <script type="module" src="/src/homepage.ts"></script>
+    </div>
+</main>
+
+<!-- TypeScript script tag -->
+<script type="module" src="/src/index.ts"></script>
+<script type="module" src="/src/homepage.ts"></script>
 </body>
 </html>

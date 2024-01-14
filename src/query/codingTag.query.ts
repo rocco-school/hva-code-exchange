@@ -1,8 +1,8 @@
 export const CODING_TAG_QUERY: {
     SELECT_CODING_TAGS: string;
     SELECT_CODING_TAG: string;
-    SELECT_CODING_TAG_NAME: string;
     CREATE_CODING_TAG: string;
+    SELECT_CODING_TAG_NAME: string;
     UPDATE_CODING_TAG: string;
     DELETE_CODING_TAG: string;
 
