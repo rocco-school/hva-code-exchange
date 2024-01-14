@@ -1,12 +1,29 @@
 import "./config";
-import {api} from "@hboictcloud/api";
+import {api, url} from "@hboictcloud/api";
 import {USER_QUERY} from "./query/user.query";
-
+import {hashPassword} from "./components/hashPassword";
+import {User} from "./models/user";
+import {JWTPayload} from "jose";
+import {security} from "./components/security";
 
 /**
- * This method will be called when the page is loaded, this happens at the end of this file.
+ * The main application entry point for the signup page.
+ *
+ * This function initializes the signup page, including event handling,
+ * user verification, and other related functionality.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
-function setup(): void {
+async function setup(): Promise<void> {
+
+    // Check the security status by calling the 'security' function.
+    const loginStatus: JWTPayload | boolean = await security();
+
+    // If the user is authenticated (loginStatus is true), redirect them to the index.html page.
+    if (loginStatus) {
+        url.redirect("/index.html");
+    }
+
     // keeps redirect message hidden
     document.getElementsByTagName("section")[0].setAttribute("style", "display:none");
 
@@ -34,37 +51,56 @@ function setup(): void {
         submitButton.addEventListener("submit", async function (e: any): Promise<void> {
             e.preventDefault();
 
+            // Hide any previous error messages.
             document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: none");
 
+            // Array of input elements for validation.
             const inputs: (HTMLInputElement | null)[] = [firstnameInput, lastnameInput, usernameInput, emailInput, passwordInput];
 
+            // Validate the user inputs.
             const verifiedInputs: boolean = await validateInputs(inputs);
 
-            console.log(verifiedInputs);
-
             if (verifiedInputs) {
+                // Verify individual input fields.
                 const verifiedFirstname: boolean = await verifyFirstname(firstnameInput.value);
-                console.log(verifiedFirstname, "fistname");
                 if (!verifiedFirstname) return;
+
                 const verifiedLastname: boolean = await verifyLastname(lastnameInput.value);
-                console.log(verifiedLastname, "lastname");
                 if (!verifiedLastname) return;
+
                 const verifiedEmail: boolean = await verifyEmail(emailInput.value);
-                console.log(verifiedEmail, "Email");
                 if (!verifiedEmail) return;
+
                 const verifiedPass: boolean = await verifyPassword(passwordInput.value);
-                console.log(verifiedPass, "password");
                 if (!verifiedPass) return;
 
-                if (verifiedInputs && verifiedFirstname && verifiedLastname && verifiedPass && verifiedEmail) {
+                // If all inputs are verified, attempt user sign-up.
+                if (verifiedFirstname && verifiedLastname && verifiedPass && verifiedEmail) {
                     try {
-                        const newUser: any = await signUpDatabase(firstnameInput.value, lastnameInput.value, usernameInput.value, emailInput.value, passwordInput.value);
+                        // Call the sign-up function and await the result.
+                        const newUser: any = await signUpDatabase(
+                            firstnameInput.value,
+                            lastnameInput.value,
+                            usernameInput.value,
+                            emailInput.value,
+                            passwordInput.value
+                        );
 
-                        if (newUser) {
-                            console.log(newUser);
+                        // Check if the sign-up was successful.
+                        if (newUser instanceof Error) {
+                            // Handle error case.
+                            console.error("Error during user sign-up:", newUser.message);
+                        } else {
+                            // Log the newly created user.
+                            console.log("User signed up successfully:", newUser);
+
+
+                            // TODO:add popup to tell user successfully signed up
+                            // location.replace("login.html");
                         }
                     } catch (e) {
-                        console.log(e);
+                        // Handle unexpected errors during sign-up.
+                        console.error("Unexpected error during user sign-up:", e);
                     }
                 }
             }
@@ -97,14 +133,12 @@ function setup(): void {
      * @param email
      */
     async function verifyEmail(email: any): Promise<boolean | any> {
-        console.log(email, "1");
         if (email.match(emailRegEx)) {
             const textInput: string = "Email is not correct!";
             // Returns the alertPopUp function and with the assigned data
             await alertPopUp(textInput);
             return false;
         }
-        console.log(email, "2");
         try {
             const emailExists: any = await api.queryDatabase(USER_QUERY.GET_EMAIL_BY_EMAIL, email);
             console.log(emailExists);
@@ -160,7 +194,6 @@ function setup(): void {
      * @param password
      */
     async function verifyPassword(password: any): Promise<boolean> {
-        console.log(password);
         if (password.match(passwordRegEx)) {
             const textInput: string = "Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.";
             // Returns the alertPopUp function and with the assigned data
@@ -173,24 +206,43 @@ function setup(): void {
 
 
 /**
- *
- * @param firstname
- * @param lastname
- * @param username
- * @param email
- * @param password
- * @returns Array with the user data
+ * Signs up a new user by inserting user data into the database.
+ * @param {string} firstnameInput - The first name of the user.
+ * @param {string} lastnameInput - The last name of the user.
+ * @param {string} usernameInput - The username chosen by the user.
+ * @param {string} emailInput - The email address of the user.
+ * @param {string} passwordInput - The user's password.
+ * @returns {Promise<User>} A Promise that resolves to the user object if the sign-up is successful, otherwise resolves to an error.
  */
-async function signUpDatabase(firstnameInput: string, lastnameInput: string, usernameInput: string, emailInput: string, passwordInput: string): Promise<any[] | string[]> {
-
-    // tries to get the data out of the database
+async function signUpDatabase(firstnameInput: string, lastnameInput: string, usernameInput: string, emailInput: string, passwordInput: string): Promise<User | Error> {
     try {
-        const dataString: string[] = [firstnameInput, lastnameInput, usernameInput, passwordInput, emailInput];
-        const data: any = await api.queryDatabase(USER_QUERY.CREATE_USER, ...dataString);
-        return data;
+        // Hash the user's password.
+        const password: string | null = await hashPassword(passwordInput);
+
+        // If hashing the password fails, return early.
+        if (!password) {
+            return new Error("Error hashing the password.");
+        }
+
+        // Prepare data for database insertion.
+        const dataString: any = [firstnameInput, lastnameInput, usernameInput, password, emailInput];
+
+        // Insert user data into the database.
+        const user: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER, ...dataString);
+        // Retrieve the newly created user based on the insertId.
+        return user
+            .then((databaseResponse) => {
+                const insertId: number = databaseResponse.insertId;
+                return User.retrieveUser(insertId);
+            })
+            .catch((error: Error) => {
+                console.error("Error inserting user:", error);
+                throw error; // Propagate the error for external handling.
+            }) as User;
     } catch (error) {
-        // if it fails, then it returns an empty array
-        return [];
+        // If an unexpected error occurs, return an error object.
+        console.error("Unexpected error during user sign-up:", error);
+        return new Error("Unexpected error during user sign-up.");
     }
 }
 
@@ -204,4 +256,4 @@ async function alertPopUp(textInput: string): Promise<void> {
 }
 
 // Calls the setup function when the page is loaded
-setup();
+await setup();

@@ -12,13 +12,9 @@ classDiagram
     }
 
     class Question {
-        -number questionId
-        -number userId
         -string questionTitle
         -string questionBody
-        -boolean isCLosed
-        -Date createdAt
-        -Date updatedAt
+        -boolean isClosed
 
         +toString()
         +saveQuestion()
@@ -27,16 +23,10 @@ classDiagram
         +retrieveQuestion()
         +insertQuestionTag()
         +deleteQuestion()
-
     }
 
     class Answer {
-        -number answerId
-        -number questionId
-        -number userId
-        -String answerBody
-        -Date createdAt
-        -Date updatedAt
+        -string answerBody
 
         +toString()
     }
@@ -48,15 +38,19 @@ classDiagram
 
         +toString()
         +saveCodingTag()
-        +updateQuestion()
         +getCodingTags()
         +retrieveCodingTags()
         +deleteCodingTag()
-
     }
 
-    Question "0..*" ..> "1" User
-    Answer "0..*" ..> "1" Question
-    Answer "0..*" ..> "1" User
-    CodingTag "1..*" ..> "1" Question
-    CodingTag "0..*" ..> "1" User
+
+    User "1" --* "0..*" Question
+    User "1" --* "0..*" Answer
+
+    Question "1" --* "0..*" Answer
+
+    User "1" --* "0..*" Post
+    Question --|> Post
+    Answer --|> Post
+    Question "0..*" --* "1..*" CodingTag
+    User "0..*" --* "0..*" CodingTag

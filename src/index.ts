@@ -1,4 +1,5 @@
-import { redirect } from "./components/redirect";
+import "./config";
+import {url} from "@hboictcloud/api";
 
 /**
  * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
@@ -18,11 +19,11 @@ async function setup(): Promise<void> {
 
     // Add event listeners for various buttons
     signupButton?.addEventListener("click", () => {
-        redirect("signup.html");
+        url.redirect("signup.html");
     });
 
     loginButton?.addEventListener("click", () => {
-        redirect("login.html");
+        url.redirect("login.html");
     });
 
     burgerMenu?.addEventListener("click", () => {
@@ -38,22 +39,19 @@ async function setup(): Promise<void> {
 
     homeButton?.addEventListener("click", () => {
         // Redirect to the home page
-        redirect("index.html");
+        url.redirect("homepage.html");
     });
 
     aboutButton?.addEventListener("click", () => {
         // Redirect to the about page (or '#' if not specified)
-        redirect("#");
+        url.redirect("/");
     });
 
     questionsButton?.addEventListener("click", () => {
         // Redirect to the questions page
-        redirect("homepage.html");
+        url.redirect("questions.html");
     });
 }
 
 // Run bij het opstarten de setup functie
-// Run the setup function when the page is loaded
-setup();
-
-
+await setup();

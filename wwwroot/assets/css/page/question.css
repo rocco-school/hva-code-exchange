@@ -1,0 +1,152 @@
+.create-question-container {
+    max-width: 70%;
+    margin: 5rem auto auto;
+}
+
+.answer-container {
+    margin: 2rem;
+    display: flex;
+    gap: 3rem;
+}
+
+.answer {
+    border-bottom: 1px solid grey;
+}
+
+.answer:last-of-type {
+    border-bottom: 0;
+}
+
+.vote {
+    display: flex;
+    flex-direction: column;
+}
+
+.question {
+    margin: 2rem;
+    display: flex;
+    gap: 3rem;
+}
+
+.new-answer-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.new-answer-container {
+    margin-top: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    width: 80%;
+    justify-content: center;
+    background-color: darkgrey;
+    height: 100%;
+}
+
+.new-answer-container--inner {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.new-answer-body-textarea {
+    min-height: 10rem;
+    max-height: 30rem;
+    padding: 10px;
+    outline: none;
+    overflow-y: scroll;
+    max-width: 50rem;
+    resize: vertical;
+}
+
+.new-answer-body-textarea:focus {
+    border-color: #ccc;
+}
+
+
+.new-answer-title {
+    width: 80%;
+    margin: 4rem auto auto;
+}
+
+.arrow {
+    width: 3rem;
+    cursor: pointer;
+}
+
+.arrow:hover {
+    filter: opacity(0.5);
+}
+
+.upvote-count {
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+
+.arrow-down {
+    transform: rotate(180deg);
+}
+
+.profile-picture {
+    border-radius: 1rem;
+}
+
+.answer-body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.created-info {
+    display: flex;
+    gap: 1rem;
+    justify-content: end;
+    font-size: .8rem;
+    margin-top: 2rem;
+    grid-column-start: 4;
+    grid-column-end: 6;
+}
+
+.person {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.profile-picture {
+    width: 5rem;
+}
+
+.personal-information {
+    display: flex;
+    flex-direction: column;
+}
+
+.action-buttons {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: flex;
+    justify-content: center;
+}
+
+.edit-button {
+    padding: 0;
+}
+
+.delete-button {
+    padding: 0;
+}
+
+.answer-info {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.answers-count {
+    margin-top: 1rem;
+}

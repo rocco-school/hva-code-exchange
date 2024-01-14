@@ -12,32 +12,45 @@ export class QuestionService {
      * Save a question to the database.
      *
      * @param {Question} question - The question object to be saved.
-     * @returns {Promise<[Question]>} A Promise resolving to the saved question(s).
+     * @returns {Promise<Question>} A Promise resolving to the saved question.
      * @throws {Error} Throws an error if the database query was not successful.
+     *
+     * @description
+     * This static method saves a new question to the database using the provided question object.
+     * If the questionId is null, it indicates a new question, and the database will auto-increment the ID.
+     * It queries the database to create a new question and returns a Promise that resolves to the saved question.
      */
-    public static async saveQuestion(question: Question): Promise<[Question]> {
+    public static async saveQuestion(question: Question): Promise<Question> {
         // Querying the database with the new question data.
-        const param: (string | number | boolean)[] = [question.userId, question.questionTitle, question.questionBody, question.isClosed];
-        const questionQuery: [Question] = await api.queryDatabase(QUESTION_QUERY.CREATE_QUESTION, ...param) as [Question];
+        const param: (string | number | boolean | null)[] = [question.userId, question.questionTitle, question.questionBody, question.isClosed];
+        const newQuestion: any = await api.queryDatabase(QUESTION_QUERY.CREATE_QUESTION, ...param);
+
+        // Retrieving the newly created question from the database.
+        const getQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, newQuestion.insertId) as [Question];
 
         // Checking if the database query was successful.
-        if (!questionQuery) {
+        if (!getQuestion) {
             // If the query was not successful, throw an error.
             throw new Error("Failed to create question in the database");
         }
 
         // Hiding the createQuestionForm and refreshing the page.
-        return questionQuery;
+        return getQuestion[0] as Question;
     }
 
     /**
      * Update a question in the database.
      *
      * @param {Question} question - The question object containing the updated data.
-     * @returns {Promise<[Question]>} A Promise resolving to the updated question(s).
+     * @returns {Promise<Question>} A Promise resolving to the updated question.
      * @throws {Error} Throws an error if the database update was not successful.
+     *
+     * @description
+     * This static method updates a question in the database using the provided question object.
+     * It destructures the question object to extract individual properties and then queries the database
+     * to perform the update. The method returns a Promise that resolves to the updated question.
      */
-    public static async updateQuestion(question: Question): Promise<[Question]> {
+    public static async updateQuestion(question: Question): Promise<Question> {
         // Destructuring the question object to get individual properties
         const questionData: (string | number | boolean | null)[] = [question.questionTitle, question.questionBody, question.isClosed, question.questionId];
 
@@ -49,7 +62,7 @@ export class QuestionService {
             throw new Error(`Failed to update question with ID: ${question.questionId}`);
         }
 
-        return updatedQuestion;
+        return updatedQuestion[0];
     }
 
     /**
@@ -57,6 +70,11 @@ export class QuestionService {
      *
      * @returns {Promise<[Question]>} A Promise resolving to the retrieved question(s).
      * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves questions from the database based on certain criteria.
+     * It queries the database to retrieve all questions and returns a Promise that resolves to
+     * an array of retrieved questions.
      */
     public static async getQuestions(): Promise<[Question]> {
         // Querying the database to retrieve all questions.
@@ -76,8 +94,13 @@ export class QuestionService {
      * @param {number} questionId - The ID of the question to be retrieved.
      * @returns {Promise<[Question]>} A Promise resolving to the retrieved question.
      * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves a specific question from the database based on its ID.
+     * It queries the database to retrieve the question with the given questionId and returns
+     * a Promise that resolves to the retrieved question.
      */
-    public static async retrieveQuestion(questionId: number): Promise<[Question]> {
+    public static async retrieveQuestion(questionId: number): Promise<Question> {
         // Querying the database to retrieve the question with the given questionId.
         const getQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId) as [Question];
 
@@ -86,7 +109,7 @@ export class QuestionService {
             throw new Error(`Failed to retrieve question with ID: ${questionId}`);
         }
 
-        return getQuestion;
+        return getQuestion[0];
     }
 
     /**
@@ -94,10 +117,15 @@ export class QuestionService {
      *
      * @param {number} questionId - The ID of the question.
      * @param {number[]} tagIds - An array of tag IDs to associate with the question.
-     * @returns {Promise<number>} A Promise resolving to the question ID.
+     * @returns {Promise<boolean>} A Promise resolving to true upon successful insertion.
      * @throws {Error} Throws an error if the database insertion was not successful.
+     *
+     * @description
+     * This static method inserts tags for a specific question into the database.
+     * It iterates through the array of tag IDs and queries the database to create associations between
+     * the question and each tag. It returns a Promise that resolves to true upon successful insertion.
      */
-    public static async insertQuestionTag(questionId: number, tagIds: number[]): Promise<number> {
+    public static async insertQuestionTag(questionId: number, tagIds: number[]): Promise<boolean> {
         for (const tagId of tagIds) {
             const questionTagData: [number, number] = [questionId, tagId];
 
@@ -112,25 +140,134 @@ export class QuestionService {
                 throw new Error(`Failed to insert question tags for question with ID: ${questionId}`);
             }
         }
-        return questionId;
+        return true;
     }
 
     /**
-     * delete a question in the database.
+     * Delete a question in the database.
      *
-     * @returns {Promise<[Question]>} A Promise resolving to the deleted question.
+     * @param {number} questionId - The ID of the question to be deleted.
+     * @returns {Promise<boolean>} A Promise resolving to the deletion status.
      * @throws {Error} Throws an error if the database deletion was not successful.
-     * @param questionId
+     *
+     * @description
+     * This static method deletes a specific question from the database based on its ID.
+     * It queries the database to delete the question with the given questionId and returns
+     * a Promise that resolves to a boolean indicating whether the deletion was successful.
      */
-    public static async deleteQuestion(questionId: number): Promise<[Question]> {
+    public static async deleteQuestion(questionId: number): Promise<boolean> {
         // Querying the database to delete the question with the given questionId.
-        const newQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.DELETE_QUESTION, questionId) as [Question];
+        const deleteQuestion: any = await api.queryDatabase(QUESTION_QUERY.DELETE_QUESTION, questionId) as any;
 
         // Checking if the database deletion was successful.
-        if (!newQuestion) {
-            throw new Error(`Failed to delete question with ID: ${questionId}`);
+        if (deleteQuestion.affectedRows === 0) {
+            return false; // No rows affected, indicating the question was not found.
         }
 
-        return newQuestion;
+        if (deleteQuestion.affectedRows > 0) {
+            return true; // Deletion successful.
+        }
+
+        // If affectedRows is not 0 or greater than 0, something unexpected happened.
+        throw new Error(`Failed to delete question with ID: ${questionId}`);
+    }
+
+    /**
+     * Retrieve questions connected to a specific question from the database.
+     *
+     * @param {string} userId - The ID of the question for which answers are to be retrieved.
+     * @returns {Promise<[AnswerWithUser]>} A Promise resolving to the retrieved answer(s).
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method retrieves answers connected to a specific question from the database.
+     * It queries the database to retrieve answers based on the provided question ID and returns
+     * a Promise that resolves to an array of retrieved answers.
+     */
+    public static async getQuestionsCountByUser(userId: number): Promise<number> {
+        // Querying the database to retrieve questions for the specified question.
+        const questions: any = await api.queryDatabase(QUESTION_QUERY.GET_TOTAL_QUESTIONS_BY_USER, userId);
+
+        // Checking if the database retrieval was successful.
+        if (!questions) {
+            throw new Error(`Failed to retrieve total question count for user ${userId} from Database!`);
+        }
+
+        return questions[0].totalQuestions;
+    }
+
+
+    /**
+     * Update the total upvotes for a question in the database.
+     *
+     * @param {number} questionId - The ID of the question to update.
+     * @param {boolean} increment - If true, increment total upvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Question>} A Promise resolving to the updated question object.
+     * @throws {Error} Throws an error if the database update or retrieval fails.
+     *
+     * @description
+     * This static method updates the total upvotes for a question in the database by either incrementing or
+     * decrementing by 1. It uses a parameterized query to perform the update operation and retrieves the
+     * updated question from the database. The function returns a Promise that resolves to the updated question.
+     */
+    public static async updateTotalUpvotes(questionId: number, increment: boolean): Promise<Question> {
+        // Determine the update value based on the increment flag.
+        const updateValue: number = increment ? 1 : -1;
+
+        try {
+            // Update the total_upvotes column in the Question table.
+            const params: number[] = [updateValue, questionId];
+            await api.queryDatabase(QUESTION_QUERY.UPDATE_TOTAL_UPVOTES, ...params);
+
+            // Retrieve the updated question from the database.
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId) as [Question];
+
+            // Checking if the database retrieval was successful.
+            if (!question) {
+                new Error(`Failed to get question for ${questionId}!`);
+            }
+
+            return question[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update total question upvotes for ${questionId}: ${error}`);
+        }
+    }
+
+    /**
+     * Update the total downvotes for a question in the database.
+     *
+     * @param {number} questionId - The ID of the question to update.
+     * @param {boolean} increment - If true, increment total downvotes by 1; if false, decrement by 1.
+     * @returns {Promise<Question>} A Promise resolving to the updated question object.
+     * @throws {Error} Throws an error if the database update or retrieval fails.
+     *
+     * @description
+     * This static method updates the total downvotes for a question in the database by either incrementing or
+     * decrementing by 1. It uses a parameterized query to perform the update operation and retrieves the
+     * updated question from the database. The function returns a Promise that resolves to the updated question.
+     */
+    public static async updateTotalDownvotes(questionId: number, increment: boolean): Promise<Question> {
+        // Determine the update value based on the increment flag.
+        const updateValue: number = increment ? 1 : -1;
+
+        try {
+            // Update the total_downvotes column in the Question table.
+            const params: number[] = [updateValue, questionId];
+            await api.queryDatabase(QUESTION_QUERY.UPDATE_TOTAL_DOWNVOTES, ...params);
+
+            // Retrieve the updated question from the database.
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, questionId) as [Question];
+
+            // Checking if the database retrieval was successful.
+            if (!question) {
+                new Error(`Failed to get question for ${questionId}!`);
+            }
+
+            return question[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update total question downvotes for ${questionId}: ${error}`);
+        }
     }
 }

@@ -8,55 +8,79 @@ import {CODING_TAG_QUERY} from "../query/codingTag.query";
  * @class
  */
 export class CodingTagService {
+
     /**
      * Save a codingTag to the database.
      *
-     * @returns {Promise<[CodingTag]>} A Promise resolving to the saved codingTag(s).
+     * @param {CodingTag} codingTag - The codingTag object to be saved.
+     * @returns {Promise<CodingTag>} A Promise resolving to the saved codingTag.
      * @throws {Error} Throws an error if the database query was not successful.
-     * @param codingTag
+     *
+     * @description
+     * This static method asynchronously saves a codingTag object to the database.
+     * It queries the database with the provided codingTag data and returns a Promise
+     * that resolves to the saved codingTag. If the database query is not successful,
+     * it throws an error.
      */
-    public static async saveCodingTag(codingTag: CodingTag): Promise<[CodingTag]> {
+    public static async saveCodingTag(codingTag: CodingTag): Promise<CodingTag> {
         // Querying the database with the new codingTag data.
         const param: string[] = [codingTag.tagName, codingTag.tagDescription];
-        const questionQuery: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.CREATE_CODING_TAG, ...param) as [CodingTag];
+        const newCodingTag: [CodingTag] = await api.queryDatabase(
+            CODING_TAG_QUERY.CREATE_CODING_TAG,
+            ...param
+        ) as [CodingTag];
 
         // Checking if the database query was successful.
-        if (!questionQuery) {
+        if (!newCodingTag) {
             // If the query was not successful, throw an error.
-            throw new Error("Failed to create question in the database");
+            throw new Error("Failed to create codingTag in the database");
         }
 
-        // Hiding the createQuestionForm and refreshing the page.
-        return questionQuery;
+        // Returning the saved codingTag.
+        return newCodingTag[0];
     }
 
     /**
      * Update a codingTag in the database.
      *
-     * @returns {Promise<[CodingTag]>} A Promise resolving to the updated codingTag(s).
+     * @param {CodingTag} codingTag - The codingTag object containing the updated data.
+     * @returns {Promise<CodingTag>} A Promise resolving to the updated codingTag.
      * @throws {Error} Throws an error if the database update was not successful.
-     * @param codingTag
+     *
+     * @description
+     * This static method updates a codingTag object in the database with the provided data.
+     * It queries the database to update the codingTag with the given tagId and returns a Promise
+     * that resolves to the updated codingTag. If the database update is not successful, it throws an error.
      */
-    public static async updateCodingTag(codingTag: CodingTag): Promise<[CodingTag]> {
-        // Destructuring the codingTag object to get individual properties
+    public static async updateCodingTag(codingTag: CodingTag): Promise<CodingTag> {
+        // Destructuring the codingTag object to get individual properties.
         const codingTagData: (string | number | null)[] = [codingTag.tagDescription, codingTag.tagName, codingTag.tagId];
 
-        // Querying the database to update the question with the given questionId.
-        const updatedCodingTag: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.UPDATE_CODING_TAG, ...codingTagData) as [CodingTag];
+        // Querying the database to update the codingTag with the given tagId.
+        const updatedCodingTag: [CodingTag] = await api.queryDatabase(
+            CODING_TAG_QUERY.UPDATE_CODING_TAG,
+            ...codingTagData
+        ) as [CodingTag];
 
         // Checking if the database update was successful.
         if (!updatedCodingTag) {
-            throw new Error(`Failed to update question with ID: ${codingTag.tagId}`);
+            throw new Error(`Failed to update codingTag with ID: ${codingTag.tagId}`);
         }
 
-        return updatedCodingTag;
+        // Returning the updated codingTag.
+        return updatedCodingTag[0];
     }
 
     /**
-     * Retrieve Coding tags from the database
+     * Retrieve Coding tags from the database.
      *
      * @returns {Promise<[CodingTag]>} A Promise resolving to the retrieved coding tag(s).
      * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method queries the database to retrieve all coding tags.
+     * It returns a Promise that resolves to an array of retrieved coding tags.
+     * If the database retrieval is not successful, it throws an error.
      */
     public static async getCodingTags(): Promise<[CodingTag]> {
         // Querying the database to retrieve all coding tags.
@@ -74,10 +98,15 @@ export class CodingTagService {
      * Retrieve a Coding tag from the database.
      *
      * @param {number} tagId - The ID of the coding tag to be retrieved.
-     * @returns {Promise<[CodingTag]>} A Promise resolving to the retrieved Coding tag.
+     * @returns {Promise<CodingTag>} A Promise resolving to the retrieved Coding tag.
      * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method queries the database to retrieve a specific coding tag with the given tagId.
+     * It returns a Promise that resolves to the retrieved coding tag.
+     * If the database retrieval is not successful, it throws an error.
      */
-    public static async retrieveCodingTag(tagId: number): Promise<[CodingTag]> {
+    public static async retrieveCodingTag(tagId: number): Promise<CodingTag> {
         // Querying the database to retrieve the coding tag with the given tagId.
         const getCodingTag: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.SELECT_CODING_TAG, tagId) as [CodingTag];
 
@@ -86,25 +115,36 @@ export class CodingTagService {
             throw new Error(`Failed to retrieve Coding tag with ID: ${tagId}`);
         }
 
-        return getCodingTag;
+        // Returning the retrieved coding tag.
+        return getCodingTag[0];
     }
 
     /**
-     * delete a coding tag in the database.
+     * Delete a coding tag in the database.
      *
-     * @returns {Promise<[Question]>} A Promise resolving to the deleted coding tag.
+     * @param {number} tagId - The ID of the coding tag to be deleted.
+     * @returns {Promise<boolean>} A Promise resolving to the deleted coding tag.
      * @throws {Error} Throws an error if the database deletion was not successful.
-     * @param tagId
+     *
+     * @description
+     * This static method queries the database to delete a specific coding tag with the given tagId.
+     * It returns a Promise that resolves to a boolean indicating whether the deletion was successful.
+     * If the database deletion is not successful, it throws an error.
      */
-    public static async deleteCodingTag(tagId: number): Promise<[CodingTag]> {
-        // Querying the database to delete the codingTag with the given questionId.
-        const deletedCodingTag: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.DELETE_CODING_TAG, tagId) as [CodingTag];
+    public static async deleteCodingTag(tagId: number): Promise<boolean> {
+        // Querying the database to delete the codingTag with the given tagId.
+        const deletedCodingTag: any = await api.queryDatabase(CODING_TAG_QUERY.DELETE_CODING_TAG, tagId) as any;
 
         // Checking if the database deletion was successful.
-        if (!deletedCodingTag) {
-            throw new Error(`Failed to delete Coding tag with ID: ${tagId}`);
+        if (deletedCodingTag.affectedRows === 0) {
+            return false; // No rows affected, indicating the codingTag was not found.
         }
 
-        return deletedCodingTag;
+        if (deletedCodingTag.affectedRows > 0) {
+            return true; // Deletion successful.
+        }
+
+        // If affectedRows is not 0 or greater than 0, something unexpected happened.
+        throw new Error(`Failed to delete codingTag with ID: ${tagId}`);
     }
 }
