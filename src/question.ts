@@ -261,24 +261,34 @@ function createAnswerElement(
     `;
 }
 
+/**
+ * Adds answers to the page for a specific question.
+ *
+ * @param {number} userId - The unique identifier for the current user.
+ * @returns {Promise<void>} - A Promise that resolves when answers are successfully added to the page.
+ */
 async function addAnswersToPage(userId: number): Promise<void> {
+    // Get references to HTML elements
     const answersBody: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answers"));
     const answerCount: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answer-count"));
 
+    // Retrieve answers for the current question from the database
     const answers: AnswerWithUser[] | string = await Question.getAnswersForQuestion(questionId);
 
+    // Update the answer count displayed on the page
     answerCount.innerHTML = String(answers.length);
 
+    // Check if there are any answers to display
     if (answers.length !== 0) {
-
         for (const singleAnswer of answers) {
-
+            // Cast answer to the type with user information
             const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
 
+            // Get total answers and total questions count for the user
             let totalAnswers: number | string = await User.getTotalAnswers(answer.userId);
             let totalQuestions: number | string = await User.getTotalQuestions(answer.userId);
 
-
+            // Ensure the counts are numbers, default to 0 if not
             if (typeof totalAnswers !== "number") {
                 totalAnswers = 0;
             }
@@ -287,7 +297,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 totalQuestions = 0;
             }
 
-
+            // Format the creation date of the answer
             const createdAt: Date | null = answer.createdAt;
             let date: string = Date.now().toString();
             if (createdAt !== null) {
@@ -297,14 +307,14 @@ async function addAnswersToPage(userId: number): Promise<void> {
 
             let extraClass: string = "";
 
-
+            // If the user is not the author of the answer, add the "hidden" class
             if (userId !== answer.userId) {
                 extraClass = "hidden";
             }
 
+            // Create the HTML markup for the answer
             const username: string = answer.firstname + " " + answer.lastname as string;
             const upvoteCount: number = answer.totalUpvotes! - answer.totalDownvotes!;
-
             const answerElement: string = createAnswerElement(
                 answer.answerId!,
                 answer.answerBody,
@@ -317,10 +327,11 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 extraClass
             );
 
+            // Append the answer element to the answers container
             answersBody.innerHTML += answerElement;
         }
 
-
+        // Add event listeners for upvoting and downvoting answers
         document.querySelectorAll(".answer-upvote").forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 if (item.parentElement) {
