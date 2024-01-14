@@ -31,27 +31,28 @@ async function setup(): Promise<void> {
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean = await security();
 
-    // @ts-ignore
+    // @ts-ignore: Extract user ID from login status
     const userId: number = loginStatus["userId"] as number;
 
     // Retrieves a question from the database based on the URL parameter question ID.
     const question: Question = await QuestionService.retrieveQuestion(questionId);
 
-
+    // If the question does not exist, redirect to the index page
     if (!question) location.replace("index.html");
 
-    // Initialize the text Editor.
+    // Initialize the text editor.
     await initializeTextEditor();
 
+    // Calculate the upvote count for the question
     const upvoteSum: number = question.totalUpvotes! - question.totalDownvotes!;
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
 
-
     // Populate all answers by questionID
     await addAnswersToPage(userId);
 
+    // Add event listeners for upvoting and downvoting the question
     document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.UPVOTE);
     });
@@ -70,22 +71,24 @@ async function setup(): Promise<void> {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.DOWNVOTE);
     });
 
-
+    // Add event listeners for delete buttons in each answer
     document.querySelectorAll(".delete-button").forEach(item => {
         item.addEventListener("click", async (): Promise<void> => {
             await showSuccessMessage("Are you sure you want to delete this Answer?", null, "delete", parseInt(item.id), "answer");
         });
     });
 
+    // Add event listener for continuing the delete operation
     document.querySelector(".continue-button")?.addEventListener("click", async (item) => {
         const target: HTMLDivElement = item.target as HTMLDivElement;
 
+        // Check if the target has the correct class
         if (!target.classList.contains("answer")) {
             await showSuccessMessage("Error while deleting answer!", 3000, "danger", null, null);
             return;
         }
 
-
+        // Delete the answer and show success/error messages accordingly
         const deleteAnswer: boolean | string = await Answer.deleteAnswer(parseInt(target.id));
 
         if (deleteAnswer === true) {
@@ -95,23 +98,27 @@ async function setup(): Promise<void> {
             await showSuccessMessage("Error while deleting answer!", 3000, "danger", null, null);
             return;
         }
-
     });
 
+    // Get references to the new answer submission button and the text input area
     const postNewAnswer: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".btn_submit"));
     const newAnswerTextBody: HTMLDivElement = (<HTMLDivElement>document.querySelector("#text-input"));
 
+    // Add event listener for posting a new answer
     postNewAnswer.addEventListener("click", async (): Promise<void> => {
+        // Check if the user is logged in
         if (!loginStatus) {
             await showSuccessMessage("Please login before creating an answer for this question!", 5000, "danger", null, null);
             return;
         }
 
+        // Check if the answer body is not empty
         if (!newAnswerTextBody.innerHTML) {
             await showSuccessMessage("Please enter your answer before posting answer", 3000, "danger", null, null);
             return;
         }
 
+        // Create a new Answer object
         const newAnswer: Answer = new Answer(
             null,
             questionId,
@@ -124,12 +131,14 @@ async function setup(): Promise<void> {
         );
 
         try {
+            // Save the new answer and show success message
             const savedAnswer: Answer | string = await newAnswer.saveAnswer();
             console.log("Answer saved successfully:", savedAnswer);
 
             await showSuccessMessage("Successfully created answer!", 3000, "success", null, null);
             location.reload();
         } catch (error) {
+            // Show error message if there's an issue saving the answer
             await showSuccessMessage("Failed to create answer!", 3000, "danger", null, null);
             console.error("Failed to save answer:", error);
         }
@@ -195,30 +204,61 @@ async function handleDownvote(postId: number, userId: number, postType: string):
 }
 
 
-function createAnswerElement(answerId: number, answerText: string, upvoteCount: string, createdAt: string, profilePictureSrc: string, username: string, answersCount: number, questionsCount: number, extraClass: string): string {
+/**
+ * Creates HTML markup for displaying an answer.
+ *
+ * @param {number} answerId - The unique identifier for the answer.
+ * @param {string} answerText - The text content of the answer.
+ * @param {string} upvoteCount - The count of upvotes for the answer.
+ * @param {string} createdAt - The creation timestamp of the answer.
+ * @param {string} profilePictureSrc - The source URL for the user's profile picture.
+ * @param {string} username - The username of the user who posted the answer.
+ * @param {number} answersCount - The total count of answers posted by the user.
+ * @param {number} questionsCount - The total count of questions posted by the user.
+ * @param {string} extraClass - Additional CSS class to be applied to action buttons.
+ * @returns {string} - HTML markup for the answer.
+ */
+function createAnswerElement(
+    answerId: number,
+    answerText: string,
+    upvoteCount: string,
+    createdAt: string,
+    profilePictureSrc: string,
+    username: string,
+    answersCount: number,
+    questionsCount: number,
+    extraClass: string
+): string {
     return `
         <div class="answer">
             <div class="answer-container">
                 <div id="${answerId}" class="vote">
+                    <!-- Upvote button and count -->
                     <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
                     <span class="upvote-count">${upvoteCount}</span>
+                    <!-- Downvote button -->
                     <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
                 </div>
                 <div class="answer-body">
+                    <!-- Answer text -->
                     <span>${answerText}</span>
                     
                     <div class="answer-info">
                         <div class="action-buttons ${extraClass}">
+                            <!-- Delete/edit button with unique ID -->
                             <button class="button edit-button" id="${answerId}">Edit</button>
                             <button class="button delete-button" id="${answerId}">Delete</button>
                         </div>
                         
                         <div class="created-info">
                             <div class="inner-info">
+                                <!-- Creation timestamp -->
                                 <span>Created at: ${createdAt}</span>
                                 <div class="person">
+                                    <!-- User profile picture -->
                                     <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
                                     <div class="personal-information">
+                                        <!-- User details -->
                                         <span>${username}</span>
                                         <span>Answers: ${answersCount}</span>
                                         <span>Questions: ${questionsCount}</span>
@@ -233,24 +273,34 @@ function createAnswerElement(answerId: number, answerText: string, upvoteCount: 
     `;
 }
 
+/**
+ * Adds answers to the page for a specific question.
+ *
+ * @param {number} userId - The unique identifier for the current user.
+ * @returns {Promise<void>} - A Promise that resolves when answers are successfully added to the page.
+ */
 async function addAnswersToPage(userId: number): Promise<void> {
+    // Get references to HTML elements
     const answersBody: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answers"));
     const answerCount: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answer-count"));
 
+    // Retrieve answers for the current question from the database
     const answers: AnswerWithUser[] | string = await Question.getAnswersForQuestion(questionId);
 
+    // Update the answer count displayed on the page
     answerCount.innerHTML = String(answers.length);
 
+    // Check if there are any answers to display
     if (answers.length !== 0) {
-
         for (const singleAnswer of answers) {
-
+            // Cast answer to the type with user information
             const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
 
+            // Get total answers and total questions count for the user
             let totalAnswers: number | string = await User.getTotalAnswers(answer.userId);
             let totalQuestions: number | string = await User.getTotalQuestions(answer.userId);
 
-
+            // Ensure the counts are numbers, default to 0 if not
             if (typeof totalAnswers !== "number") {
                 totalAnswers = 0;
             }
@@ -259,7 +309,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 totalQuestions = 0;
             }
 
-
+            // Format the creation date of the answer
             const createdAt: Date | null = answer.createdAt;
             let date: string = Date.now().toString();
             if (createdAt !== null) {
@@ -269,14 +319,14 @@ async function addAnswersToPage(userId: number): Promise<void> {
 
             let extraClass: string = "";
 
-
+            // If the user is not the author of the answer, add the "hidden" class
             if (userId !== answer.userId) {
                 extraClass = "hidden";
             }
 
+            // Create the HTML markup for the answer
             const username: string = answer.firstname + " " + answer.lastname as string;
             const upvoteCount: number = answer.totalUpvotes! - answer.totalDownvotes!;
-
             const answerElement: string = createAnswerElement(
                 answer.answerId!,
                 answer.answerBody,
@@ -289,10 +339,11 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 extraClass
             );
 
+            // Append the answer element to the answers container
             answersBody.innerHTML += answerElement;
         }
 
-
+        // Add event listeners for upvoting and downvoting answers
         document.querySelectorAll(".answer-upvote").forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 if (item.parentElement) {

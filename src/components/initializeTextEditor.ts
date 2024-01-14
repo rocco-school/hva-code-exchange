@@ -1,15 +1,17 @@
 export async function initializeTextEditor(): Promise<void> {
+    // Selecting DOM elements
     let optionsButtons: NodeListOf<Element> = document.querySelectorAll(".option-button");
     let advancedOptionButton: NodeListOf<HTMLButtonElement> = document.querySelectorAll(".adv-option-button");
-    let fontName: HTMLElement | null = document.getElementById("fontName");
+    let fontName: HTMLElement = document.getElementById("fontName") as HTMLElement;
     let fontSizeRef: HTMLSelectElement = document.getElementById("fontSize") as HTMLSelectElement;
     let linkButton: HTMLButtonElement = document.getElementById("createLink") as HTMLButtonElement;
     let alignButtons: NodeListOf<Element> = document.querySelectorAll(".align");
     let spacingButtons: NodeListOf<Element> = document.querySelectorAll(".spacing");
     let formatButtons: NodeListOf<Element> = document.querySelectorAll(".format");
     let scriptButtons: NodeListOf<Element> = document.querySelectorAll(".script");
-    let codeBlockButton: HTMLButtonElement | null = document.getElementById("codeBlock") as HTMLButtonElement;
+    let codeBlockButton: HTMLButtonElement = document.getElementById("codeBlock") as HTMLButtonElement;
 
+    // List of available fonts
     let fontList: string[] = [
         "Arial",
         "Verdana",
@@ -20,11 +22,13 @@ export async function initializeTextEditor(): Promise<void> {
         "Cursive",
     ];
 
+    // Highlight certain buttons based on their category
     highlighter(alignButtons, true);
     highlighter(spacingButtons, true);
     highlighter(formatButtons, false);
     highlighter(scriptButtons, true);
 
+    // Populate font select dropdown
     fontList.map((value: string): void => {
         let option: HTMLOptionElement = document.createElement("option");
         option.value = value;
@@ -32,6 +36,7 @@ export async function initializeTextEditor(): Promise<void> {
         fontName?.appendChild(option);
     });
 
+    // Populate font size select dropdown
     for (let i: number = 1; i <= 7; i++) {
         let option: HTMLOptionElement = document.createElement("option");
         option.value = i.toString();
@@ -39,20 +44,24 @@ export async function initializeTextEditor(): Promise<void> {
         fontSizeRef?.appendChild(option);
     }
 
+    // Set default font size value
     fontSizeRef.value = "3";
 
+    // Add click event listeners for standard buttons
     optionsButtons.forEach((button: Element): void => {
         button.addEventListener("click", (): void => {
             modifyText(button.id, false, undefined);
         });
     });
 
+    // Add change event listeners for advanced option buttons
     advancedOptionButton.forEach((button: HTMLButtonElement): void => {
         button.addEventListener("change", (): void => {
             modifyText(button.id, false, button.value);
         });
     });
 
+    // Add click event listener for creating links
     linkButton.addEventListener("click", (): void => {
         let userLink: string = prompt("Enter a URL?") as string;
         if (/http/i.test(userLink)) {
