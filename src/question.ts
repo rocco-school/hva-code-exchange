@@ -193,29 +193,60 @@ async function handleDownvote(postId: number, userId: number, postType: string):
 }
 
 
-function createAnswerElement(answerId: number, answerText: string, upvoteCount: string, createdAt: string, profilePictureSrc: string, username: string, answersCount: number, questionsCount: number, extraClass: string): string {
+/**
+ * Creates HTML markup for displaying an answer.
+ *
+ * @param {number} answerId - The unique identifier for the answer.
+ * @param {string} answerText - The text content of the answer.
+ * @param {string} upvoteCount - The count of upvotes for the answer.
+ * @param {string} createdAt - The creation timestamp of the answer.
+ * @param {string} profilePictureSrc - The source URL for the user's profile picture.
+ * @param {string} username - The username of the user who posted the answer.
+ * @param {number} answersCount - The total count of answers posted by the user.
+ * @param {number} questionsCount - The total count of questions posted by the user.
+ * @param {string} extraClass - Additional CSS class to be applied to action buttons.
+ * @returns {string} - HTML markup for the answer.
+ */
+function createAnswerElement(
+    answerId: number,
+    answerText: string,
+    upvoteCount: string,
+    createdAt: string,
+    profilePictureSrc: string,
+    username: string,
+    answersCount: number,
+    questionsCount: number,
+    extraClass: string
+): string {
     return `
         <div class="answer">
             <div class="answer-container">
                 <div id="${answerId}" class="vote">
+                    <!-- Upvote button and count -->
                     <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
                     <span class="upvote-count">${upvoteCount}</span>
+                    <!-- Downvote button -->
                     <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
                 </div>
                 <div class="answer-body">
+                    <!-- Answer text -->
                     <span>${answerText}</span>
                     
                     <div class="answer-info">
                         <div class="action-buttons ${extraClass}">
+                            <!-- Delete button with unique ID -->
                             <button class="button delete-button" id="${answerId}">Delete</button>
                         </div>
                         
                         <div class="created-info">
                             <div class="inner-info">
+                                <!-- Creation timestamp -->
                                 <span>Created at: ${createdAt}</span>
                                 <div class="person">
+                                    <!-- User profile picture -->
                                     <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
                                     <div class="personal-information">
+                                        <!-- User details -->
                                         <span>${username}</span>
                                         <span>Answers: ${answersCount}</span>
                                         <span>Questions: ${questionsCount}</span>
