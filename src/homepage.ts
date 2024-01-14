@@ -1,10 +1,11 @@
-import {api} from "@hboictcloud/api";
-import {QUESTION_QUERY} from "./query/question.query";
-import {Question} from "./models/question";
-import {USER_QUERY} from "./query/user.query";
-import {User} from "./models/user";
-import {ANSWER_QUERY} from "./query/answer.query";
-import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import "./config";
+import { api } from "@hboictcloud/api";
+import { QUESTION_QUERY } from "./query/question.query";
+import { homepageService } from "./services/homepageService";
+import { Question } from "./models/question";
+import { User } from "./models/user";
+import { ANSWER_QUERY } from "./query/answer.query";
+import { handleRedirectToQuestionDetail } from "./components/handleRedirects";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -24,14 +25,14 @@ async function getMostRecentQuestions(): Promise<void> {
                 question.questionTitle,
                 question.questionBody,
                 question.isClosed,
-                question.totalUpvotes,
                 question.totalDownvotes,
+                question.totalUpvotes,
                 question.createdAt,
-                question.updatedAt,
+                question.updatedAt
             );
 
             // Create a container for each question in the UI
-            const container: HTMLUListElement | undefined = recentQuestionsBody?.appendChild(document.createElement("ul"));
+            const container: HTMLUListElement | undefined | any = recentQuestionsBody?.appendChild(document.createElement("ul"));
 
             // Check if the container was successfully created
             if (container) {
@@ -55,36 +56,16 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 // Create UI elements for question stats (upvote, downvote, votes count, answers count, posted at, updated at)
 
-                // Upvote Button
-                const liQuestionUpvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
-                const questionUpvote: HTMLButtonElement = liQuestionUpvote.appendChild(document.createElement("button"));
-                questionUpvote.classList.add("questionUpvote");
-                questionUpvote.innerHTML = "upvote";
-
                 // Votes Count
                 const liquestionVotes: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
                 const questionVotes: HTMLDivElement | any = liquestionVotes.appendChild(document.createElement("div"));
                 questionVotes.classList.add("questionVotes");
                 questionVotes.innerHTML = "0";
 
-                // Downvote Button
-                const liQuestionDownvote: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
-                const questionDownvote: HTMLButtonElement = liQuestionDownvote.appendChild(document.createElement("button"));
-                questionDownvote.classList.add("questionDownvote");
-                questionDownvote.innerHTML = "Downvote";
-
-                // Attach event listeners to upvote and downvote buttons
-                questionUpvote.addEventListener("click", async () => {
-                    votes++;
-                    questionVotes.innerHTML = votes;
-                    votesColor(votes, questionVotes);
-                });
-
-                questionDownvote.addEventListener("click", () => {
-                    votes--;
-                    questionVotes.innerHTML = votes;
-                    votesColor(votes, questionVotes);
-                });
+                if (questionVotes) {
+                    const questionVoteScore: number | null = question.totalUpvotes! - question.totalDownvotes!;
+                    questionVotes.innerHTML = "total votes: " + questionVoteScore ;
+                }
 
                 // Answers Count
                 const liquestionAnswers: HTMLLIElement = questionStatsContainer.appendChild(document.createElement("li"));
@@ -176,35 +157,19 @@ async function getMostRecentQuestions(): Promise<void> {
                 if (questionCreator) {
                     // Search for the user data based on the user ID
                     const searchForUserId: number = singleQuestion.userId;
-                    const userData: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, searchForUserId) as [User];
-
-                    // Check if user data is available
-                    if (userData.length < 0) return;
+                    const userData: User = await homepageService.searchUserId(searchForUserId);
 
                     // Display the username of the question creator
-                    questionCreator.innerHTML = userData[0].username;
+                    questionCreator.innerHTML = userData.username;
 
-                    questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData[0].username + "&background=random";
+                    questionCreatorPicture.src = "https://ui-avatars.com/api/?name=" + userData.username + "&background=random";
                 }
-
-                // TODO integrate tags into the questions
             }
         }
 
     } catch (e) {
         // Handle any errors that occur during the execution of the function
         console.error(e);
-    }
-}
-
-// Function to change the color of the vote count based on the number of votes
-function votesColor(votes: number, questionVotes: HTMLElement): void {
-    if (votes > 0) {
-        questionVotes.style.color = "green";
-    } else if (votes < 0) {
-        questionVotes.style.color = "red";
-    } else if (votes === 0) {
-        questionVotes.style.color = "black";
     }
 }
 
