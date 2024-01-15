@@ -29,12 +29,16 @@ async function setup(): Promise<void> {
     // burgerMenu?.addEventListener("click", () => {
     //     // Show the sidebar menu when the burger menu is clicked
     //     sidebarMenu?.classList.add("show");
+    //     sidebarClose?.classList.add("show");
+    //     burgerMenu?.classList.remove("show");
     //     console.log("class added");
     // });
 
     // sidebarClose?.addEventListener("click", () => {
     //     // Hide the sidebar menu when the close button is clicked
     //     sidebarMenu?.classList.remove("show");
+    //     burgerMenu?.classList.add("show");
+        
     // });
 
     homeButton?.addEventListener("click", () => {

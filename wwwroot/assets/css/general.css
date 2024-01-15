@@ -57,6 +57,7 @@
     width: 12rem;
     position: fixed;
     border-right: grey 1px solid;
+    background-color: white;
     height: 100%;
     top: 0;
 }

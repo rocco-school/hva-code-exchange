@@ -20,13 +20,21 @@
 
         .profileNameCard {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            align-items: center;
         }
 
             .profileNameCard img {
                 height: 8rem;
                 width: 8rem;
                 border-radius: 1rem;
+            }
+
+            .profileNameCard .nameAndRankContainer {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
 
             .profileNameCard .nameCardUsername {
@@ -36,32 +44,6 @@
                 width: 8rem;
                 font-size: 1.5rem;
                 margin-top: 0.5rem;
-            }
-
-        .profileStats {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-        }
-
-            .profileStats .profileExpertise {
-                display: flex;
-                flex-direction: row;
-            }
-
-            .profileStats h3 {
-                margin-bottom: 1rem;
-            }
-
-            .profileStats ul {
-                list-style-type: none;
-            }
-
-            .profileStats li {
-                padding: 0.5rem;
-                margin: 0 0.5rem;
-                border-radius: 1rem;
-                background-color: #f1f1f1;
             }
 
     .profileHeaderContainer .editProfileBtn {
@@ -90,7 +72,50 @@
         height: 1.5rem;
     }
 
+/* public profile section */
+.publicProfileSection.hidden {
+    display: none;
+}
+
+.publicProfileSection {
+    margin: 0 14rem;
+    padding: 2rem;
+}
+
+.publicProfileSection h2{
+    margin-bottom: 1rem;
+}
+
+    .profileStats {
+        display: flex;
+        flex-direction: column;
+    }
+
+        .profileStats .profileExpertise {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .profileStats h3 {
+            margin: 1rem 0;
+        }
+
+        .profileStats ul {
+            list-style-type: none;
+        }
+
+        .profileStats li {
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border-radius: 1rem;
+            background-color: #f1f1f1;
+        }
+
 /* editProfileSection */
+.editProfileSection.hidden {
+    display: none;
+}
+
 .editProfileSection {
     margin: 0 14rem;
     padding: 1rem 2rem;

@@ -47,24 +47,17 @@
             <!-- User's profile picture and username -->
             <div class="profileNameCard">
                 <img src="assets/img/userPictureExample.jpg" id="profilePictureUser" alt="User's profile avatar">
-                <div class="nameCardUsername" id="usernameUser" >John Doe<!-- Insert username from DB here --></div>
+                <div class="nameAndRankContainer">
+                    <div class="nameCardUsername" id="usernameUser" >John Doe<!-- Insert username from DB here --></div>
+                    <div class="userRank" id="userRank">software engineer</div>
+                </div>
             </div>
-
-            <div class="profileStats">
-                <h3>expertise</h3>
-                <ul class="profileExpertise">
-                    <li>JavaScript</li>
-                    <li>PHP</li>
-                    <li>Python</li>
-                </ul>
-            </div>
-
             <!-- Edit profile button -->
             <button class="editProfileBtn" id="editProfile">Edit profile</button>
         </div>
     </header>
 
-    <!-- Profile tabs section -->
+    <!-- Profile tabs section for user -->
     <section class="profileTabs">
         <ul class="profileTabsContainer">
             <!-- Profile, Questions, Answers, Settings tabs -->
@@ -73,6 +66,28 @@
             <li><button id="userAnswersBtn">Answers</button></li>
             <li><button id="userSettingsBtn">Edit</button></li>
         </ul>
+    </section>
+
+    <!-- Profile section -->
+    <section class="publicProfileSection hidden">
+        <h2>About me</h2>
+        <div class="aboutMeText" id="aboutMeText">
+The fact is that the comments that have been made and the issues that have surfaced over the last few weeks reflect the complexities of race in this country that we've never really worked through - a part of our union that we have yet to perfect. On November 4th, we must stand up and say: "Eight is enough." These are the Americans that I know. And now is the time to keep the promise of equal pay for an equal day's work, because I want my daughters to have exactly the same opportunities as your sons. It's a story with a simple truth: that violence is a dead end.<br>
+<br>
+Thank you, God Bless you, and God Bless the United States of America.
+
+            <!-- here comes the about me from data base -->
+        </div>
+
+        <div class="profileStats">
+            <h3>expertise</h3>
+            <ul class="profileExpertise">
+                <li>JavaScript</li>
+                <li>PHP</li>
+                <li>Python</li>
+            </ul>
+        </div>
+
     </section>
 
     <!-- Edit profile section -->
@@ -88,23 +103,20 @@
         <input type="text" name="username" id="usernameInput">
 
         <h3>password</h3>
-        <input type="text" name="password" id="passwordInput">
+        <button name="password" id="passwordBtn">edit</button>
 
         <h3>email</h3>
         <input type="text" name="email" id="emailInput">
 
-        <h3>expertise</h3>
+        <!-- <h3>expertise</h3>
         <select name="expertiseOptions" id="expertiseOptions">
             <option>HTML</option>
             <option>CSS</option>
             <option>JS</option>
             <option>PHP</option>
             <option>PY</option>
-        </select>
-
-        <h3>About Me</h3>
-        <textarea name="aboutMe" id="aboutMeInput" cols="30" rows="10"></textarea>
-
+        </select> -->
+        
         <!-- Personal Information -->
         <h2>Personal Information</h2>
 
@@ -123,9 +135,26 @@
                 <li><button id="discardBtn">Discard</button></li>
             </ul>
         </div>
+
+        <section class="passwordVerification">
+            <h1>Change Password</h1>
+
+            <h3>old password</h3>
+            <input type="text" name="firstname" id="oldPasswordInput">
+
+            <h3>new password</h3>
+            <input type="text" name="firstname" id="newPasswordInput">
+
+            <h3>confirm password</h3>
+            <input type="text" name="firstname" id="confirmPasswordInput">
+
+            <button id="changePasswordBtn">Change password</button>
+        </section>
     </section>
 
-    <!-- JavaScript file inclusion -->
+
+    <!-- TypeScript file inclusion -->
     <script src="/src/index.ts" type="module"></script>
+    <script src="/src/userpage.ts" type="module"></script>
 </body>
 </html>
