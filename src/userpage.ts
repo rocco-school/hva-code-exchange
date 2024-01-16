@@ -1,7 +1,8 @@
+import { hashPassword } from "./components/hashPassword";
 import "./config";
-// import { User } from "./models/user";
-// import { api } from "@hboictcloud/api";
-// import { USER_QUERY } from "./query/user.query";
+import { User } from "./models/user";
+import { api } from "@hboictcloud/api";
+import { USER_QUERY } from "./query/user.query";
 
 async function setup(): Promise<void> {
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
@@ -9,6 +10,7 @@ async function setup(): Promise<void> {
     const publicProfileSection: HTMLElement | null = document.querySelector(".publicProfileSection");
     const editProfileSection: HTMLElement | null = document.querySelector(".editProfileSection");
     const passwordSection: HTMLElement | null = document.querySelector(".passwordSection");
+    const errorPasswordMessageBox: HTMLDivElement | null = document.querySelector("#errorPasswordMessageBox");
 
     const usernameInput: HTMLInputElement | null = document.querySelector("#usernameInput");
     // const oldPasswordInput: HTMLInputElement | null = document.querySelector("#oldPasswordInput");
@@ -108,13 +110,22 @@ async function setup(): Promise<void> {
             const passwordInputs: (HTMLInputElement | null)[] = [newPasswordInput, confirmPasswordInput];
 
             // TODO password comparison
-            const verifiedPasswordInputs: any = checkPasswordValue(passwordInputs);
-
+            const emptyPasswordInputs: any = await checkPasswordValue(passwordInputs);
+            if(!emptyPasswordInputs) return;
             const verifiedNewPassword: boolean = await verifyNewPassword(newPasswordInput);
-            const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput);
+            if (!verifiedNewPassword) return;
+            const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput, newPasswordInput);
+            if (!verifiedConfirmPassword) return;
 
-
-
+            if (emptyPasswordInputs && verifiedNewPassword && verifiedConfirmPassword) {
+                try {
+                    const updatedPassword: any = await updatePasswordDatabase(confirmPasswordInput!.value);
+                    passwordSection?.classList.add("hidden");
+                    editProfileSection?.classList.remove("hidden");
+                } catch (e) {
+                    console.error(e);
+                }
+            }
         });
     }
 
@@ -179,32 +190,67 @@ async function setup(): Promise<void> {
     }
 
     // Password
-    async function checkPasswordValue(inputs:(HTMLInputElement | null)[]): Promise<void> {
+    async function checkPasswordValue(inputs:(HTMLInputElement | null)[]): Promise<boolean> {
+        let valid: boolean = true;
+
         inputs.forEach(inputPassword => {
             if (inputPassword && inputPassword.value === "") {
-                console.log("Data is missing at the field " + inputPassword.name);
-                return;
+                console.log(inputPassword.name + " is empty!");
+                valid = false;
             }
         }); 
+
+        return valid;
     }
 
     async function verifyNewPassword(password: any): Promise<boolean> {
         if (password.value.match(passwordRegEx)) {
-            console.log("Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
+            errorPasswordMessageBox?.classList.remove("hidden");
+            if (errorPasswordMessageBox) {
+                errorPasswordMessageBox.innerHTML="Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.";
+                setTimeout(() => {
+                    errorPasswordMessageBox.classList.add("hidden");
+                    errorPasswordMessageBox.innerHTML="";
+                }, 5000); 
+            }
             return false;
         } else {
             return true;
         }
     }
 
-    async function verifyConfirmPassword(password:any): Promise<boolean> {
-        if (!password.value.match(newPasswordInput)) {
-            console.log("Password does not match!");
+    async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
+        if (!password.value.match(newPassword.value)) {
+            errorPasswordMessageBox?.classList.remove("hidden");
+            if (errorPasswordMessageBox) {
+                errorPasswordMessageBox.innerHTML="Password does not match!";
+                setTimeout(() => {
+                    errorPasswordMessageBox.classList.add("hidden");
+                    errorPasswordMessageBox.innerHTML="";
+                }, 5000); 
+            }
             return false;
         } else {
             console.log("Password matches!");
             return true;
         }
+    }
+
+    async function updatePasswordDatabase(updatedPassword:string): Promise<any> {
+        const hashedPassword: string | null = await hashPassword(updatedPassword);
+
+        if (!hashedPassword) {
+            return new Error("Error hashing the password.");
+        }
+
+        const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD,
+            hashedPassword,
+            2   
+        );
+
+        console.log(passwordDatabase);
+        console.log("SUCCES!!!!");
+        return;
     }
 
 

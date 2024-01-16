@@ -4,6 +4,7 @@ export const USER_QUERY: {
     CREATE_USER: string;
     DELETE_USER: string;
     UPDATE_USER: string;
+    UPDATE_PASSWORD: string;
     FIND_USER_BY_EMAIL: string
     GET_EMAIL_BY_EMAIL: string
 } = {
@@ -11,6 +12,7 @@ export const USER_QUERY: {
     SELECT_USER: "SELECT * FROM user WHERE userId = ?",
     CREATE_USER: "INSERT INTO user (firstname, lastname, username, password, email) VALUES(?, ?, ?, ?, ?)",
     UPDATE_USER: "UPDATE user SET firstname = ?, lastname = ?, username = ?, password = ?, email = ? WHERE userId = ?",
+    UPDATE_PASSWORD: "UPDATE user SET password = ? WHERE userId = ?",
     DELETE_USER: "DELETE FROM user WHERE userId = ?",
     FIND_USER_BY_EMAIL: "SELECT * FROM user WHERE email = ?",
     GET_EMAIL_BY_EMAIL: "SELECT email FROM user WHERE email = ?",
