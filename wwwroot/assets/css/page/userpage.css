@@ -5,6 +5,10 @@
     width: auto;
 }
 
+.hidden {
+    display: none;
+}
+
 .profileHeader { 
     margin: 0 14rem;
     border-bottom: 1px grey solid;
@@ -129,6 +133,11 @@
         line-height: 1.6;
     }
 
+    .editProfileSection #editPasswordBtn {
+        width: 4rem;
+        height: 1rem;
+    }
+
     .editProfileSection .actionButtons{
         padding: 1rem 0rem;
     }
@@ -149,6 +158,57 @@
             }
 
 
+
+.passwordSection.hidden {
+    display: none;
+}
+
+.passwordSection {
+    display: flex;
+    justify-content: center;
+    margin: 5rem;
+}
+
+    .passwordSectionContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        border: black 2px solid;
+        border-radius: 2rem;
+        padding: 2rem;
+    }
+
+    .passwordSectionContainer input {
+        height: 1.5rem;
+        width: 25rem;
+    }
+
+    .passwordSectionContainer #passwordCloseBtn {
+        align-self: flex-end;
+        background: none;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-size: 2rem;
+        height: 1rem;
+        width: 1rem;
+    }
+
+    .passwordSectionContainer h1, .passwordBox, button {
+        align-self: center;
+        padding-bottom: 1rem;
+    }
+
+    .passwordSectionContainer #changePasswordBtn {
+        display: flex;
+        justify-content: center;
+        align-items: baseline;
+        height: 1.5rem;
+        font-size: 1rem;
+        width: 25rem;
+
+    }
 
 
 

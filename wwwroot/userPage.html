@@ -100,13 +100,13 @@ Thank you, God Bless you, and God Bless the United States of America.
 
         <!-- Input fields for username, password, email, expertise, and about me -->
         <h3>username</h3>
-        <input type="text" name="username" id="usernameInput">
+        <input type="text" name="username" id="usernameInput" disabled>
 
         <h3>password</h3>
-        <button name="password" id="passwordBtn">edit</button>
+        <button name="password" id="editPasswordBtn" disabled>edit</button>
 
         <h3>email</h3>
-        <input type="text" name="email" id="emailInput">
+        <input type="text" name="email" id="emailInput" disabled>
 
         <!-- <h3>expertise</h3>
         <select name="expertiseOptions" id="expertiseOptions">
@@ -122,34 +122,43 @@ Thank you, God Bless you, and God Bless the United States of America.
 
         <!-- Input fields for firstname and lastname -->
         <h3>firstname</h3>
-        <input type="text" name="firstname" id="firstnameInput">
+        <input type="text" name="firstname" id="firstnameInput" disabled>
     
         <h3>lastname</h3>
-        <input type="text" name="lastname" id="lastnameInput">
+        <input type="text" name="lastname" id="lastnameInput" disabled>
 
         <!-- Action buttons: Save, Edit, Discard -->
         <div class="actionButtons">
             <ul class="actionButtonsContainer">
-                <li><button id="saveBtn">Save</button></li>
-                <li><button id="editBtn">Edit</button></li>
-                <li><button id="discardBtn">Discard</button></li>
+                <li><button id="saveBtn" class="hidden">Save</button></li>
+                <li><button id="editBtn" class="">Edit</button></li>
+                <li><button id="discardBtn" class="hidden">Discard</button></li>
             </ul>
         </div>
 
-        <section class="passwordVerification">
+    </section>
+
+    <section class="passwordSection hidden">
+        <div class="passwordSectionContainer">
+            <button id="passwordCloseBtn">x</button>
             <h1>Change Password</h1>
 
-            <h3>old password</h3>
-            <input type="text" name="firstname" id="oldPasswordInput">
+            <!-- TODO password comparison -->
+            <!-- <h3>old password</h3>
+            <input type="text" name="oldPassword" id="oldPasswordInput"> -->
 
-            <h3>new password</h3>
-            <input type="text" name="firstname" id="newPasswordInput">
+            <div class="passwordBox">
+                <h3>new password</h3>
+                <input type="text" name="newPassword" id="newPasswordInput">
+            </div>
 
-            <h3>confirm password</h3>
-            <input type="text" name="firstname" id="confirmPasswordInput">
+            <div class="passwordBox">
+                <h3>confirm password</h3>
+                <input type="text" name="confirmPassword" id="confirmPasswordInput">
+            </div>
 
             <button id="changePasswordBtn">Change password</button>
-        </section>
+        </div>
     </section>
 
 
