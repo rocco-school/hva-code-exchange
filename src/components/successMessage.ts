@@ -11,13 +11,13 @@ import {delay} from "./delay";
  */
 export async function showSuccessMessage(message: string, duration: number | null, type: string, extraID: number | null, typeOfId: string | null): Promise<void> {
     // Get references to HTML elements
-    const filter: HTMLElement = document.querySelector(".filter") as HTMLElement;
-    const messageButton: HTMLElement = document.querySelector(".continue-button") as HTMLElement;
-    const CustomMessage: HTMLElement = document.querySelector(".message") as HTMLElement;
-    const closeButton: HTMLElement = document.querySelector(".close-modal-button") as HTMLElement;
-    const successIcon: HTMLElement = document.querySelector(".success-background") as HTMLElement;
-    const failureIcon: HTMLElement = document.querySelector(".failed-background") as HTMLElement;
-    const deleteIcon: HTMLElement = document.querySelector(".delete-background") as HTMLElement;
+    const filter: HTMLElement = (<HTMLElement>document.querySelector(".filter"));
+    const messageButton: HTMLElement = (<HTMLElement>document.querySelector(".continue-button"));
+    const CustomMessage: HTMLElement = (<HTMLElement>document.querySelector(".message"));
+    const closeButton: HTMLElement = (<HTMLElement>document.querySelector(".close-modal-button"));
+    const successIcon: HTMLElement = (<HTMLElement>document.querySelector(".success-background"));
+    const failureIcon: HTMLElement = (<HTMLElement>document.querySelector(".failed-background"));
+    const deleteIcon: HTMLElement = (<HTMLElement>document.querySelector(".delete-background"));
 
     successIcon?.classList.add("hidden", String(!successIcon?.classList.contains("hidden")));
     failureIcon?.classList.add("hidden", String(!failureIcon?.classList.contains("hidden")));

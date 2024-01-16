@@ -1,15 +1,17 @@
 export async function initializeTextEditor(): Promise<void> {
     // Selecting DOM elements
-    let optionsButtons: NodeListOf<Element> = document.querySelectorAll(".option-button");
-    let advancedOptionButton: NodeListOf<HTMLButtonElement> = document.querySelectorAll(".adv-option-button");
-    let fontName: HTMLElement = document.getElementById("fontName") as HTMLElement;
-    let fontSizeRef: HTMLSelectElement = document.getElementById("fontSize") as HTMLSelectElement;
-    let linkButton: HTMLButtonElement = document.getElementById("createLink") as HTMLButtonElement;
-    let alignButtons: NodeListOf<Element> = document.querySelectorAll(".align");
-    let spacingButtons: NodeListOf<Element> = document.querySelectorAll(".spacing");
-    let formatButtons: NodeListOf<Element> = document.querySelectorAll(".format");
-    let scriptButtons: NodeListOf<Element> = document.querySelectorAll(".script");
-    let codeBlockButton: HTMLButtonElement = document.getElementById("codeBlock") as HTMLButtonElement;
+    let optionsButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".option-button"));
+    let advancedOptionButton: NodeListOf<HTMLButtonElement> = (<NodeListOf<HTMLButtonElement>>document.querySelectorAll(".adv-option-button"));
+
+    let fontName: HTMLElement = (<HTMLElement>document.getElementById("fontName"));
+    let fontSizeRef: HTMLSelectElement = (<HTMLSelectElement>document.getElementById("fontSize"));
+    let linkButton: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("createLink"));
+    let codeBlockButton: HTMLButtonElement = (<HTMLButtonElement>document.getElementById("codeBlock"));
+
+    let alignButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".align"));
+    let spacingButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".spacing"));
+    let formatButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".format"));
+    let scriptButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".script"));
 
     // List of available fonts
     let fontList: string[] = [
@@ -22,6 +24,7 @@ export async function initializeTextEditor(): Promise<void> {
         "Cursive",
     ];
 
+
     // Highlight certain buttons based on their category
     highlighter(alignButtons, true);
     highlighter(spacingButtons, true);
@@ -30,7 +33,7 @@ export async function initializeTextEditor(): Promise<void> {
 
     // Populate font select dropdown
     fontList.map((value: string): void => {
-        let option: HTMLOptionElement = document.createElement("option");
+        let option: HTMLOptionElement = (<HTMLOptionElement>document.createElement("option"));
         option.value = value;
         option.innerHTML = value;
         fontName?.appendChild(option);
@@ -38,7 +41,7 @@ export async function initializeTextEditor(): Promise<void> {
 
     // Populate font size select dropdown
     for (let i: number = 1; i <= 7; i++) {
-        let option: HTMLOptionElement = document.createElement("option");
+        let option: HTMLOptionElement = (<HTMLOptionElement>document.createElement("option"));
         option.value = i.toString();
         option.innerHTML = i.toString();
         fontSizeRef?.appendChild(option);
@@ -78,10 +81,10 @@ export async function initializeTextEditor(): Promise<void> {
             const selection: Selection = window.getSelection() as Selection;
 
             if (selection) {
-                const range: Range = selection.getRangeAt(0) as Range;
+                const range: Range = (<Range>selection.getRangeAt(0));
 
                 if (range) {
-                    const parentCodeBlock: HTMLElement = findParentCodeBlock(range.commonAncestorContainer) as HTMLElement;
+                    const parentCodeBlock: HTMLElement = (<HTMLElement>findParentCodeBlock(range.commonAncestorContainer));
 
                     if (parentCodeBlock) {
                         // Case 3: If the cursor is inside a code block, unwrap the content
@@ -165,7 +168,9 @@ function unwrapCodeBlock(codeBlock: HTMLElement): void {
      * @returns {Text} - The created text node.
      */
     const createTextNodeFromCodeBlock: (block: HTMLElement) => Text = (block: HTMLElement): Text => {
-        return document.createTextNode(block.textContent!);
+        return (<Text>document.createTextNode(block.textContent!));
+
+
     };
 
     // Create a text node from the content of the code block
@@ -195,18 +200,18 @@ function insertCodeBlock(): void {
      * @returns {HTMLPreElement} - The created <code> block.
      */
     const createCodeBlock: () => HTMLElement = (): HTMLElement => {
-        const codeBlock: HTMLElement = document.createElement("div");
+        const codeBlock: HTMLElement = (<HTMLElement>document.createElement("div"));
         codeBlock.classList.add("code-block");
         codeBlock.textContent = "Put your code here";
         return codeBlock;
     };
 
     // Get the current text selection
-    const selection: Selection = window.getSelection() as Selection;
+    const selection: Selection = (<Selection>window.getSelection());
 
     if (selection) {
         // Get the range of the selection
-        const range: Range = selection.getRangeAt(0);
+        const range: Range = (<Range>selection.getRangeAt(0));
 
         if (range) {
             // Create a <code> block with default content
