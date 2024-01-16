@@ -2,8 +2,16 @@ import { hashPassword } from "./components/hashPassword";
 import "./config";
 import { api } from "@hboictcloud/api";
 import { USER_QUERY } from "./query/user.query";
+import {JWTPayload} from "jose";
+import {security} from "./components/security";
 
 async function setup(): Promise<void> {
+
+    // Check the user login status by calling the 'security' function.
+    const loginStatus: JWTPayload | boolean = await security();
+
+    console.log(loginStatus);
+
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
     const userSettingsBtn: HTMLButtonElement | null = document.querySelector("#userSettingsBtn");
     const publicProfileSection: HTMLElement | null = document.querySelector(".publicProfileSection");
