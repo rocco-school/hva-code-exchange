@@ -36,7 +36,7 @@
 }
 
 /* Styling for specific elements within the navigation bar */
-.navbar .container .burgerMenu.show {
+.navbar .container #burgerMenu {
     height: 2rem;
     cursor: pointer;
 }
@@ -185,4 +185,3 @@
 .sectionContact .container .containerContactBoxes .contactBox {
     padding: 2rem;
 }
-    

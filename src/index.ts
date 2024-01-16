@@ -26,20 +26,16 @@ async function setup(): Promise<void> {
         url.redirect("login.html");
     });
 
-    // burgerMenu?.addEventListener("click", () => {
-    //     // Show the sidebar menu when the burger menu is clicked
-    //     sidebarMenu?.classList.add("show");
-    //     sidebarClose?.classList.add("show");
-    //     burgerMenu?.classList.remove("show");
-    //     console.log("class added");
-    // });
+    burgerMenu?.addEventListener("click", () => {
+        // Show the sidebar menu when the burger menu is clicked
+        sidebarMenu?.classList.add("show");
+        console.log("class added");
+    });
 
-    // sidebarClose?.addEventListener("click", () => {
-    //     // Hide the sidebar menu when the close button is clicked
-    //     sidebarMenu?.classList.remove("show");
-    //     burgerMenu?.classList.add("show");
-        
-    // });
+    sidebarClose?.addEventListener("click", () => {
+        // Hide the sidebar menu when the close button is clicked
+        sidebarMenu?.classList.remove("show");
+    });
 
     homeButton?.addEventListener("click", () => {
         // Redirect to the home page
@@ -58,6 +54,6 @@ async function setup(): Promise<void> {
 }
 
 // Run bij het opstarten de setup functie
-// Run the setup function when the page is loaded
 await setup();
+
 

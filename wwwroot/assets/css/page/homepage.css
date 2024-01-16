@@ -1,0 +1,97 @@
+/* Resetting default padding and margin for all elements */
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.recentQuestions {
+    height: auto;
+    width: 100%;
+}
+
+.recentQuestions .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.recentQuestions .questionBox {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+
+    width: 40rem;
+    max-height: 30rem;
+    margin: 2rem;
+    padding: 2rem;
+    list-style: none;
+    background-color: #f1f1f1;
+    border: black 0.1rem solid;
+    border-radius: 2rem;
+}
+
+.recentQuestions .questionBox:hover {
+    cursor: pointer;
+    background-color: aquamarine;
+}
+
+.recentQuestions .questionBox li {
+    padding-top: 0.5rem;
+}
+
+.recentQuestions .questionBox .questionStats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 30%;
+    margin-right: auto;
+}
+
+.recentQuestions .questionBox .questionStats button {
+    padding: 0.5rem;
+}
+
+.recentQuestions .questionBox .questionContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    margin-left: auto;
+}
+
+.recentQuestions .questionBox .questionContent .questionTags {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    margin-top: auto;
+}
+
+.recentQuestions .questionBox .questionContent .questionTag li {
+    margin-right: 0.5rem;
+}
+
+.recentQuestions .questionBox .questionContent .questionTag {
+    padding: 0.5rem;
+    border: gray 1px solid;
+    border-radius: 2rem;
+    margin-top: 2rem;
+    margin-left: 0.5rem;
+}
+
+.recentQuestions .questionBox .questionUser {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 30%;
+    margin-left: auto;
+}
+
+.recentQuestions .questionBox .creatorPicture {
+    height: 4rem;
+    width: 4rem;
+    border-radius: 1rem;
+}

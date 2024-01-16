@@ -1,0 +1,52 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+/* Styling for the navigation bar */
+.navbar {
+    height: 3.5rem;
+    border-bottom: grey 1px solid;
+    padding: 0 1rem;
+}
+
+/* Styling for the navigation bar container */
+.navbar .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.navbar .container li {
+    margin: 0 0.5rem;
+}
+
+.navbar .container li:nth-child(1) {
+    margin-right: auto;
+}
+
+.navbar .container li:nth-child(4) {
+    margin-left: auto;
+}
+
+.navbar .container #searchBarInput {
+    height: 1.5rem;
+    width: 40rem;
+}
+
+/* Styling for buttons within the navigation bar */
+.navbar .container button {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+/* Styling for specific elements within the navigation bar */
+.navbar .container #burgerMenu {
+    height: 2rem;
+    cursor: pointer;
+}
+
+.navbar .container #codeExchangeLogo {
+    height: 3.5rem;
+}

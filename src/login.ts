@@ -90,7 +90,7 @@ async function loginFromDatabase(email: string, password: string): Promise<User 
         // If the password is correct, assign a JWT to the user.
         await assignToken(user[0]);
 
-        url.redirect("/homepage.html");
+        location.reload();
 
         // Return the user object if login is successful.
         return user[0];

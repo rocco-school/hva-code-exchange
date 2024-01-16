@@ -1,6 +1,5 @@
 import { hashPassword } from "./components/hashPassword";
 import "./config";
-import { User } from "./models/user";
 import { api } from "@hboictcloud/api";
 import { USER_QUERY } from "./query/user.query";
 
@@ -121,7 +120,8 @@ async function setup(): Promise<void> {
                 try {
                     const updatedPassword: any = await updatePasswordDatabase(confirmPasswordInput!.value);
                     passwordSection?.classList.add("hidden");
-                    editProfileSection?.classList.remove("hidden");
+                    editProfileSection?.classList.remove("hidden"); 
+                    console.log(updatedPassword);
                 } catch (e) {
                     console.error(e);
                 }
