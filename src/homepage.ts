@@ -13,6 +13,9 @@ async function getMostRecentQuestions(): Promise<void> {
         // Fetch recent questions from the database using an API call
         const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_FIVE_QUESTIONS) as [Question];
 
+        // Check the security status by calling the 'security' function.
+        const loginStatus: JWTPayload | boolean = await security();
+
         // Select the HTML element where recent questions will be displayed
         const recentQuestionsBody: HTMLElement | null = document.querySelector(".recentQuestions");
 

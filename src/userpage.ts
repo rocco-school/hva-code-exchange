@@ -9,7 +9,6 @@ async function setup(): Promise<void> {
 
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean = await security();
-
     console.log(loginStatus);
 
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
@@ -126,7 +125,7 @@ async function setup(): Promise<void> {
 
             if (emptyPasswordInputs && verifiedNewPassword && verifiedConfirmPassword) {
                 try {
-                    const updatedPassword: any = await updatePasswordDatabase(confirmPasswordInput!.value);
+                    const updatedPassword: any = await updatePasswordData(loginStatus.userId, confirmPasswordInput!.value);
                     passwordSection?.classList.add("hidden");
                     editProfileSection?.classList.remove("hidden"); 
                     console.log(updatedPassword);
@@ -142,11 +141,33 @@ async function setup(): Promise<void> {
             const inputs: (HTMLInputElement | null)[] = [usernameInput, emailInput, firstnameInput, lastnameInput];
 
             const verifiedInputs: any  = checkValue(inputs);
+            // if (!verifiedInputs) {
+            //     verifiedInputs.value === "NULL";
+            // }
 
             const verifiedEmail: boolean = await verifyEmail(emailInput);
+            if(!verifiedEmail) return;
             const verifiedFirstname: boolean = await verifyFirstname(firstnameInput);
+            if(!verifiedFirstname) return;
             const verifiedLastname: boolean = await verifyLastname(lastnameInput);
+            if(!verifiedLastname) return;
 
+            if(verifiedEmail && verifiedFirstname && verifiedLastname) {
+                try {
+                    const updatedUserData: any = await updateUserData(
+                        usernameInput!.value,
+                        emailInput!.value, 
+                        firstnameInput!.value, 
+                        lastnameInput!.value, 
+                        loginStatus.userId
+                    );
+
+                    console.log(updateUserData);    
+
+                } catch (error) {
+                    console.error(error);
+                }
+            }
         });
     }
 
@@ -164,7 +185,7 @@ async function setup(): Promise<void> {
      *
      * @param email
      */
-    async function verifyEmail(email: any): Promise<boolean | any> {
+    async function verifyEmail(email: any): Promise<boolean> {
         if (email.value.match(emailRegEx)) {
             console.log(email.name + " format is not correct!");
             // Returns the alertPopUp function and with the assigned data
@@ -244,7 +265,15 @@ async function setup(): Promise<void> {
         }
     }
 
-    async function updatePasswordDatabase(updatedPassword:string): Promise<any> {
+    async function updateUserData(username: string, email: string, firstname: string, lastname: string, userId: number): Promise<void> {
+        const arrayData: (string | number | null)[] = [firstname, lastname, username, email, userId]; 
+        console.log(arrayData); 
+        const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayData);
+        console.log(userDatabase);
+        return;
+    }
+
+    async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
         const hashedPassword: string | null = await hashPassword(updatedPassword);
 
         if (!hashedPassword) {
@@ -253,11 +282,11 @@ async function setup(): Promise<void> {
 
         const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD,
             hashedPassword,
-            2   
+            userId
         );
 
         console.log(passwordDatabase);
-        console.log("SUCCES!!!!");
+        console.log("SUCCES! WOOHOO!");
         return;
     }
 
