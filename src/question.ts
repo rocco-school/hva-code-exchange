@@ -12,6 +12,7 @@ import {handleAnswerUpvote, handleQuestionUpvote} from "./components/handleUpvot
 import {PostType} from "./enum/postType";
 import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleDownvotes";
 import {initializeTextEditor} from "./components/initializeTextEditor";
+import {url, utils} from "@hboictcloud/api";
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -54,6 +55,16 @@ async function setup(): Promise<void> {
     // Add event listeners for upvoting and downvoting the question
     document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.UPVOTE);
+    });
+
+    document.querySelector(".edit-button")?.addEventListener("click", async (): Promise<void> => {
+        // Create a new URL with the updated page number
+        const newURL: string = utils.createUrl("edit-form.html", {
+            postType: PostType.QUESTION,
+            id: questionId
+        });
+
+        url.redirect(newURL);
     });
 
     document.querySelector(".downvote-question")?.addEventListener("click", async (): Promise<void> => {
@@ -234,7 +245,8 @@ function createAnswerElement(
                     
                     <div class="answer-info">
                         <div class="action-buttons ${extraClass}">
-                            <!-- Delete button with unique ID -->
+                            <!-- Delete/edit button with unique ID -->
+                            <button class="button edit-button" id="${answerId}">Edit</button>
                             <button class="button delete-button" id="${answerId}">Delete</button>
                         </div>
                         
@@ -347,6 +359,18 @@ async function addAnswersToPage(userId: number): Promise<void> {
                     const answerId: string = item.parentElement.id;
                     await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
                 }
+            });
+        });
+
+        document.querySelectorAll(".edit-button").forEach(item => {
+            item.addEventListener("click", async (): Promise<void> => {
+                // Create a new URL with the updated page number
+                const newURL: string = utils.createUrl("edit-form.html", {
+                    postType: PostType.ANSWER,
+                    id: item.id
+                });
+
+                url.redirect(newURL);
             });
         });
     }

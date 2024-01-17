@@ -51,18 +51,25 @@ export class QuestionService {
      * to perform the update. The method returns a Promise that resolves to the updated question.
      */
     public static async updateQuestion(question: Question): Promise<Question> {
-        // Destructuring the question object to get individual properties
-        const questionData: (string | number | boolean | null)[] = [question.questionTitle, question.questionBody, question.isClosed, question.questionId];
+        try {
+            // Update the question in the Question table.
+            const questionData: (string | number | boolean | null)[] = [question.questionTitle, question.questionBody, question.isClosed, question.questionId];
+            await api.queryDatabase(QUESTION_QUERY.UPDATE_QUESTION, ...questionData);
 
-        // Querying the database to update the question with the given questionId.
-        const updatedQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.UPDATE_QUESTION, ...questionData) as [Question];
+            // Retrieve the updated question from the database.
+            const getQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, question.questionId) as [Question];
 
-        // Checking if the database update was successful.
-        if (!updatedQuestion) {
-            throw new Error(`Failed to update question with ID: ${question.questionId}`);
+            // Checking if the database retrieval was successful.
+            if (!getQuestion) {
+                new Error(`Failed to get question: ${question.questionId}!`);
+            }
+
+            // Return the updated question.
+            return getQuestion[0];
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update question: ${question.questionId}: ${error}`);
         }
-
-        return updatedQuestion[0];
     }
 
     /**

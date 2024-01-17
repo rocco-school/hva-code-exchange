@@ -203,4 +203,68 @@ export class CodingTag {
         }
     }
 
+
+    /**
+     * Retrieves all coding tags associated with a specific question using the CodingTagService.
+     *
+     * @param {number} questionId - The ID of the question for which coding tags are to be retrieved.
+     * @returns {Promise<[CodingTag] | string>} - A Promise resolving to an array of coding tags or an error message.
+     * @throws {Error} - Throws an error if there is an issue with the retrieval process.
+     *
+     * @description
+     * This static method leverages the CodingTagService to retrieve all coding tags associated with a specific question.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either an array of coding tags
+     * or an error message if there is an issue with the retrieval process.
+     *
+     * @example
+     * // Example: Retrieve coding tags for a specific question
+     * try {
+     *   const codingTags = await CodingTag.getAllCodingTagsForQuestion(questionId);
+     *   console.log('Retrieved coding tags:', codingTags);
+     * } catch (error) {
+     *   console.error('Error retrieving coding tags:', error.message);
+     * }
+     */
+    public static async getAllCodingTagsForQuestion(questionId: number): Promise<[CodingTag] | string> {
+        try {
+            // Calling the getAllCodingTagsForQuestion method from the service.
+            return await CodingTagService.getAllCodingTagsForQuestion(questionId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving coding tags: ${error}`;
+        }
+    }
+
+
+    /**
+     * Remove all coding tags associated with a specific question using the CodingTagService.
+     *
+     * @param {number} questionId - The ID of the question for which coding tags are to be removed.
+     * @returns {Promise<boolean | string>} - A Promise resolving to a boolean indicating the success of the removal or an error message.
+     * @throws {Error} - Throws an error if there is an issue with the removal process.
+     *
+     * @description
+     * This static method leverages the CodingTagService to remove all coding tags associated with a specific question.
+     * It handles the removal operation asynchronously and returns a Promise that resolves to either a boolean indicating
+     * the success of the removal or an error message if there is an issue with the removal process.
+     *
+     * @example
+     * // Example: Remove all coding tags associated with a specific question
+     * const questionIdToRemoveTags = 123;
+     * try {
+     *   const isRemoved = await CodingTag.removeAllQuestionTags(questionIdToRemoveTags);
+     *   console.log('Question tags removal successful:', isRemoved);
+     * } catch (error) {
+     *   console.error('Failed to remove question tags:', error.message);
+     * }
+     */
+    public static async removeAllQuestionTags(questionId: number): Promise<boolean | string> {
+        try {
+            // Calling the removeAllQuestionTags method from the service.
+            return await CodingTagService.removeAllQuestionTags(questionId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error removing question tags: ${error}`;
+        }
+    }
 }
