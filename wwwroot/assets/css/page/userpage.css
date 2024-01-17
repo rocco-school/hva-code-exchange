@@ -9,6 +9,10 @@
     display: none;
 }
 
+#usernameUser {
+    padding: 1rem;
+}
+
 .profileHeader { 
     margin: 0 14rem;
     border-bottom: 1px grey solid;
@@ -37,8 +41,6 @@
             .profileNameCard .nameAndRankContainer {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-                align-items: center;
             }
 
             .profileNameCard .nameCardUsername {
@@ -55,6 +57,27 @@
         width: 6rem;
         height: 2rem;
     }
+
+    .profileHeaderContainer .userStatsContainer {
+        display: flex;
+        flex-direction: row;
+        list-style: none;
+        
+    }
+        .userStatsContainer li {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .userStatsContainer div {
+            margin-left: 0.5rem;
+        }
+    
+        .userStatsContainer .statSVG {
+            margin-left: 1rem;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
 
 
 .profileTabs {

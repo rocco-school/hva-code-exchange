@@ -7,17 +7,21 @@ export class User {
     private _userId: number;
     private _firstname: string;
     private _lastname: string;
+    private _dateOfBirth: string;
     private _username: string;
+    private _experienceYears: number;
     private _password: string;
     private _email: string;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(userId: number, username: string, password: string, email: string, firstname: string, lastname: string) {
+    public constructor(userId: number, username: string, experienceYears: number, dateOfBirth: string, password: string, email: string, firstname: string, lastname: string) {
         this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
+        this._dateOfBirth = dateOfBirth;
         this._username = username;
+        this._experienceYears = experienceYears;
         this._password = password;
         this._email = email;
     }
@@ -31,7 +35,11 @@ export class User {
         return this._username;
     }
 
-    public get password(): string {
+    public get experienceYears(): number {
+        return this._experienceYears;
+    }
+
+    public get password(): string { 
         return this._password;
     }
 
@@ -47,12 +55,20 @@ export class User {
         return this._lastname;
     }
 
+    public get dateOfBirth(): string {
+        return this._dateOfBirth;
+    }
+
     public set userId(value: number) {
         this._userId = value;
     }
 
     public set username(value: string) {
         this._username = value;
+    }
+
+    public set experienceYears(value: number) {
+        this._experienceYears = value;
     }
 
     public set password(value: string) {
@@ -71,8 +87,12 @@ export class User {
         this._lastname = value;
     }
 
+    public set dateOfBirth(value: string) {
+        this._dateOfBirth = value;
+    }
+
     public toString(): string {
-        return `User: ${this._userId} ${this._username} ${this._password} ${this._email} ${this._firstname} ${this._lastname}`;
+        return `User: ${this._userId} ${this._username} ${this._experienceYears} ${this._password} ${this._email} ${this._firstname} ${this._lastname} ${this._dateOfBirth}`;
     }
 
 
@@ -287,6 +307,14 @@ export class User {
         } catch (error) {
             // Handling any errors that occur during the process.
             return `Error deleting user: ${error}`;
+        }
+    }
+
+    public static async getUserTags(userId: number): Promise <User | string> {
+        try {
+            return await UserService.retrieveUserTags(userId);
+        } catch (error) {
+            return `error retrieving usertags: ${error}`;
         }
     }
 

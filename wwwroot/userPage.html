@@ -50,8 +50,13 @@
             <div class="profileNameCard">
                 <img src="assets/img/userPictureExample.jpg" id="profilePictureUser" alt="User's profile avatar">
                 <div class="nameAndRankContainer">
-                    <div class="nameCardUsername" id="usernameUser" >John Doe<!-- Insert username from DB here --></div>
-                    <div class="userRank" id="userRank">software engineer</div>
+                    <div class="nameCardUsername" id="usernameUser"></div>
+                    <div class="userStats">
+                        <ul class="userStatsContainer">
+                            <li><img class="statSVG" src="assets/img/svg/birthday-cake.svg"><div id="birthdayUser"></div></li>
+                            <li><img class="statSVG" src="assets/img/svg/clock-two.svg"><div id="yearsOfExperienceUser"></div></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <!-- Edit profile button -->
@@ -72,21 +77,18 @@
 
     <!-- Profile section -->
     <section class="publicProfileSection hidden">
-        <h2>About me</h2>
+        <!-- <h2>About me</h2>
         <div class="aboutMeText" id="aboutMeText">
 The fact is that the comments that have been made and the issues that have surfaced over the last few weeks reflect the complexities of race in this country that we've never really worked through - a part of our union that we have yet to perfect. On November 4th, we must stand up and say: "Eight is enough." These are the Americans that I know. And now is the time to keep the promise of equal pay for an equal day's work, because I want my daughters to have exactly the same opportunities as your sons. It's a story with a simple truth: that violence is a dead end.<br>
 <br>
 Thank you, God Bless you, and God Bless the United States of America.
 
-            <!-- here comes the about me from data base -->
-        </div>
+            here comes the about me from data base
+        </div> -->
 
         <div class="profileStats">
             <h3>expertise</h3>
             <ul class="profileExpertise">
-                <li>JavaScript</li>
-                <li>PHP</li>
-                <li>Python</li>
             </ul>
         </div>
 
@@ -104,20 +106,20 @@ Thank you, God Bless you, and God Bless the United States of America.
         <h3>username</h3>
         <input type="text" name="username" id="usernameInput" disabled>
 
+        <h3>birthday</h3>
+        <input type="date" name="birthday" id="birthdayInput" disabled>
+
+        <h3>programming experience</h3>
+        <input type="text" name="programmingExperience" id="programmingExperienceInput" disabled>
+
         <h3>password</h3>
         <button name="password" id="editPasswordBtn" disabled>edit</button>
 
         <h3>email</h3>
         <input type="text" name="email" id="emailInput" disabled>
 
-        <!-- <h3>expertise</h3>
-        <select name="expertiseOptions" id="expertiseOptions">
-            <option>HTML</option>
-            <option>CSS</option>
-            <option>JS</option>
-            <option>PHP</option>
-            <option>PY</option>
-        </select> -->
+        <h3>expertise</h3>
+        <select name="expertiseOptions" id="expertiseOptions" disabled></select>
         
         <!-- Personal Information -->
         <h2>Personal Information</h2>

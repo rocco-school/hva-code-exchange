@@ -4,12 +4,12 @@ import { api } from "@hboictcloud/api";
 import { USER_QUERY } from "./query/user.query";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
+import { User } from "./models/user";
 
 async function setup(): Promise<void> {
 
     // Check the user login status by calling the 'security' function.
-    const loginStatus: JWTPayload | boolean = await security();
-    console.log(loginStatus);
+    const loginStatus: JWTPayload | boolean | any = await security();
 
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
     const userSettingsBtn: HTMLButtonElement | null = document.querySelector("#userSettingsBtn");
@@ -17,6 +17,10 @@ async function setup(): Promise<void> {
     const editProfileSection: HTMLElement | null = document.querySelector(".editProfileSection");
     const passwordSection: HTMLElement | null = document.querySelector(".passwordSection");
     const errorPasswordMessageBox: HTMLDivElement | null = document.querySelector("#errorPasswordMessageBox");
+    const usernameUser: HTMLDivElement | null = document.querySelector("#usernameUser");
+    const birthdayUser: HTMLDivElement | null = document.querySelector("#birthdayUser");
+    const yearsOfExperienceUser: HTMLDivElement | null = document.querySelector("#yearsOfExperienceUser");
+    const profileExpertise: HTMLUListElement | null = document.querySelector(".profileExpertise");
 
     const usernameInput: HTMLInputElement | null = document.querySelector("#usernameInput");
     // const oldPasswordInput: HTMLInputElement | null = document.querySelector("#oldPasswordInput");
@@ -25,6 +29,9 @@ async function setup(): Promise<void> {
     const emailInput: HTMLInputElement | null = document.querySelector("#emailInput");
     const firstnameInput: HTMLInputElement | null = document.querySelector("#firstnameInput");
     const lastnameInput: HTMLInputElement | null = document.querySelector("#lastnameInput");
+    const birthdayInput: HTMLInputElement | null = document.querySelector("#birthdayInput");
+    const programmingExperienceInput: HTMLInputElement | null = document.querySelector("#programmingExperienceInput");
+    const expertiseOptions: HTMLSelectElement | null = document.querySelector("#expertiseOptions");
 
     const editPasswordBtn: HTMLButtonElement | null = document.querySelector("#editPasswordBtn");
     const changePasswordBtn: HTMLButtonElement | null = document.querySelector("#changePasswordBtn");
@@ -32,6 +39,8 @@ async function setup(): Promise<void> {
     const saveBtn: HTMLButtonElement | null = document.querySelector("#saveBtn");
     const editBtn: HTMLButtonElement | null = document.querySelector("#editBtn");
     const discardBtn: HTMLButtonElement | null = document.querySelector("#discardBtn");
+
+    const disabled: (HTMLInputElement | HTMLButtonElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, editPasswordBtn, emailInput, expertiseOptions, firstnameInput, lastnameInput, saveBtn, discardBtn];
 
     // Regular Expression for email
     // Needs alphanumerics before the @ which follows with a dot and 2-4 letters
@@ -45,7 +54,36 @@ async function setup(): Promise<void> {
     // only letters are allowed and numbers are not allowed
     const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
 
-    const disabled: (HTMLInputElement | HTMLButtonElement | null)[] = [usernameInput, editPasswordBtn, emailInput, firstnameInput, lastnameInput, saveBtn, discardBtn];
+    const retrievedUser: any = await User.retrieveUser(loginStatus.userId);
+    const retrievedUserTags: any = await User.getUserTags(loginStatus.userId);
+    const retrievedAllUserTags: any = await api.queryDatabase(USER_QUERY.GET_TAGS);
+
+
+    if (usernameUser) {
+        usernameUser.innerHTML = retrievedUser.username;
+    }
+
+    if (birthdayUser) {
+        birthdayUser.innerHTML = retrievedUser.dateOfBirth.replace("T", "  ").replace("00:00", "").slice(0, -8);;
+    }
+
+    if (yearsOfExperienceUser) {
+        yearsOfExperienceUser.innerHTML = retrievedUser.experienceYears + " years of progamming experience";
+    }
+
+    if (expertiseOptions) {
+        retrievedAllUserTags.forEach(async (allUserTags: any) => {
+            const optionContent: HTMLOptionElement = expertiseOptions?.appendChild(document.createElement("option"));
+            optionContent.innerHTML = allUserTags.tagName;
+        });
+    }
+
+    if (profileExpertise) {
+        retrievedUserTags.forEach((userTag: any) => {
+            const liContent: HTMLLIElement = profileExpertise.appendChild(document.createElement("li"));
+            liContent.innerHTML = userTag.tagName;
+        });
+    }
 
     if (editBtn) {
         editBtn.addEventListener("click", (): void => {;
@@ -138,12 +176,10 @@ async function setup(): Promise<void> {
 
     if (saveBtn) {
         saveBtn.addEventListener("click", async (): Promise<void> => {
-            const inputs: (HTMLInputElement | null)[] = [usernameInput, emailInput, firstnameInput, lastnameInput];
+            const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
 
-            const verifiedInputs: any  = checkValue(inputs);
-            // if (!verifiedInputs) {
-            //     verifiedInputs.value === "NULL";
-            // }
+            const verifiedInputs: any = checkValue(inputs);
+            const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
 
             const verifiedEmail: boolean = await verifyEmail(emailInput);
             if(!verifiedEmail) return;
@@ -156,9 +192,12 @@ async function setup(): Promise<void> {
                 try {
                     const updatedUserData: any = await updateUserData(
                         usernameInput!.value,
-                        emailInput!.value, 
-                        firstnameInput!.value, 
-                        lastnameInput!.value, 
+                        birthdayInput?.value,
+                        programmingExperienceInput?.value,
+                        emailInput?.value, 
+                        getTagIdExpertise,
+                        firstnameInput?.value, 
+                        lastnameInput?.value, 
                         loginStatus.userId
                     );
 
@@ -171,13 +210,18 @@ async function setup(): Promise<void> {
         });
     }
 
-    async function checkValue(inputs:(HTMLInputElement | null)[]): Promise<void> {
+    async function checkValue(inputs:(HTMLInputElement | HTMLSelectElement | null)[]): Promise<void> {
         inputs.forEach(input => {
             if (input && input.value === "") {
                 console.log("there is no value at " + input.name);
                 return;
             }
         }); 
+    }
+
+    async function retrieveTagId(tagName:string | undefined): Promise<number> {
+        const getTagId: any = await api.queryDatabase(USER_QUERY.GET_TAG, tagName);
+        return getTagId;
     }
 
     /**
@@ -265,10 +309,12 @@ async function setup(): Promise<void> {
         }
     }
 
-    async function updateUserData(username: string, email: string, firstname: string, lastname: string, userId: number): Promise<void> {
-        const arrayData: (string | number | null)[] = [firstname, lastname, username, email, userId]; 
-        console.log(arrayData); 
-        const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayData);
+    async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagId: number, firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
+        const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId]; 
+        console.log(arrayUserData); 
+        const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
+        const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER_TAG, tagId);
+        console.log(userTagDatabase);
         console.log(userDatabase);
         return;
     }

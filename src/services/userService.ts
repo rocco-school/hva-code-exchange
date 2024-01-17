@@ -117,4 +117,9 @@ export class UserService {
         // If affectedRows is not 0 or greater than 0, something unexpected happened.
         throw new Error(`Failed to delete user with ID: ${userId}`);
     }
+
+    public static async retrieveUserTags(userId: number): Promise<User> {
+        const getUserTagsData: any = await api.queryDatabase(USER_QUERY.SELECT_TAGS_BY_USER, userId) as any;
+        return getUserTagsData;
+    }
 }
