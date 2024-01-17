@@ -5,6 +5,7 @@ import {
     setupSelectBoxClickHandling,
     updateSelectedOptions
 } from "./customSelect";
+import {populateTagSelect} from "./handleCustomSelect";
 
 /**
  * Fetches the list of coding tags and populates the select options.
@@ -14,6 +15,9 @@ import {
 export async function initializeTagSelect(): Promise<void> {
     const customSelects: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".custom-select"));
     const selectBoxes: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".select-box"));
+    const selectOptions: HTMLElement = (<HTMLElement>document.querySelector(".options"));
+
+    if (selectOptions) await populateTagSelect(selectOptions);
 
     // Update selected options for each custom select
     customSelects.forEach(updateSelectedOptions);

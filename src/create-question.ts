@@ -27,9 +27,6 @@ async function setup(): Promise<void> {
         url.redirect("/questions.html");
     }
 
-    const selectOptions: HTMLElement = (<HTMLElement>document.querySelector(".options"));
-    if (selectOptions) await populateTagSelect(selectOptions);
-
     // Initialize the text Editor.
     await initializeTextEditor();
 
