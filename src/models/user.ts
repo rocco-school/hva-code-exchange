@@ -39,7 +39,7 @@ export class User {
         return this._experienceYears;
     }
 
-    public get password(): string { 
+    public get password(): string {
         return this._password;
     }
 
@@ -310,7 +310,7 @@ export class User {
         }
     }
 
-    public static async getUserTags(userId: number): Promise <User | string> {
+    public static async getUserTags(userId: number): Promise<User | string> {
         try {
             return await UserService.retrieveUserTags(userId);
         } catch (error) {
@@ -319,4 +319,5 @@ export class User {
     }
 
 }
+
 

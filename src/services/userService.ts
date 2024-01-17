@@ -119,7 +119,6 @@ export class UserService {
     }
 
     public static async retrieveUserTags(userId: number): Promise<User> {
-        const getUserTagsData: any = await api.queryDatabase(USER_QUERY.SELECT_TAGS_BY_USER, userId) as any;
-        return getUserTagsData;
+        return await api.queryDatabase(USER_QUERY.SELECT_TAGS_BY_USER, userId) as any;
     }
 }

@@ -38,9 +38,11 @@ export class Answer extends Post {
     public get answerBody(): string {
         return this._answerBody;
     }
+
     public get totalUpvotes(): number | null {
         return this._totalUpvotes;
     }
+
     public get totalDownvotes(): number | null {
         return this._totalDownvotes;
     }
@@ -60,9 +62,11 @@ export class Answer extends Post {
     public set answerBody(value: string) {
         this._answerBody = value;
     }
+
     public set totalUpvotes(value: number | null) {
         this._totalUpvotes = value;
     }
+
     public set totalDownvotes(value: number | null) {
         this._totalDownvotes = value;
     }

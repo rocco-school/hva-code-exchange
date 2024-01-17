@@ -11,7 +11,7 @@ import {VoteType} from "./enum/voteType";
 import {handleAnswerUpvote, handleQuestionUpvote} from "./components/handleUpvotes";
 import {PostType} from "./enum/postType";
 import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleDownvotes";
-import {initializeTextEditor} from "./components/initializeTexteditor";
+import {initializeTextEditor} from "./components/initializeTextEditor";
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
