@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css/general.css">
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/page/create-question.css">
     <link rel="stylesheet" href="assets/css/page/userpage.css">
     
     <!-- Page title -->
@@ -119,7 +120,27 @@ Thank you, God Bless you, and God Bless the United States of America.
         <input type="text" name="email" id="emailInput" disabled>
 
         <h3>expertise</h3>
-        <select name="expertiseOptions" id="expertiseOptions" disabled></select>
+
+        <div class="custom-select open">
+            <div class="select-box" tabindex="0">
+                <input type="text" class="tags_input" id="tags_input" name="tags" hidden/>
+                <div class="selected-options">
+
+                </div>
+                <div class="arrow">
+                    <i class="fa fa-angle-down open-select-box"></i>
+                </div>
+            </div>
+            <div class="options">
+                <div class="option-search-tags">
+                    <input type="text" class="search-tags" placeholder="Search tags..."/>
+                    <button type="button" class="clear"><i class="fa fa-close"></i></button>
+                </div>
+                <div class="option all-tags" tabindex="0" data-value="All">Select All</div>
+                <div class="no-result-message hidden">No result match</div>
+            </div>
+            <div class="tag_error_msg error"></div>
+        </div>
         
         <!-- Personal Information -->
         <h2>Personal Information</h2>

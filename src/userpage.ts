@@ -5,11 +5,16 @@ import { USER_QUERY } from "./query/user.query";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import { User } from "./models/user";
+import {initializeTagSelect} from "./components/initializeSelect";
 
 async function setup(): Promise<void> {
 
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean | any = await security();
+
+    await initializeTagSelect();
+
+    const currentUserId: number = loginStatus["userId"];
 
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
     const userSettingsBtn: HTMLButtonElement | null = document.querySelector("#userSettingsBtn");
@@ -176,9 +181,8 @@ async function setup(): Promise<void> {
 
     if (saveBtn) {
         saveBtn.addEventListener("click", async (): Promise<void> => {
-            const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
-
-            const verifiedInputs: any = checkValue(inputs);
+            // const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
+            // const verifiedInputs: any = checkValue(inputs);
             const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
 
             const verifiedEmail: boolean = await verifyEmail(emailInput);
@@ -190,7 +194,7 @@ async function setup(): Promise<void> {
 
             if(verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
-                    const updatedUserData: any = await updateUserData(
+                    const updatedUser: any = await updateUserData(
                         usernameInput!.value,
                         birthdayInput?.value,
                         programmingExperienceInput?.value,
@@ -201,7 +205,7 @@ async function setup(): Promise<void> {
                         loginStatus.userId
                     );
 
-                    console.log(updateUserData);    
+                    console.log(updatedUser);
 
                 } catch (error) {
                     console.error(error);
@@ -216,7 +220,7 @@ async function setup(): Promise<void> {
                 console.log("there is no value at " + input.name);
                 return;
             }
-        }); 
+        });
     }
 
     async function retrieveTagId(tagName:string | undefined): Promise<number> {
@@ -271,7 +275,7 @@ async function setup(): Promise<void> {
                 console.log(inputPassword.name + " is empty!");
                 valid = false;
             }
-        }); 
+        });
 
         return valid;
     }
@@ -284,7 +288,7 @@ async function setup(): Promise<void> {
                 setTimeout(() => {
                     errorPasswordMessageBox.classList.add("hidden");
                     errorPasswordMessageBox.innerHTML="";
-                }, 5000); 
+                }, 5000);
             }
             return false;
         } else {
@@ -300,7 +304,7 @@ async function setup(): Promise<void> {
                 setTimeout(() => {
                     errorPasswordMessageBox.classList.add("hidden");
                     errorPasswordMessageBox.innerHTML="";
-                }, 5000); 
+                }, 5000);
             }
             return false;
         } else {
@@ -310,8 +314,8 @@ async function setup(): Promise<void> {
     }
 
     async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagId: number, firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
-        const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId]; 
-        console.log(arrayUserData); 
+        const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
+        console.log(arrayUserData);
         const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
         const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER_TAG, tagId);
         console.log(userTagDatabase);

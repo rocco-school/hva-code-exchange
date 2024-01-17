@@ -310,14 +310,75 @@ export class User {
         }
     }
 
-    public static async getUserTags(userId: number): Promise<User | string> {
+
+    /**
+     * Retrieves user tags for a given user ID using the UserService.
+     *
+     * @param {number} userId - The ID of the user to retrieve tags for.
+     * @returns {Promise<User | string>} A Promise resolving to either the user tags or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to retrieve tags for a specific user from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * the user tags or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve user tags by user ID
+     * try {
+     *   const userTags = await User.getUserTags(userId);
+     *   console.log('User tags:', userTags);
+     * } catch (error) {
+     *   console.error('Failed to retrieve user tags:', error.message);
+     * }
+     */
+    public static async getUserTags(userId: number): Promise<any[] | string> {
         try {
+            // Calling the retrieveUserTags method from the service.
             return await UserService.retrieveUserTags(userId);
         } catch (error) {
-            return `error retrieving usertags: ${error}`;
+            // Handling any errors that occur during the process.
+            return `Error retrieving user tags: ${error}`;
         }
     }
 
+
+    /**
+     * Inserts tags for a given user into the database using the UserService.
+     *
+     * @param {number} userId - The ID of the user to associate with the tags.
+     * @param {number[]} tagIds - An array of tag IDs to associate with the user.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the insertion status or an error message.
+     * @throws {Error} Throws an error if the insertion operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to insert tags for a specific user into the database.
+     * It handles the insertion operation asynchronously and returns a Promise that resolves to either
+     * the insertion status (true if successful) or an error message if the insertion fails.
+     *
+     * @example
+     * // Example: Insert tags for a user
+     * try {
+     *   const userTags: number[] = [1, 2, 3]; // tag IDs.
+     *   const insertStatus = await User.insertUserTag(userId, userTags);
+     *   if (insertStatus) {
+     *     console.log('User tags inserted successfully.');
+     *   } else {
+     *     console.log('Failed to insert user tags.');
+     *   }
+     * } catch (error) {
+     *   console.error('Error inserting user tags:', error.message);
+     * }
+     */
+    public static async insertUserTag(userId: number, tagIds: number[]): Promise<boolean | string> {
+        try {
+            // Call the insertUserTag method from the UserService.
+            return await UserService.insertUserTag(userId, tagIds);
+        } catch (error) {
+            // Handle any errors that occur during the process.
+            return `Error inserting user tags: ${error}`;
+        }
+    }
 }
 
 
