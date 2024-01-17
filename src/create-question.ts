@@ -7,7 +7,6 @@ import {initializeTextEditor} from "./components/initializeTextEditor";
 import {Question} from "./models/question";
 import {showSuccessMessage} from "./components/successMessage";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
-import {populateTagSelect} from "./components/handleCustomSelect";
 import {initializeTagSelect} from "./components/initializeSelect";
 
 /**
