@@ -37,7 +37,7 @@ export class CodingTagService {
         }
 
         // Returning the saved codingTag.
-        return newCodingTag[0];
+        return newCodingTag[0] as CodingTag;
     }
 
     /**
@@ -67,7 +67,7 @@ export class CodingTagService {
             }
 
             // Return the updated codingTag.
-            return getCodingTag[0];
+            return getCodingTag[0] as CodingTag;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update codingTag: ${codingTag.tagId}: ${error}`);
@@ -94,7 +94,7 @@ export class CodingTagService {
             throw new Error("Failed to retrieve coding tags from Database!");
         }
 
-        return codingTags;
+        return codingTags as [CodingTag];
     }
 
     /**
@@ -119,7 +119,7 @@ export class CodingTagService {
         }
 
         // Returning the retrieved coding tag.
-        return getCodingTag[0];
+        return getCodingTag[0] as CodingTag;
     }
 
     /**
@@ -185,7 +185,7 @@ export class CodingTagService {
         }
 
         // Returning the retrieved coding tags.
-        return tagsArray;
+        return tagsArray as [CodingTag];
     }
 
 
@@ -207,8 +207,6 @@ export class CodingTagService {
             CODING_TAG_QUERY.DELETE_ALL_QUESTION_TAGS_BY_QUESTION_ID,
             questionId
         ) as any;
-
-        console.log(deletedQuestionTags);
 
         // Checking if the database removal was successful.
         if (deletedQuestionTags.affectedRows === 0) {

@@ -1,11 +1,10 @@
 import "./config";
-import { api } from "@hboictcloud/api";
-import { QUESTION_QUERY } from "./query/question.query";
-import { homepageService } from "./services/homepageService";
-import { Question } from "./models/question";
-import { User } from "./models/user";
-import { ANSWER_QUERY } from "./query/answer.query";
-import { handleRedirectToQuestionDetail } from "./components/handleRedirects";
+import {api} from "@hboictcloud/api";
+import {QUESTION_QUERY} from "./query/question.query";
+import {Question} from "./models/question";
+import {User} from "./models/user";
+import {ANSWER_QUERY} from "./query/answer.query";
+import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
@@ -14,7 +13,7 @@ async function getMostRecentQuestions(): Promise<void> {
         const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_FIVE_QUESTIONS) as [Question];
 
         // Select the HTML element where recent questions will be displayed
-        const recentQuestionsBody: HTMLElement | null = document.querySelector(".recentQuestions");
+        const recentQuestionsBody: HTMLElement = (<HTMLElement>document.querySelector(".recentQuestions"));
 
         // Iterate over each recent question
         for (const question of recentQuestions) {
@@ -62,7 +61,7 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 if (questionVotes) {
                     const questionVoteScore: number | null = question.totalUpvotes! - question.totalDownvotes!;
-                    questionVotes.innerHTML = "total votes: " + questionVoteScore ;
+                    questionVotes.innerHTML = "total votes: " + questionVoteScore;
                 }
 
                 // Answers Count
@@ -154,8 +153,7 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 if (questionCreator) {
                     // Search for the user data based on the user ID
-                    const searchForUserId: number = singleQuestion.userId;
-                    const userData: User = await homepageService.searchUserId(searchForUserId);
+                    const userData: User = await User.retrieveUser(singleQuestion.userId) as User;
 
                     // Display the username of the question creator
                     questionCreator.innerHTML = userData.username;

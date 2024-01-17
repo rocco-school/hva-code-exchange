@@ -16,7 +16,8 @@ export function addClickListenersToOptions(customSelect: Element): void {
     }
 
     // Add click event listeners to all options within the custom select
-    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+
+    (<NodeListOf<Element>>document.querySelectorAll(".option")).forEach(function (option: Element): void {
         option.addEventListener("click", optionClickHandler);
 
         // Event listener for keydown event (e.g., Enter key)
@@ -38,42 +39,40 @@ export function addClickListenersToOptions(customSelect: Element): void {
  */
 export function setupCustomSelect(customSelect: Element): void {
     // Retrieve necessary elements within the custom select
-    const searchInput: HTMLInputElement | null = customSelect.querySelector(".search-tags");
-    const optionsContainer: HTMLDivElement | null = customSelect.querySelector(".options");
-    const noResultMessage: HTMLDivElement | null = customSelect.querySelector(".no-result-message");
-    const allTagsOption: HTMLDivElement | null = customSelect.querySelector(".option.all-tags");
-    const clearButton: HTMLButtonElement | null = customSelect.querySelector(".clear");
+    const searchInput: HTMLInputElement = (<HTMLInputElement>document.querySelector(".search-tags"));
+    const optionsContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector(".options"));
+    const noResultMessage: HTMLDivElement = (<HTMLDivElement>document.querySelector(".no-result-message"));
+    const allTagsOption: HTMLDivElement = (<HTMLDivElement>document.querySelector(".option.all-tags"));
+    const clearButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".clear"));
 
     // Event listener for 'All Tags' option click
-    allTagsOption?.addEventListener("click", function (): void {
+    allTagsOption.addEventListener("click", function (): void {
         toggleAllTagsOption(allTagsOption, customSelect);
     });
 
     // Event listener for keydown event (e.g., Enter key) on 'All Tags' option
-    allTagsOption?.addEventListener("keydown", function (event: KeyboardEvent): void {
+    allTagsOption.addEventListener("keydown", function (event: KeyboardEvent): void {
         if (event.key === "Enter") {
             toggleAllTagsOption(allTagsOption, customSelect);
         }
     });
 
     // Event listener for 'Clear' button
-    clearButton?.addEventListener("click", function (): void {
+    clearButton.addEventListener("click", function (): void {
         clearSearchInput(searchInput, customSelect, noResultMessage);
     });
 
     // Event listener for keydown event (e.g., Enter key)
-    clearButton?.addEventListener("keydown", function (event: KeyboardEvent): void {
+    clearButton.addEventListener("keydown", function (event: KeyboardEvent): void {
         if (event.key === "Enter") {
             clearSearchInput(searchInput, customSelect, noResultMessage);
         }
     });
 
     // Event listener for search input
-    searchInput?.addEventListener("input", (): void => {
+    searchInput.addEventListener("input", (): void => {
         handleSearchInput(searchInput, customSelect, noResultMessage, optionsContainer);
     });
-
-
 }
 
 
@@ -85,7 +84,7 @@ export function setupCustomSelect(customSelect: Element): void {
  */
 function toggleAllTagsOption(allTagsOption: Element, customSelect: Element): void {
     // Toggle 'active' class for all options (excluding 'All Tags')
-    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+    (<NodeListOf<Element>>customSelect.querySelectorAll(".option")).forEach(function (option: Element): void {
         if (option !== allTagsOption) {
             option.classList.toggle("active");
         }
@@ -99,14 +98,14 @@ function toggleAllTagsOption(allTagsOption: Element, customSelect: Element): voi
 /**
  * Clears the search input and resets the options display.
  *
- * @param {HTMLInputElement | null} searchInput - The search input element.
+ * @param {HTMLInputElement} searchInput - The search input element.
  * @param {Element} customSelect - The custom select element.
- * @param {Element | null} noResultMessage - The element to display when there are no search results.
+ * @param {Element} noResultMessage - The element to display when there are no search results.
  */
 function clearSearchInput(
-    searchInput: HTMLInputElement | null,
+    searchInput: HTMLInputElement,
     customSelect: Element,
-    noResultMessage: Element | null
+    noResultMessage: Element
 ): void {
     if (!searchInput) return;
 
@@ -114,7 +113,7 @@ function clearSearchInput(
     searchInput.value = "";
 
     // Show all options and hide 'No Result' message
-    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+    (<NodeListOf<Element>>customSelect.querySelectorAll(".option")).forEach(function (option: Element): void {
         option.classList.add("block");
         option.classList.remove("hidden");
     });
@@ -130,16 +129,16 @@ function clearSearchInput(
 /**
  * Handles the input event on a search input, filtering options in a custom select.
  *
- * @param {HTMLInputElement | null} searchInput - The search input element.
+ * @param {HTMLInputElement} searchInput - The search input element.
  * @param {Element} customSelect - The custom select element.
- * @param {Element | null} noResultMessage - The element to display when there are no search results.
- * @param {HTMLDivElement | null} optionsContainer - The container for the options.
+ * @param {Element} noResultMessage - The element to display when there are no search results.
+ * @param {HTMLDivElement} optionsContainer - The container for the options.
  */
 function handleSearchInput(
-    searchInput: HTMLInputElement | null,
+    searchInput: HTMLInputElement,
     customSelect: Element,
-    noResultMessage: Element | null,
-    optionsContainer: HTMLDivElement | null
+    noResultMessage: Element,
+    optionsContainer: HTMLDivElement
 ): void {
     // Check if any required elements are missing
     if (!searchInput || !customSelect || !noResultMessage || !optionsContainer) return;
@@ -148,7 +147,7 @@ function handleSearchInput(
     const searchTerm: string = searchInput.value.toLowerCase();
 
     // Filter options based on the search term
-    customSelect.querySelectorAll(".option").forEach(function (option: Element): void {
+    (<NodeListOf<Element>>customSelect.querySelectorAll(".option")).forEach(function (option: Element): void {
         if (option.textContent) {
             const optionText: string = option.textContent.trim();
             const shouldShow: boolean = optionText.toLowerCase().includes(searchTerm);
@@ -169,10 +168,10 @@ function handleSearchInput(
     });
 
     // Check if any options match the search term
-    const options: NodeListOf<Element> = customSelect.querySelectorAll(".option");
-    const anyOptionsMatch: boolean = Array.from(options).some(option => option.classList.contains("block"));
 
-    console.log(anyOptionsMatch);
+
+    const options: NodeListOf<Element> = (<NodeListOf<Element>>customSelect.querySelectorAll(".option"));
+    const anyOptionsMatch: boolean = Array.from(options).some(option => option.classList.contains("block"));
 
     // Show or hide 'No Result' message based on search results
     if (anyOptionsMatch) {
@@ -200,10 +199,10 @@ function handleSearchInput(
  * @param {MouseEvent} event - The click event.
  */
 export function handleDocumentClick(event: MouseEvent): void {
-    const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
+    const customSelects: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".custom-select"));
     const targetElem: HTMLElement = event.target as HTMLElement;
-    const removeTag: Element | null = targetElem.closest(".remove-tag");
-    const customSelect: Element | null = targetElem.closest(".custom-select");
+    const removeTag: HTMLElement = (<HTMLElement>targetElem.closest(".remove-tag"));
+    const customSelect: HTMLElement = (<HTMLElement>targetElem.closest(".custom-select"));
 
     if (!removeTag && !customSelect) {
         // Close all custom selects if the click is outside of them and not on a remove tag
@@ -214,10 +213,10 @@ export function handleDocumentClick(event: MouseEvent): void {
 
     // Handle removing tags
     if (removeTag && customSelect) {
-        const valueToRemove: string | null = removeTag.getAttribute("data-value");
-        const optionToRemove: Element | null = customSelect.querySelector(`.option[data-value="${valueToRemove}"]`);
-        const otherSelectedOptions: NodeListOf<Element> = customSelect.querySelectorAll(".option.active:not(.all-tags)");
-        const allTagsOption: Element | null = customSelect.querySelector(".option.all-tags");
+        const valueToRemove: string = removeTag.getAttribute("data-value") as string;
+        const optionToRemove: HTMLElement = (<HTMLElement>customSelect.querySelector(`.option[data-value="${valueToRemove}"]`));
+        const otherSelectedOptions: NodeListOf<Element> = (<NodeListOf<Element>>customSelect.querySelectorAll(".option.active:not(.all-tags)"));
+        const allTagsOption: HTMLElement = (<HTMLElement>customSelect.querySelector(".option.all-tags"));
 
         // Remove 'active' class from the selected option
         optionToRemove?.classList.remove("active");
@@ -257,7 +256,7 @@ export function setupSelectBoxClickHandling(selectBoxes: NodeListOf<Element>): v
             }
 
             if (targetElem.classList.contains("open-select-box")) {
-                const customSelect: Element | null = document.querySelector(".custom-select");
+                const customSelect: HTMLElement = (<HTMLElement>document.querySelector(".custom-select"));
 
                 if (customSelect) {
                     customSelect.classList.toggle("open");
@@ -288,8 +287,8 @@ export function validateCustomSelects(customSelects: NodeListOf<Element>): boole
      * @param {Element} customSelect - The custom select element to validate.
      */
     function validateCustomSelect(customSelect: Element): void {
-        const selectedOptions: NodeListOf<Element> = customSelect.querySelectorAll(".option.active");
-        const tagErrorMsg: Element | null = customSelect.querySelector(".tag_error_msg");
+        const selectedOptions: NodeListOf<Element> = (<NodeListOf<Element>>customSelect.querySelectorAll(".option.active"));
+        const tagErrorMsg: HTMLElement = (<HTMLElement>customSelect.querySelector(".tag_error_msg"));
 
         if (selectedOptions.length === 0) {
             // Show error message if no options are selected
@@ -323,11 +322,11 @@ export function validateCustomSelects(customSelects: NodeListOf<Element>): boole
  */
 export function handleButtonClick(): Promise<string | null> {
     return new Promise((resolve): void => {
-        const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
+        const customSelects: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".custom-select"));
         const isValid: boolean = validateCustomSelects(customSelects);
 
         if (isValid) {
-            const tagsInput: HTMLInputElement = document.querySelector(".tags_input") as HTMLInputElement;
+            const tagsInput: HTMLInputElement = (<HTMLInputElement>document.querySelector(".tags_input"));
             const customSelectInput: string = tagsInput.value;
             resetCustomSelects();
 
@@ -348,14 +347,15 @@ export function handleButtonClick(): Promise<string | null> {
  */
 export function resetCustomSelects(): void {
     // Find all custom select elements
-    document.querySelectorAll(".custom-select").forEach(function (customSelect: Element) {
+    (<NodeListOf<Element>>document.querySelectorAll(".custom-select")).forEach(function (customSelect: Element) {
         // Remove 'active' class from all selected options
-        customSelect.querySelectorAll(".option.active").forEach(function (option: Element) {
+
+        (<NodeListOf<Element>>customSelect.querySelectorAll(".option.active")).forEach(function (option: Element) {
             option.classList.remove("active");
         });
 
         // Remove 'active' class from the special 'all-tags' option, if it exists
-        customSelect.querySelector(".option.all-tags")?.classList.remove("active");
+        (<HTMLDivElement>customSelect.querySelector(".option.all-tags")).classList.remove("active");
 
         // Update the display of selected options
         updateSelectedOptions(customSelect);
@@ -370,8 +370,8 @@ export function resetCustomSelects(): void {
  */
 export function updateSelectedOptions(customSelect: Element): void {
     // Find all selected options and extract their text and value attributes
-    const selectedOptions: any[] = Array.from(customSelect.querySelectorAll(".option.active"))
-        .filter(option => option !== customSelect.querySelector(".option.all-tags"))
+    const selectedOptions: any[] = Array.from((<NodeListOf<Element>>customSelect.querySelectorAll(".option.active")))
+        .filter(option => option !== (<HTMLDivElement>customSelect.querySelector(".option.all-tags")))
         .map(function (option: any) {
             return {
                 value: option.getAttribute("data-value"),
@@ -384,13 +384,12 @@ export function updateSelectedOptions(customSelect: Element): void {
         return option.value;
     });
 
-    const tagInput: HTMLInputElement | null = customSelect.querySelector(".tags_input");
+    const tagInput: HTMLInputElement = (<HTMLInputElement>customSelect.querySelector(".tags_input"));
 
     if (tagInput) {
         // Set the selected values in the tags input
         tagInput.value = selectedValues.join(", ");
     }
-
 
     let tagsHtml: string = "";
 
@@ -416,7 +415,7 @@ export function updateSelectedOptions(customSelect: Element): void {
         }
     }
 
-    const selectOptions: Element | null = customSelect.querySelector(".selected-options");
+    const selectOptions: HTMLElement = (<HTMLElement>customSelect.querySelector(".selected-options"));
 
     if (selectOptions) {
         // Update the HTML content to display selected tags

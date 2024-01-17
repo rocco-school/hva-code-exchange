@@ -35,7 +35,7 @@ export class VoteService {
             throw new Error("Failed to create vote in the database");
         }
 
-        return getVote[0];
+        return getVote[0] as Vote;
     }
 
     /**
@@ -65,7 +65,7 @@ export class VoteService {
             }
 
             // Return the updated vote.
-            return getVote[0];
+            return getVote[0] as Vote;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update Vote: ${vote.voteId}: ${error}`);
@@ -93,7 +93,7 @@ export class VoteService {
             throw new Error(`Failed to retrieve vote with ID: ${voteId}`);
         }
 
-        return getVote[0];
+        return getVote[0] as Vote;
     }
 
     /**
@@ -148,7 +148,7 @@ export class VoteService {
             throw new Error(`Failed to retrieve vote for user: ${userId} on question: ${questionId}`);
         }
 
-        return getVote[0];
+        return getVote[0] as Vote;
     }
 
     /**
@@ -174,6 +174,6 @@ export class VoteService {
             throw new Error(`Failed to retrieve vote for user: ${userId} on answer: ${answerId}`);
         }
 
-        return getVote[0];
+        return getVote[0] as Vote;
     }
 }

@@ -36,7 +36,7 @@ export class AnswerService {
         }
 
         // Hiding the createAnswerForm and refreshing the page.
-        return getAnswer[0];
+        return getAnswer[0] as Answer;
     }
 
     /**
@@ -66,7 +66,7 @@ export class AnswerService {
             }
 
             // Return the updated answer.
-            return getAnswer[0];
+            return getAnswer[0] as Answer;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update answer: ${answer.answerId}: ${error}`);
@@ -95,7 +95,7 @@ export class AnswerService {
             throw new Error(`Failed to retrieve answer with ID: ${answerId}`);
         }
 
-        return getAnswer[0];
+        return getAnswer[0] as Answer;
     }
 
     /**
@@ -148,7 +148,7 @@ export class AnswerService {
             throw new Error(`Failed to retrieve answers for question ${questionId} from Database!`);
         }
 
-        return answers;
+        return answers as [AnswerWithUser];
     }
 
     /**
@@ -197,7 +197,7 @@ export class AnswerService {
             throw new Error(`Failed to retrieve answers for question ${questionId} from Database!`);
         }
 
-        return answers;
+        return answers as [Answer];
     }
 
 
@@ -231,7 +231,7 @@ export class AnswerService {
                 new Error(`Failed to get answer for ${answerId}!`);
             }
 
-            return answer[0];
+            return answer[0] as Answer;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update total answer upvotes for ${answerId}: ${error}`);
@@ -268,7 +268,7 @@ export class AnswerService {
                 new Error(`Failed to get answer for ${answerId}!`);
             }
 
-            return answer[0];
+            return answer[0] as Answer;
         } catch (error) {
             // Handle any errors that occur during the update or retrieval process.
             throw new Error(`Failed to update total answer downvotes for ${answerId}: ${error}`);

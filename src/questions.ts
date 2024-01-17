@@ -3,6 +3,8 @@ import {api, url} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import {Question} from "./models/question";
+import {JWTPayload} from "jose";
+import {security} from "./components/security";
 
 /**
  * The main application entry point for the home page.

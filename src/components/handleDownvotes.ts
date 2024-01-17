@@ -34,7 +34,7 @@ export async function handleQuestionDownvote(questionId: number, userId: number)
                 null,
             );
 
-            const vote: string | Vote = await newVote.saveVote();
+            const vote: Vote = await newVote.saveVote() as Vote;
 
             if (vote) {
                 await Question.updateTotalDownvotes(questionId, true);
@@ -51,7 +51,7 @@ export async function handleQuestionDownvote(questionId: number, userId: number)
                 null,
             );
 
-            const updateVote: string | Vote = await updatedVote.updateVote();
+            const updateVote: Vote = await updatedVote.updateVote() as Vote;
 
             if (updateVote) {
                 // Update total upvotes and downvotes accordingly.
@@ -97,7 +97,7 @@ export async function handleAnswerDownvote(answerId: number, userId: number): Pr
                 null,
             );
 
-            const vote: string | Vote = await newVote.saveVote();
+            const vote: Vote = await newVote.saveVote() as Vote;
 
             if (vote) {
                 await Answer.updateTotalDownvotes(answerId, true);
@@ -114,7 +114,7 @@ export async function handleAnswerDownvote(answerId: number, userId: number): Pr
                 null,
             );
 
-            const updateVote: string | Vote = await updatedVote.updateVote();
+            const updateVote: Vote = await updatedVote.updateVote() as Vote;
 
             if (updateVote) {
                 // Update total upvotes and downvotes accordingly.

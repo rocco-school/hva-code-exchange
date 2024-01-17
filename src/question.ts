@@ -12,6 +12,7 @@ import {handleAnswerUpvote, handleQuestionUpvote} from "./components/handleUpvot
 import {PostType} from "./enum/postType";
 import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleDownvotes";
 import {initializeTextEditor} from "./components/initializeTextEditor";
+import {CodingTag} from "./models/codingTag";
 import {url, utils} from "@hboictcloud/api";
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
@@ -53,11 +54,22 @@ async function setup(): Promise<void> {
     await addAnswersToPage(userId);
 
     // Add event listeners for upvoting and downvoting the question
-    document.querySelector(".upvote-question")?.addEventListener("click", async (): Promise<void> => {
+    (<HTMLElement>document.querySelector(".upvote-question")).addEventListener("click", async (): Promise<void> => {
         await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.UPVOTE);
     });
 
-    document.querySelector(".edit-button")?.addEventListener("click", async (): Promise<void> => {
+    (<HTMLElement>document.querySelector(".downvote-question")).addEventListener("click", async (): Promise<void> => {
+        await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.DOWNVOTE);
+    });
+
+    // Add event listeners for delete buttons in each answer
+    (<NodeListOf<Element>>document.querySelectorAll(".delete-button")).forEach(item => {
+        item.addEventListener("click", async (): Promise<void> => {
+            await showSuccessMessage("Are you sure you want to delete this Answer?", null, "delete", parseInt(item.id), "answer");
+        });
+    });
+
+    (<HTMLDivElement>document.querySelector(".edit-button")).addEventListener("click", async (): Promise<void> => {
         // Create a new URL with the updated page number
         const newURL: string = utils.createUrl("edit-form.html", {
             postType: PostType.QUESTION,
@@ -67,19 +79,8 @@ async function setup(): Promise<void> {
         url.redirect(newURL);
     });
 
-    document.querySelector(".downvote-question")?.addEventListener("click", async (): Promise<void> => {
-        await handleVoting(question.questionId!, userId, PostType.QUESTION, VoteType.DOWNVOTE);
-    });
-
-    // Add event listeners for delete buttons in each answer
-    document.querySelectorAll(".delete-button").forEach(item => {
-        item.addEventListener("click", async (): Promise<void> => {
-            await showSuccessMessage("Are you sure you want to delete this Answer?", null, "delete", parseInt(item.id), "answer");
-        });
-    });
-
     // Add event listener for continuing the delete operation
-    document.querySelector(".continue-button")?.addEventListener("click", async (item) => {
+    (<HTMLElement>document.querySelector(".continue-button")).addEventListener("click", async (item) => {
         const target: HTMLDivElement = item.target as HTMLDivElement;
 
         // Check if the target has the correct class
@@ -211,10 +212,12 @@ async function handleDownvote(postId: number, userId: number, postType: string):
  * @param {string} answerText - The text content of the answer.
  * @param {string} upvoteCount - The count of upvotes for the answer.
  * @param {string} createdAt - The creation timestamp of the answer.
+ * @param {string} updatedAt - The updated timestamp of the answer.
  * @param {string} profilePictureSrc - The source URL for the user's profile picture.
  * @param {string} username - The username of the user who posted the answer.
  * @param {number} answersCount - The total count of answers posted by the user.
  * @param {number} questionsCount - The total count of questions posted by the user.
+ * @param {string} userExpertise - The expertise of the user that posted this answer
  * @param {string} extraClass - Additional CSS class to be applied to action buttons.
  * @returns {string} - HTML markup for the answer.
  */
@@ -223,10 +226,12 @@ function createAnswerElement(
     answerText: string,
     upvoteCount: string,
     createdAt: string,
+    updatedAt: string,
     profilePictureSrc: string,
     username: string,
     answersCount: number,
     questionsCount: number,
+    userExpertise: string,
     extraClass: string
 ): string {
     return `
@@ -253,7 +258,10 @@ function createAnswerElement(
                         <div class="created-info">
                             <div class="inner-info">
                                 <!-- Creation timestamp -->
-                                <span>Created at: ${createdAt}</span>
+                                <div class="answer-date">
+                                    <span>Created at: ${createdAt}</span>
+                                    <span>Last updated: ${updatedAt}</span>
+                                </div>
                                 <div class="person">
                                     <!-- User profile picture -->
                                     <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
@@ -262,6 +270,8 @@ function createAnswerElement(
                                         <span>${username}</span>
                                         <span>Answers: ${answersCount}</span>
                                         <span>Questions: ${questionsCount}</span>
+                                        <button id="tooltipButton" type="button" class="tool-tip-button">Expertise</button>
+                                        <div id="tooltipContent" role="tooltip" class="tool-tip-content">${userExpertise}</div>
                                     </div>
                                 </div>
                             </div>
@@ -300,6 +310,20 @@ async function addAnswersToPage(userId: number): Promise<void> {
             let totalAnswers: number | string = await User.getTotalAnswers(answer.userId);
             let totalQuestions: number | string = await User.getTotalQuestions(answer.userId);
 
+            // Retrieve user expertises, which are coding tags associated with the user
+            let userExpertises: [CodingTag] = await User.getUserExpertises(answer.userId) as [CodingTag];
+
+            // Extract unique tag names from user expertises
+            const tagNames: string[] = [...new Set(userExpertises.map((item: {
+                tagName: any;
+            }) => item.tagName))];
+            let userExpertise: string = tagNames.join(", ");
+
+            // Check if the user has no expertise and update the userExpertise accordingly
+            if (tagNames.length === 0) {
+                userExpertise = "No expertise!";
+            }
+
             // Ensure the counts are numbers, default to 0 if not
             if (typeof totalAnswers !== "number") {
                 totalAnswers = 0;
@@ -310,12 +334,16 @@ async function addAnswersToPage(userId: number): Promise<void> {
             }
 
             // Format the creation date of the answer
-            const createdAt: Date | null = answer.createdAt;
-            let date: string = Date.now().toString();
-            if (createdAt !== null) {
-                const theDate: Date = new Date(createdAt);
-                date = theDate.toISOString().slice(0, 10);
-            }
+            const createdAt: Date = answer.createdAt as Date;
+            const updatedAt: Date = answer.updatedAt as Date;
+            let createdDate: string = Date.now().toString();
+            let updatedDate: string = Date.now().toString();
+
+
+            const theCreatedAtDate: Date = new Date(createdAt);
+            const theUpdatedAtDate: Date = new Date(updatedAt);
+            createdDate = theCreatedAtDate.toISOString().slice(0, 10);
+            updatedDate = theUpdatedAtDate.toISOString().slice(0, 10);
 
             let extraClass: string = "";
 
@@ -331,11 +359,13 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 answer.answerId!,
                 answer.answerBody,
                 upvoteCount.toString(),
-                date,
+                createdDate,
+                updatedDate,
                 "https://ui-avatars.com/api/?name=" + username,
                 username,
                 totalAnswers,
                 totalQuestions,
+                userExpertise,
                 extraClass
             );
 
@@ -344,7 +374,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
         }
 
         // Add event listeners for upvoting and downvoting answers
-        document.querySelectorAll(".answer-upvote").forEach(item => {
+        (<NodeListOf<Element>>document.querySelectorAll(".answer-upvote")).forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 if (item.parentElement) {
                     const answerId: string = item.parentElement.id;
@@ -353,7 +383,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
             });
         });
 
-        document.querySelectorAll(".answer-downvote").forEach(item => {
+        (<NodeListOf<Element>>document.querySelectorAll(".answer-downvote")).forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 if (item.parentElement) {
                     const answerId: string = item.parentElement.id;
@@ -362,7 +392,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
             });
         });
 
-        document.querySelectorAll(".edit-button").forEach(item => {
+        (<NodeListOf<Element>>document.querySelectorAll(".edit-button")).forEach(item => {
             item.addEventListener("click", async (): Promise<void> => {
                 // Create a new URL with the updated page number
                 const newURL: string = utils.createUrl("edit-form.html", {

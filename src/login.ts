@@ -64,7 +64,6 @@ async function setup(): Promise<void> {
  */
 async function loginFromDatabase(email: string, password: string): Promise<User | []> {
     try {
-        console.log("Start");
         // Query the database to retrieve user information based on the email.
         const user: [User] = await api.queryDatabase(USER_QUERY.FIND_USER_BY_EMAIL, email) as [User];
 
