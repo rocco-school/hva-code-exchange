@@ -174,9 +174,9 @@ async function setup(): Promise<void> {
             newAnswerTextBody.innerHTML,
             null,
             null,
+            false,
             null,
-            null,
-            false
+            null
         );
 
         try {

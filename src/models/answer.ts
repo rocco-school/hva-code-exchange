@@ -173,7 +173,7 @@ export class Answer extends Post {
      *   answerBody,
      *   null, // Default totalUpvotes is 0
      *   null, // Default totalDownvotes is 0
-     *   false, // isAccepted is false. can also be null because database default is false.
+     *   false, // isAccepted is false.
      *   null, // createdAt
      *   null, // updatedAt auto-updates in the database
      * );
