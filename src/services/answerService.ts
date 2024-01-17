@@ -23,7 +23,7 @@ export class AnswerService {
      */
     public static async saveAnswer(answer: Answer): Promise<Answer> {
         // Querying the database with the new answer data.
-        const param: (string | number | boolean | null)[] = [answer.questionId, answer.userId, answer.answerBody];
+        const param: Array<any> = [answer.questionId, answer.userId, answer.answerBody];
         const newAnswer: any = await api.queryDatabase(ANSWER_QUERY.CREATE_ANSWER, ...param);
 
         // Retrieving the newly created answer from the database.
@@ -54,7 +54,7 @@ export class AnswerService {
     public static async updateAnswer(answer: Answer): Promise<Answer> {
         try {
             // Update the answer in the Answer table.
-            const answerData: (string | number | boolean | null)[] = [answer.answerBody, answer.answerId];
+            const answerData: any[] = [answer.answerBody, answer.isAccepted, answer.answerId];
             await api.queryDatabase(ANSWER_QUERY.UPDATE_ANSWER, ...answerData);
 
             // Retrieve the updated answer from the database.
@@ -220,7 +220,7 @@ export class AnswerService {
 
         try {
             // Update the total_upvotes column in the Answer table.
-            const params: number[] = [updateValue, answerId];
+            const params: Array<any> = [updateValue, answerId];
             await api.queryDatabase(ANSWER_QUERY.UPDATE_TOTAL_UPVOTES, ...params);
 
             // Retrieve the updated answer from the database.
@@ -257,7 +257,7 @@ export class AnswerService {
 
         try {
             // Update the total_downvotes column in the Answer table.
-            const params: number[] = [updateValue, answerId];
+            const params: Array<any> = [updateValue, answerId];
             await api.queryDatabase(ANSWER_QUERY.UPDATE_TOTAL_DOWNVOTES, ...params);
 
             // Retrieve the updated answer from the database.

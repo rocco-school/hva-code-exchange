@@ -174,7 +174,7 @@ export class User {
      *   console.error('Failed to retrieve user:', error.message);
      * }
      */
-    public static async retrieveUser(userId: number): Promise<User | string> {
+    public static async retrieveUser(userId: number): Promise<User> {
         try {
             // Calling the retrieveUser method from the service.
             return await UserService.retrieveUser(userId);

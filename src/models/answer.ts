@@ -9,10 +9,11 @@ export class Answer extends Post {
     private _answerBody: string;
     private _totalUpvotes: number | null;
     private _totalDownvotes: number | null;
+    private _isAccepted: boolean;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null, isAccepted: boolean) {
         super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
@@ -20,6 +21,7 @@ export class Answer extends Post {
         this._answerBody = answerBody;
         this._totalUpvotes = totalUpvotes;
         this._totalDownvotes = totalDownvotes;
+        this._isAccepted = isAccepted;
     }
 
     // Getters en setters
@@ -47,6 +49,10 @@ export class Answer extends Post {
         return this._totalDownvotes;
     }
 
+    public get isAccepted(): boolean {
+        return this._isAccepted;
+    }
+
     public set answerId(value: number | null) {
         this._answerId = value;
     }
@@ -71,8 +77,12 @@ export class Answer extends Post {
         this._totalDownvotes = value;
     }
 
+    public set isAccepted(value: boolean) {
+        this._isAccepted = value;
+    }
+
     public toString(): string {
-        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._totalUpvotes} ${this._totalDownvotes} ${this.createdAt} ${this.updatedAt}`;
+        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._totalUpvotes} ${this._totalDownvotes} ${this._isAccepted} ${this.createdAt} ${this.updatedAt}`;
     }
 
     /**

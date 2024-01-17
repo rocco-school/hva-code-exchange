@@ -14,7 +14,7 @@ export const ANSWER_QUERY: {
     SELECT_ANSWERS: "SELECT * FROM answer LIMIT 50",
     SELECT_ANSWER: "SELECT * FROM answer WHERE answerId = ?",
     CREATE_ANSWER: "INSERT INTO answer (questionId, userId, answerBody) VALUES(?, ?, ?)",
-    UPDATE_ANSWER: "UPDATE answer SET answerBody = ? WHERE answerId = ? ",
+    UPDATE_ANSWER: "UPDATE answer SET answerBody = ?, isAccepted = ? WHERE answerId = ? ",
     DELETE_ANSWER: "DELETE FROM answer WHERE answerId = ?",
     GET_ANSWERS_FROM_QUESTION: "SELECT * FROM answer WHERE questionId = ?",
     GET_ANSWERS_AND_USERS_FROM_QUESTION: "SELECT answer.answerId, answer.questionId, answer.answerBody, answer.totalUpvotes, answer.totalDownvotes, answer.createdAt, answer.updatedAt, user.userId, user.firstname, user.lastname FROM answer LEFT JOIN user ON user.userId = answer.userId WHERE questionId = ? ORDER BY answer.createdAt DESC",

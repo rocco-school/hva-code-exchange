@@ -1,6 +1,5 @@
 import "./config";
 import {Question} from "./models/question";
-import {QuestionService} from "./services/questionService";
 import {AnswerWithUser} from "./models/interface/answerWithUser";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
@@ -36,7 +35,9 @@ async function setup(): Promise<void> {
     const userId: number = loginStatus["userId"] as number;
 
     // Retrieves a question from the database based on the URL parameter question ID.
-    const question: Question = await QuestionService.retrieveQuestion(questionId);
+    const question: Question = await Question.retrieveQuestion(questionId) as Question;
+
+    await generateQuestionUserInfo(userId, question);
 
     // If the question does not exist, redirect to the index page
     if (!question) location.replace("index.html");
@@ -49,6 +50,29 @@ async function setup(): Promise<void> {
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
+    const form: HTMLInputElement = (<HTMLInputElement>document.querySelector(".testing-button"));
+
+
+    form.addEventListener("click", async () => {
+        const image: HTMLInputElement = (<HTMLInputElement>document.querySelector("#img"));
+
+        console.log(image.files);
+        const reader: FileReader = new FileReader();
+
+        reader.readAsBinaryString(image?.files[0]);
+
+        reader.onload = function(): voidg {
+            console.log(reader.result);
+        };
+
+    });
+
+
+
+    if (userId === question.userId) {
+        (<HTMLButtonElement>document.querySelector(".question-edit")).classList.remove("hidden");
+        (<HTMLButtonElement>document.querySelector(".question-divider")).classList.remove("hidden");
+    }
 
     // Populate all answers by questionID
     await addAnswersToPage(userId);
@@ -128,7 +152,8 @@ async function setup(): Promise<void> {
             null,
             null,
             null,
-            null
+            null,
+            false
         );
 
         try {
@@ -148,6 +173,63 @@ async function setup(): Promise<void> {
 
 // Invoke the question detail page application entry point.
 await setup();
+
+
+/**
+ * Generates and displays user information for a given user ID within a question.
+ *
+ * @param {string} userId - The ID of the user for whom the information is generated.
+ * @param {Question} question - The Question Object with whom the information is generated.
+ * @returns {Promise<void>} A Promise that resolves when the function completes successfully.
+ */
+async function generateQuestionUserInfo(userId: number, question: Question): Promise<void> {
+    const user: User = await User.retrieveUser(userId) as User;
+
+    // Get total answers and total questions count for the user
+    let totalAnswers: number = await User.getTotalAnswers(user.userId) as number;
+    let totalQuestions: number | string = await User.getTotalQuestions(user.userId) as number;
+    const username: string = user.firstname + " " + user.lastname as string;
+
+    // Retrieve user expertises, which are coding tags associated with the user
+    let userExpertises: [CodingTag] = await User.getUserExpertises(user.userId) as [CodingTag];
+
+    // Extract unique tag names from user expertises
+    const tagNames: string[] = [...new Set(userExpertises.map((item: { tagName: any; }) => item.tagName))];
+    let userExpertise: string = tagNames.join(", ");
+
+    // Check if the user has no expertise and update the userExpertise accordingly
+    if (tagNames.length === 0) {
+        userExpertise = "No expertise!";
+    }
+
+    // Format the creation date of the answer
+    const createdAt: Date = question.createdAt as Date;
+    const updatedAt: Date = question.updatedAt as Date;
+
+    const theCreatedAtDate: Date = new Date(createdAt);
+    const theUpdatedAtDate: Date = new Date(updatedAt);
+    const createdDate: string = theCreatedAtDate.toISOString().slice(0, 10);
+    const updatedDate: string = theUpdatedAtDate.toISOString().slice(0, 10);
+
+
+    /**
+     * Represents user information displayed in a question.
+     * @type {string}
+     */
+    const questionUser: string = createQuestionPerson(
+        createdDate,
+        updatedDate,
+        "https://ui-avatars.com/api/?name=" + username,
+        username,
+        totalAnswers.toString(),
+        totalQuestions.toString(),
+        userExpertise,
+    );
+
+    if (questionUser) {
+        (<HTMLDivElement>document.querySelector(".question-info")).innerHTML += questionUser;
+    }
+}
 
 
 /**
@@ -282,6 +364,53 @@ function createAnswerElement(
         </div>
     `;
 }
+
+
+/**
+ * Creates HTML markup for displaying an answer.
+ *
+ * @param {string} createdAt - The creation timestamp of the answer.
+ * @param {string} updatedAt - The updated timestamp of the answer.
+ * @param {string} profilePictureSrc - The source URL for the user's profile picture.
+ * @param {string} username - The username of the user who posted the answer.
+ * @param {string} userAnswerCount - The total count of answers posted by the user.
+ * @param {string} userQuestionCount - The total count of question posted by the user.
+ * @param {string} userExpertise - The expertise of the user that posted this answer
+ * @returns {string} - HTML markup for the answer.
+ */
+function createQuestionPerson(
+    createdAt: string,
+    updatedAt: string,
+    profilePictureSrc: string,
+    username: string,
+    userAnswerCount: string,
+    userQuestionCount: string,
+    userExpertise: string,
+): string {
+    return `
+        <div class="created-info question-person-info">
+            <div class="inner-info">
+                <!-- Creation timestamp -->
+                <div class="answer-date">
+                    <span>Created at: ${createdAt}</span>
+                    <span>Last updated: ${updatedAt}</span>
+                </div>
+                <div class="person">
+                    <!-- User profile picture -->
+                    <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
+                    <div class="personal-information">
+                        <!-- User details -->
+                        <span>${username}</span>
+                        <span>Answers: ${userAnswerCount}</span>
+                        <span>Questions: ${userQuestionCount}</span>
+                        <button id="tooltipButton" type="button" class="tool-tip-button">Expertise</button>
+                        <div id="tooltipContent" role="tooltip" class="tool-tip-content">${userExpertise}</div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+}
+
 
 /**
  * Adds answers to the page for a specific question.

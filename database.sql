@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`answer`
     `answerBody` TEXT NOT NULL,
     `upVotes` INT DEFAULT 0 NOT NULL,
     `downVotes` INT DEFAULT 0 NOT NULL,
+    `isAccepted` BOOLEAN DEFAULT FALSE,
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX `question_idx` (`questionId` ASC),
