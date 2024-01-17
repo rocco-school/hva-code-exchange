@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`user`
     `lastname` VARCHAR(50) NOT NULL,
     `username` VARCHAR(45) NOT NULL,
     `password` VARCHAR(60) NOT NULL,
-    `email`    VARCHAR(255) NOT NULL
+    `email`    VARCHAR(255) NOT NULL,
+    `profilePicture` BLOB NULL
 )  ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`question`

@@ -13,7 +13,7 @@ export class Answer extends Post {
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null, isAccepted: boolean) {
+    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, isAccepted: boolean, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
@@ -86,6 +86,37 @@ export class Answer extends Post {
     }
 
     /**
+     * Toggles the isAccepted field and updates the answer in the database using the service.
+     *
+     * @returns {Promise<Answer | string>} A Promise resolving to either the updated answer or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @example
+     * const answerToUpdate: Answer = new Answer(
+     *   // ... (your answer initialization parameters)
+     * );
+     *
+     * try {
+     *   const updatedAnswer = await answerToUpdate.toggleIsAcceptedAndUpdate();
+     *   console.log('Answer updated successfully:', updatedAnswer);
+     * } catch (error) {
+     *   console.error('Failed to update answer:', error.message);
+     * }
+     */
+    public async toggleIsAcceptedAndUpdate(): Promise<Answer | string> {
+        // Toggle the isAccepted field
+        this.isAccepted = !this.isAccepted;
+
+        try {
+            // Calling the updateAnswer method from the service.
+            return await AnswerService.updateAnswer(this);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating answer: ${error}`;
+        }
+    }
+
+    /**
      * Saves the answer to the database using the service.
      *
      * @returns {Promise<Answer | string>} A Promise resolving to either the saved answer or an error message.
@@ -140,6 +171,9 @@ export class Answer extends Post {
      *   questionId,
      *   userId,
      *   answerBody,
+     *   null, // Default totalUpvotes is 0
+     *   null, // Default totalDownvotes is 0
+     *   false, // isAccepted is false. can also be null because database default is false.
      *   null, // createdAt
      *   null, // updatedAt auto-updates in the database
      * );

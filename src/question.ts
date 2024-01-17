@@ -13,6 +13,8 @@ import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleD
 import {initializeTextEditor} from "./components/initializeTextEditor";
 import {CodingTag} from "./models/codingTag";
 import {url, utils} from "@hboictcloud/api";
+import {binaryDataToImage, imageToBinaryData} from "./components/handleProfilePicture";
+
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -52,21 +54,42 @@ async function setup(): Promise<void> {
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
     const form: HTMLInputElement = (<HTMLInputElement>document.querySelector(".testing-button"));
 
+    // const base64regex: RegExp = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
 
     form.addEventListener("click", async () => {
-        const image: HTMLInputElement = (<HTMLInputElement>document.querySelector("#img"));
+        const uploadedImage: HTMLInputElement = (<HTMLInputElement>document.querySelector("#imageInput"));
 
-        console.log(image.files);
-        const reader: FileReader = new FileReader();
+        const selectedFile: any = uploadedImage.files![0];
 
-        reader.readAsBinaryString(image?.files[0]);
+        const fileReader: FileReader = new FileReader();
 
-        reader.onload = function(): voidg {
-            console.log(reader.result);
+        fileReader.onload = function (): void {
+            const dataUrl: any = fileReader.result;
+
+            uploadedImage.src = dataUrl;
+
+            const image: HTMLImageElement = new Image();
+
+            image.onload = async function (): Promise<void> {
+                const binaryData: Uint8Array = await imageToBinaryData(image);
+                console.log("Binary Data:", binaryData);
+
+                // Example: Convert binary data to image and append to body
+                const imageElementFromBinary: HTMLImageElement = await binaryDataToImage(binaryData);
+                console.log(imageElementFromBinary);
+
+                uploadedImage.parentElement!.appendChild(imageElementFromBinary);
+            };
+
+            // Set the source of the image
+            image.src = dataUrl;
         };
 
-    });
 
+        fileReader.readAsDataURL(selectedFile);
+
+        // console.log(baseImage);
+    });
 
 
     if (userId === question.userId) {
@@ -301,6 +324,8 @@ async function handleDownvote(postId: number, userId: number, postType: string):
  * @param {number} questionsCount - The total count of questions posted by the user.
  * @param {string} userExpertise - The expertise of the user that posted this answer
  * @param {string} extraClass - Additional CSS class to be applied to action buttons.
+ * @param {string} certifiedPictureSrc - The source URL for the current certified check mark picture.
+ * @param {string} canUserCertify - Additional CSS class to be applied when user can not certify answers.
  * @returns {string} - HTML markup for the answer.
  */
 function createAnswerElement(
@@ -314,17 +339,24 @@ function createAnswerElement(
     answersCount: number,
     questionsCount: number,
     userExpertise: string,
-    extraClass: string
+    extraClass: string,
+    certifiedPictureSrc: string,
+    canUserCertify: string,
 ): string {
     return `
         <div class="answer">
             <div class="answer-container">
-                <div id="${answerId}" class="vote">
-                    <!-- Upvote button and count -->
-                    <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                    <span class="upvote-count">${upvoteCount}</span>
-                    <!-- Downvote button -->
-                    <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                <div class="answer-sidebar">
+                    <div id="${answerId}" class="vote">
+                        <!-- Upvote button and count -->
+                        <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                        <span class="upvote-count">${upvoteCount}</span>
+                        <!-- Downvote button -->
+                        <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                    </div>
+                    <div class="certified-answer-check ${canUserCertify}">
+                        <img class="certified-answer" alt="Certified answer" src="${certifiedPictureSrc}">
+                    </div>
                 </div>
                 <div class="answer-body">
                     <!-- Answer text -->
@@ -426,6 +458,16 @@ async function addAnswersToPage(userId: number): Promise<void> {
     // Retrieve answers for the current question from the database
     const answers: AnswerWithUser[] | string = await Question.getAnswersForQuestion(questionId);
 
+
+    // Check the user login status by calling the 'security' function.
+    const loginStatus: JWTPayload | boolean = await security();
+
+    // @ts-ignore: Extract user ID from login status
+    const currentUserId: number = loginStatus["userId"] as number;
+
+    // Retrieves a question from the database based on the URL parameter question ID.
+    const question: Question = await Question.retrieveQuestion(questionId) as Question;
+
     // Update the answer count displayed on the page
     answerCount.innerHTML = String(answers.length);
 
@@ -475,10 +517,22 @@ async function addAnswersToPage(userId: number): Promise<void> {
             updatedDate = theUpdatedAtDate.toISOString().slice(0, 10);
 
             let extraClass: string = "";
+            let canUserCertify: string = "";
+
+            // If the current user is not the author of the question, add the "hidden" class
+            if (currentUserId !== question.userId && !answer.isAccepted) {
+                canUserCertify = "hidden";
+            }
 
             // If the user is not the author of the answer, add the "hidden" class
             if (userId !== answer.userId) {
                 extraClass = "hidden";
+            }
+
+            let checkMarkUrl: string = "assets/img/icons/check-badge.svg";
+
+            if (answer.isAccepted) {
+                checkMarkUrl = "assets/img/icons/check-badge-color.svg";
             }
 
             // Create the HTML markup for the answer
@@ -495,11 +549,35 @@ async function addAnswersToPage(userId: number): Promise<void> {
                 totalAnswers,
                 totalQuestions,
                 userExpertise,
-                extraClass
+                extraClass,
+                checkMarkUrl,
+                canUserCertify
             );
 
             // Append the answer element to the answers container
             answersBody.innerHTML += answerElement;
+
+            (<HTMLDivElement>document.querySelector(".certified-answer-check")).addEventListener("click", async (): Promise<void> => {
+                if (currentUserId === question.userId) {
+                    const newAnswer: Answer = new Answer(
+                        answer.answerId,
+                        answer.questionId,
+                        answer.userId,
+                        answer.answerBody,
+                        answer.totalUpvotes,
+                        answer.totalDownvotes,
+                        answer.isAccepted,
+                        answer.createdAt,
+                        answer.updatedAt
+                    );
+
+                    const updated: string | Answer = await newAnswer.toggleIsAcceptedAndUpdate();
+
+                    if (updated) {
+                        location.reload();
+                    }
+                }
+            });
         }
 
         // Add event listeners for upvoting and downvoting answers
