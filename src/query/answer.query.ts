@@ -17,7 +17,7 @@ export const ANSWER_QUERY: {
     UPDATE_ANSWER: "UPDATE answer SET answerBody = ?, isAccepted = ? WHERE answerId = ? ",
     DELETE_ANSWER: "DELETE FROM answer WHERE answerId = ?",
     GET_ANSWERS_FROM_QUESTION: "SELECT * FROM answer WHERE questionId = ?",
-    GET_ANSWERS_AND_USERS_FROM_QUESTION: "SELECT answer.answerId, answer.questionId, answer.answerBody, answer.totalUpvotes, answer.totalDownvotes, answer.createdAt, answer.updatedAt, user.userId, user.firstname, user.lastname FROM answer LEFT JOIN user ON user.userId = answer.userId WHERE questionId = ? ORDER BY answer.createdAt DESC",
+    GET_ANSWERS_AND_USERS_FROM_QUESTION: "SELECT answer.answerId, answer.questionId, answer.answerBody, answer.totalUpvotes, answer.totalDownvotes, answer.isAccepted, answer.createdAt, answer.updatedAt, user.userId, user.firstname, user.lastname FROM answer LEFT JOIN user ON user.userId = answer.userId WHERE questionId = ? ORDER BY answer.createdAt DESC",
     GET_TOTAL_ANSWERS_BY_USER: "SELECT COUNT(answerId) as totalAnswers FROM answer WHERE userId = ?",
     COUNT_ANSWERS_FROM_QUESTION: "SELECT COUNT(*) AS answerCount FROM answer WHERE questionId = ?",
     UPDATE_TOTAL_UPVOTES: "UPDATE answer SET totalUpvotes = totalUpvotes + ? WHERE answerId = ?",

@@ -201,3 +201,22 @@
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
 }
+
+.certified-answer-check {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.certified-answer {
+    width: 2rem;
+}
+
+.certified-answer svg {
+    color: green;
+}
+
+.certified-answer:hover {
+    transform: scale(1.2);
+}

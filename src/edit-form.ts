@@ -275,6 +275,7 @@ async function handleAnswerUpdate(postId: string, textarea: HTMLDivElement): Pro
             answerBody,
             answer.totalUpvotes,
             answer.totalDownvotes,
+            answer.isAccepted,
             answer.createdAt,
             answer.updatedAt,
         );
