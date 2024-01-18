@@ -13,6 +13,20 @@ import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleD
 import {initializeTextEditor} from "./components/initializeTextEditor";
 import {CodingTag} from "./models/codingTag";
 import {url, utils} from "@hboictcloud/api";
+import {
+    addCertifyClickListener,
+    addEditButtonListeners,
+    addEventListeners,
+    formatDates,
+    getAvatarUrl,
+    getCertifyVisibility,
+    getCheckMarkUrl,
+    getExtraClass,
+    getUpvoteCount,
+    getUserExpertise,
+    getUsername
+} from "./components/handleInitializeAnswers";
+
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -50,24 +64,6 @@ async function setup(): Promise<void> {
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
-    const form: HTMLInputElement = (<HTMLInputElement>document.querySelector(".testing-button"));
-
-
-    form.addEventListener("click", async () => {
-        const image: HTMLInputElement = (<HTMLInputElement>document.querySelector("#img"));
-
-        console.log(image.files);
-        const reader: FileReader = new FileReader();
-
-        reader.readAsBinaryString(image?.files[0]);
-
-        reader.onload = function(): void {
-            console.log(reader.result);
-        };
-
-    });
-
-
 
     if (userId === question.userId) {
         (<HTMLButtonElement>document.querySelector(".question-edit")).classList.remove("hidden");
@@ -151,9 +147,9 @@ async function setup(): Promise<void> {
             newAnswerTextBody.innerHTML,
             null,
             null,
+            false,
             null,
-            null,
-            false
+            null
         );
 
         try {
@@ -301,6 +297,8 @@ async function handleDownvote(postId: number, userId: number, postType: string):
  * @param {number} questionsCount - The total count of questions posted by the user.
  * @param {string} userExpertise - The expertise of the user that posted this answer
  * @param {string} extraClass - Additional CSS class to be applied to action buttons.
+ * @param {string} certifiedPictureSrc - The source URL for the current certified check mark picture.
+ * @param {string} canUserCertify - Additional CSS class to be applied when user can not certify answers.
  * @returns {string} - HTML markup for the answer.
  */
 function createAnswerElement(
@@ -314,17 +312,24 @@ function createAnswerElement(
     answersCount: number,
     questionsCount: number,
     userExpertise: string,
-    extraClass: string
+    extraClass: string,
+    certifiedPictureSrc: string,
+    canUserCertify: string,
 ): string {
     return `
         <div class="answer">
             <div class="answer-container">
-                <div id="${answerId}" class="vote">
-                    <!-- Upvote button and count -->
-                    <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                    <span class="upvote-count">${upvoteCount}</span>
-                    <!-- Downvote button -->
-                    <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                <div class="answer-sidebar">
+                    <div id="${answerId}" class="vote">
+                        <!-- Upvote button and count -->
+                        <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                        <span class="upvote-count">${upvoteCount}</span>
+                        <!-- Downvote button -->
+                        <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                    </div>
+                    <div class="certified-answer-check ${canUserCertify}">
+                        <img class="certified-answer" alt="Certified answer" src="${certifiedPictureSrc}">
+                    </div>
                 </div>
                 <div class="answer-body">
                     <!-- Answer text -->
@@ -419,120 +424,65 @@ function createQuestionPerson(
  * @returns {Promise<void>} - A Promise that resolves when answers are successfully added to the page.
  */
 async function addAnswersToPage(userId: number): Promise<void> {
-    // Get references to HTML elements
-    const answersBody: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answers"));
-    const answerCount: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answer-count"));
+    const answersBody: HTMLDivElement = document.querySelector(".answers") as HTMLDivElement;
+    const answerCount: HTMLDivElement = document.querySelector(".answer-count") as HTMLDivElement;
 
-    // Retrieve answers for the current question from the database
-    const answers: AnswerWithUser[] | string = await Question.getAnswersForQuestion(questionId);
+    const answers: [AnswerWithUser] = await Question.getAnswersForQuestion(questionId) as [AnswerWithUser];
+    const loginStatus: boolean | JWTPayload = await security();
+    // @ts-ignore
+    const currentUserId: number = loginStatus["userId"] as number;
 
-    // Update the answer count displayed on the page
+    const question: Question = await Question.retrieveQuestion(questionId) as Question;
     answerCount.innerHTML = String(answers.length);
 
     // Check if there are any answers to display
-    if (answers.length !== 0) {
-        for (const singleAnswer of answers) {
-            // Cast answer to the type with user information
-            const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
+    for (const singleAnswer of answers) {
+        const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
+        const totalAnswers: number = await User.getTotalAnswers(answer.userId) as number;
+        const totalQuestions: number = await User.getTotalQuestions(answer.userId) as number;
+        const userExpertise: string = await getUserExpertise(answer.userId);
 
-            // Get total answers and total questions count for the user
-            let totalAnswers: number | string = await User.getTotalAnswers(answer.userId);
-            let totalQuestions: number | string = await User.getTotalQuestions(answer.userId);
+        const {createdAt, updatedAt} = formatDates(answer.createdAt as Date, answer.updatedAt as Date);
 
-            // Retrieve user expertises, which are coding tags associated with the user
-            let userExpertises: [CodingTag] = await User.getUserExpertises(answer.userId) as [CodingTag];
+        const extraClass: string = getExtraClass(userId, answer.userId);
+        const canUserCertify: string = getCertifyVisibility(currentUserId, question.userId, answer.isAccepted);
+        const checkMarkUrl: string = getCheckMarkUrl(answer.isAccepted);
 
-            // Extract unique tag names from user expertises
-            const tagNames: string[] = [...new Set(userExpertises.map((item: {
-                tagName: any;
-            }) => item.tagName))];
-            let userExpertise: string = tagNames.join(", ");
+        const username: string = getUsername(answer);
+        const upvoteCount: number = getUpvoteCount(answer);
 
-            // Check if the user has no expertise and update the userExpertise accordingly
-            if (tagNames.length === 0) {
-                userExpertise = "No expertise!";
-            }
+        const answerElement: string = createAnswerElement(
+            answer.answerId!,
+            answer.answerBody,
+            upvoteCount.toString(),
+            createdAt,
+            updatedAt,
+            getAvatarUrl(username),
+            username,
+            totalAnswers,
+            totalQuestions,
+            userExpertise,
+            extraClass,
+            checkMarkUrl,
+            canUserCertify
+        );
 
-            // Ensure the counts are numbers, default to 0 if not
-            if (typeof totalAnswers !== "number") {
-                totalAnswers = 0;
-            }
+        answersBody.innerHTML += answerElement;
 
-            if (typeof totalQuestions !== "number") {
-                totalQuestions = 0;
-            }
-
-            // Format the creation date of the answer
-            const createdAt: Date = answer.createdAt as Date;
-            const updatedAt: Date = answer.updatedAt as Date;
-            let createdDate: string = Date.now().toString();
-            let updatedDate: string = Date.now().toString();
-
-
-            const theCreatedAtDate: Date = new Date(createdAt);
-            const theUpdatedAtDate: Date = new Date(updatedAt);
-            createdDate = theCreatedAtDate.toISOString().slice(0, 10);
-            updatedDate = theUpdatedAtDate.toISOString().slice(0, 10);
-
-            let extraClass: string = "";
-
-            // If the user is not the author of the answer, add the "hidden" class
-            if (userId !== answer.userId) {
-                extraClass = "hidden";
-            }
-
-            // Create the HTML markup for the answer
-            const username: string = answer.firstname + " " + answer.lastname as string;
-            const upvoteCount: number = answer.totalUpvotes! - answer.totalDownvotes!;
-            const answerElement: string = createAnswerElement(
-                answer.answerId!,
-                answer.answerBody,
-                upvoteCount.toString(),
-                createdDate,
-                updatedDate,
-                "https://ui-avatars.com/api/?name=" + username,
-                username,
-                totalAnswers,
-                totalQuestions,
-                userExpertise,
-                extraClass
-            );
-
-            // Append the answer element to the answers container
-            answersBody.innerHTML += answerElement;
-        }
-
-        // Add event listeners for upvoting and downvoting answers
-        (<NodeListOf<Element>>document.querySelectorAll(".answer-upvote")).forEach(item => {
-            item.addEventListener("click", async (): Promise<void> => {
-                if (item.parentElement) {
-                    const answerId: string = item.parentElement.id;
-                    await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.UPVOTE);
-                }
-            });
-        });
-
-        (<NodeListOf<Element>>document.querySelectorAll(".answer-downvote")).forEach(item => {
-            item.addEventListener("click", async (): Promise<void> => {
-                if (item.parentElement) {
-                    const answerId: string = item.parentElement.id;
-                    await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
-                }
-            });
-        });
-
-        (<NodeListOf<Element>>document.querySelectorAll(".edit-button")).forEach(item => {
-            item.addEventListener("click", async (): Promise<void> => {
-                // Create a new URL with the updated page number
-                const newURL: string = utils.createUrl("edit-form.html", {
-                    postType: PostType.ANSWER,
-                    id: item.id
-                });
-
-                url.redirect(newURL);
-            });
-        });
+        addCertifyClickListener(currentUserId, question.userId, answer);
     }
+
+    addEventListeners(".answer-upvote", async (item: Element) => {
+        const answerId: string = item.parentElement?.id as string;
+        answerId && await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.UPVOTE);
+    });
+
+    addEventListeners(".answer-downvote", async (item: Element) => {
+        const answerId: string = item.parentElement?.id as string;
+        answerId && await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
+    });
+
+    addEditButtonListeners();
 }
 
 

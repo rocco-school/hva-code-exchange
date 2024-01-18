@@ -8,21 +8,23 @@ export class User {
     private _userId: number;
     private _firstname: string;
     private _lastname: string;
-    private _dateOfBirth: string;
+    private _dateOfBirth: Date;
     private _username: string;
     private _experienceYears: number;
+    private _profilePicture: Blob;
     private _password: string;
     private _email: string;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(userId: number, username: string, experienceYears: number, dateOfBirth: string, password: string, email: string, firstname: string, lastname: string) {
+    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: Date, username: string, experienceYears: number, profilePicture: Blob, password: string, email: string) {
         this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
         this._dateOfBirth = dateOfBirth;
         this._username = username;
         this._experienceYears = experienceYears;
+        this._profilePicture = profilePicture;
         this._password = password;
         this._email = email;
     }
@@ -30,22 +32,6 @@ export class User {
     // Getters en setters
     public get userId(): number {
         return this._userId;
-    }
-
-    public get username(): string {
-        return this._username;
-    }
-
-    public get experienceYears(): number {
-        return this._experienceYears;
-    }
-
-    public get password(): string {
-        return this._password;
-    }
-
-    public get email(): string {
-        return this._email;
     }
 
     public get firstname(): string {
@@ -56,28 +42,37 @@ export class User {
         return this._lastname;
     }
 
+    public get dateOfBirth(): Date {
+        return this._dateOfBirth;
+    }
+
+    public get username(): string {
+        return this._username;
+    }
+
+    public get experienceYears(): number {
+        return this._experienceYears;
+    }
+
+    public get profilePicture(): Blob {
+        return this._profilePicture;
+    }
+
+    public get password(): string {
+        return this._password;
+    }
+
+    public get email(): string {
+        return this._email;
+    }
+
+
     public get dateOfBirth(): string {
         return this._dateOfBirth;
     }
 
     public set userId(value: number) {
         this._userId = value;
-    }
-
-    public set username(value: string) {
-        this._username = value;
-    }
-
-    public set experienceYears(value: number) {
-        this._experienceYears = value;
-    }
-
-    public set password(value: string) {
-        this._password = value;
-    }
-
-    public set email(value: string) {
-        this._email = value;
     }
 
     public set firstname(value: string) {
@@ -88,12 +83,32 @@ export class User {
         this._lastname = value;
     }
 
-    public set dateOfBirth(value: string) {
+    public set dateOfBirth(value: Date) {
         this._dateOfBirth = value;
     }
 
+    public set username(value: string) {
+        this._username = value;
+    }
+
+    public set experienceYears(value: number) {
+        this._experienceYears = value;
+    }
+
+    public set profilePicture(value: Blob) {
+        this._profilePicture = value;
+    }
+
+    public set password(value: string) {
+        this._password = value;
+    }
+
+    public set email(value: string) {
+        this._email = value;
+    }
+
     public toString(): string {
-        return `User: ${this._userId} ${this._username} ${this._experienceYears} ${this._password} ${this._email} ${this._firstname} ${this._lastname} ${this._dateOfBirth}`;
+        return `User: ${this._userId} ${this._firstname} ${this._lastname} ${this._dateOfBirth} ${this._username} ${this._experienceYears} ${this._profilePicture} ${this._password} ${this._email} `;
     }
 
 
@@ -194,7 +209,7 @@ export class User {
      *   console.error('Failed to retrieve user:', error.message);
      * }
      */
-    public static async retrieveUser(userId: number): Promise<User> {
+    public static async retrieveUser(userId: number): Promise<User | string> {
         try {
             // Calling the retrieveUser method from the service.
             return await UserService.retrieveUser(userId);

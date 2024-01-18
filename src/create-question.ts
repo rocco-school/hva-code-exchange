@@ -7,7 +7,6 @@ import {initializeTextEditor} from "./components/initializeTextEditor";
 import {Question} from "./models/question";
 import {showSuccessMessage} from "./components/successMessage";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
-import {populateTagSelect} from "./components/handleCustomSelect";
 import {initializeTagSelect} from "./components/initializeSelect";
 
 /**
@@ -26,9 +25,6 @@ async function setup(): Promise<void> {
     if (!loginStatus) {
         url.redirect("/questions.html");
     }
-
-    const selectOptions: HTMLElement = (<HTMLElement>document.querySelector(".options"));
-    if (selectOptions) await populateTagSelect(selectOptions);
 
     // Initialize the text Editor.
     await initializeTextEditor();

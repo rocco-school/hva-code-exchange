@@ -19,7 +19,7 @@ export const USER_QUERY: {
     SELECT_TAGS_BY_USER: "SELECT user.userId, user_tag.tagId, coding_tag.tagName FROM ((user JOIN user_tag ON user.userId = user_tag.userId) JOIN coding_tag ON user_tag.tagId = coding_tag.tagId) WHERE user.userId = ?",
     CREATE_USER: "INSERT INTO user (firstname, lastname, username, password, email) VALUES(?, ?, ?, ?, ?)",
     DELETE_USER: "DELETE FROM user WHERE userId = ?",
-    UPDATE_USER: "UPDATE user SET firstname = ?, lastname = ?, dateOfBirth = ?, username = ?, experienceYears = ?, email = ? WHERE userId = ?",
+    UPDATE_USER: "UPDATE user SET firstname = ?, lastname = ?, dateOfBirth = ?, username = ?, experienceYears = ?, profilePicture = ?, password = ?, email = ? WHERE userId = ?",
     FIND_USER_BY_EMAIL: "SELECT * FROM user WHERE email = ?",
     GET_EMAIL_BY_EMAIL: "SELECT email FROM user WHERE email = ?",
     GET_USER_EXPERTISE: "SELECT coding_tag.tagId, coding_tag.tagName, coding_tag.tagDescription FROM user_tag JOIN coding_tag ON coding_tag.tagId = user_tag.tagId WHERE user_tag.userId = ?",
