@@ -68,6 +68,7 @@ async function setup(): Promise<void> {
     const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/;
 
     // Regular Expression for firstname and lastname
+    // only letters are allowed and numbers are not allowed
     const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
 
     const retrievedUser: any = await User.retrieveUser(loginStatus.userId);
@@ -75,19 +76,25 @@ async function setup(): Promise<void> {
     const retrievedAllUserTags: any = await api.queryDatabase(USER_QUERY.GET_TAGS);
 
     // Display user information in the UI
+
+    // Display the username in the UI
     if (usernameUser) {
         usernameUser.innerHTML = retrievedUser.username;
     }
 
+    // Display the formatted date of birth in the UI
     if (birthdayUser) {
         birthdayUser.innerHTML = retrievedUser.dateOfBirth.replace("T", "  ").replace("00:00", "").slice(0, -8);
     }
 
+    // Display years of programming experience in the UI
     if (yearsOfExperienceUser) {
         yearsOfExperienceUser.innerHTML = retrievedUser.experienceYears + " years of programming experience";
     }
 
     // Populate expertise options in the select element
+
+    // Loop through all user tags and create options in the select element
     if (expertiseOptions) {
         retrievedAllUserTags.forEach(async (allUserTags: any) => {
             const optionContent: HTMLOptionElement = expertiseOptions?.appendChild(document.createElement("option"));
@@ -96,6 +103,8 @@ async function setup(): Promise<void> {
     }
 
     // Display user tags in the UI
+
+    // Loop through retrieved user tags and display them as list items
     if (profileExpertise) {
         retrievedUserTags.forEach((userTag: any) => {
             const liContent: HTMLLIElement = profileExpertise.appendChild(document.createElement("li"));
@@ -104,30 +113,39 @@ async function setup(): Promise<void> {
     }
 
     // Event listeners for UI buttons
+
+    // Event listener for the "Edit" button
     if (editBtn) {
         editBtn.addEventListener("click", (): void => {
+        // Enable input fields and buttons for editing
             disabled.forEach(element => {
                 element?.removeAttribute("disabled");
             });
+            // Hide the "Edit" button, show the "Save" and "Discard" buttons
             editBtn?.classList.add("hidden");
             saveBtn?.classList.remove("hidden");
             discardBtn?.classList.remove("hidden");
         });
     }
 
+    // Event listener for the "Discard" button
     if (discardBtn) {
         discardBtn.addEventListener("click", (): void => {
+        // Disable input fields and buttons, and reset the UI
             disabled.forEach(element => {
                 element?.setAttribute("disabled", "");
             });
+            // Show the "Edit" button, hide the "Save" and "Discard" buttons
             editBtn?.classList.remove("hidden");
             saveBtn?.classList.add("hidden");
             discardBtn?.classList.add("hidden");
         });
     }
 
+    // Event listener for the "User Profile" button
     if (userProfileBtn) {
         userProfileBtn.addEventListener("click", (): void => {
+        // Show the public profile section and hide the edit profile section if visible
             publicProfileSection?.classList.remove("hidden");
             if (editProfileSection?.classList.contains("hidden")) {
                 return;
@@ -137,8 +155,10 @@ async function setup(): Promise<void> {
         });
     }
 
+    // Event listener for the "User Settings" button
     if (userSettingsBtn) {
         userSettingsBtn.addEventListener("click", (): void => {
+        // Show the edit profile section and hide the public profile section if visible
             editProfileSection?.classList.remove("hidden");
             if (publicProfileSection?.classList.contains("hidden")) {
                 return;
@@ -148,9 +168,11 @@ async function setup(): Promise<void> {
         });
     }
 
+    // Event listener for the "Edit Password" button
     if (editPasswordBtn) {
         editPasswordBtn.addEventListener("click", (): void => {
             console.log("click");
+            // Show the password section and hide the edit profile section if visible
             passwordSection?.classList.remove("hidden");
             if (editProfileSection?.classList.contains("hidden")) {
                 return;
@@ -160,29 +182,40 @@ async function setup(): Promise<void> {
         });
     }
 
+    // Event listener for the "Password Close" button
     if (passwordCloseBtn) {
         passwordCloseBtn.addEventListener("click", (): void => {
+        // Hide the password section and show the edit profile section
             passwordSection?.classList.add("hidden");
             editProfileSection?.classList.remove("hidden");
         });
     }
 
-    // editProfileSection
+    // Event listener for the "Change Password" button in the editProfileSection
     if (changePasswordBtn) {
         changePasswordBtn.addEventListener("click", async (): Promise<void> => {
+        // Gather password inputs for validation
             const passwordInputs: (HTMLInputElement | null)[] = [newPasswordInput, confirmPasswordInput];
 
-            // TODO password comparison
+            // TODO: Implement password comparison logic
+
+            // Check if any password inputs are empty
             const emptyPasswordInputs: any = await checkPasswordValue(passwordInputs);
             if (!emptyPasswordInputs) return;
+
+            // Validate the new password format
             const verifiedNewPassword: boolean = await verifyNewPassword(newPasswordInput);
             if (!verifiedNewPassword) return;
+
+            // Validate the confirmation password
             const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput, newPasswordInput);
             if (!verifiedConfirmPassword) return;
 
+            // If all validations pass, update the password
             if (emptyPasswordInputs && verifiedNewPassword && verifiedConfirmPassword) {
                 try {
                     const updatedPassword: any = await updatePasswordData(loginStatus.userId, confirmPasswordInput!.value);
+                    // Hide the password section and show the edit profile section
                     passwordSection?.classList.add("hidden");
                     editProfileSection?.classList.remove("hidden");
                     console.log(updatedPassword);
@@ -193,25 +226,28 @@ async function setup(): Promise<void> {
         });
     }
 
+    // Event listener for the "Save" button in the editProfileSection
     if (saveBtn) {
         saveBtn.addEventListener("click", async (): Promise<void> => {
-            // const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
-            // const verifiedInputs: any = checkValue(inputs);
-            const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
+        // const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
+        // const verifiedInputs: any = checkValue(inputs);
+
+            // Retrieve the tag ID for the selected expertise
+            // const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
 
             let questionTags: any[] = [];
 
             // Use the async function handleButtonClick when the submit button is clicked
             await handleButtonClick().then((result: string | null): void => {
                 if (result !== null) {
-                    // Handle the valid result
+                // Handle the valid result
                     const tags: string[] = result.split(", ");
 
                     for (const tagsKey in tags) {
                         questionTags.push(tags[tagsKey]);
                     }
                 } else {
-                    // Handle the case where the input is not valid
+                // Handle the case where the input is not valid
                     console.log("Input is not valid.");
                 }
             });
@@ -220,6 +256,7 @@ async function setup(): Promise<void> {
                 console.log(questionTag);
             });
 
+            // Validate email, firstname, and lastname
             const verifiedEmail: boolean = await verifyEmail(emailInput);
             if (!verifiedEmail) return;
             const verifiedFirstname: boolean = await verifyFirstname(firstnameInput);
@@ -227,17 +264,18 @@ async function setup(): Promise<void> {
             const verifiedLastname: boolean = await verifyLastname(lastnameInput);
             if (!verifiedLastname) return;
 
+            // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
                     const updatedUser: any = await updateUserData(
-                        usernameInput!.value,
-                        birthdayInput?.value,
-                        programmingExperienceInput?.value,
-                        emailInput?.value,
-                        questionTags,
-                        firstnameInput?.value,
-                        lastnameInput?.value,
-                        loginStatus.userId
+                    usernameInput!.value,
+                    birthdayInput?.value,
+                    programmingExperienceInput?.value,
+                    emailInput?.value,
+                    questionTags,
+                    firstnameInput?.value,
+                    lastnameInput?.value,
+                    loginStatus.userId
                     );
 
                     console.log(updatedUser);
@@ -251,47 +289,52 @@ async function setup(): Promise<void> {
 
     // Validation functions
 
-    async function checkValue(inputs: (HTMLInputElement | HTMLSelectElement | null)[]): Promise<void> {
-        inputs.forEach(input => {
-            if (input && input.value === "") {
-                console.log("there is no value at " + input.name);
-                return;
-            }
-        });
-    }
+    // Check if any of the input fields are empty
+    // async function checkValue(inputs: (HTMLInputElement | HTMLSelectElement | null)[]): Promise<void> {
+    //     inputs.forEach(input => {
+    //         if (input && input.value === "") {
+    //             console.log("Validation: Field " + input.name + " is empty.");
+    //             return;
+    //         }
+    //     });
+    // }
 
+    // Retrieve the tag ID for a given tag name
     async function retrieveTagId(tagName: string | undefined): Promise<number> {
+    // Query the database to get the tag ID based on the tag name
         const getTagId: any = await api.queryDatabase(USER_QUERY.GET_TAG, tagName);
         return getTagId;
     }
 
     /**
-     * Validates the email field and sets a custom validation message if needed.
-     *
-     * @param email
-     */
+ * Validates the email field and sets a custom validation message if needed.
+ *
+ * @param email - The email input field
+ * @returns {boolean} - True if the email is valid, false otherwise
+ */
     async function verifyEmail(email: any): Promise<boolean> {
         if (email.value.match(emailRegEx)) {
-            console.log(email.name + " format is not correct!");
-            // Returns the alertPopUp function and with the assigned data
+            console.log("Validation: Email format is not correct!");
             return false;
         } else {
             return true;
         }
     }
 
+    // Validates the firstname field against the nameRegEx pattern
     async function verifyFirstname(firstname: any): Promise<boolean> {
         if (!firstname.value.match(nameRegEx)) {
-            console.log(firstname.name + " format is not correct!");
+            console.log("Validation: " + firstname.name + " format is not correct!");
             return false;
         } else {
             return true;
         }
     }
 
+    // Validates the lastname field against the nameRegEx pattern
     async function verifyLastname(lastname: any): Promise<boolean> {
         if (!lastname.value.match(nameRegEx)) {
-            console.log(lastname.name + " format is not correct!");
+            console.log("Validation: " + lastname.name + " format is not correct!");
             return false;
         } else {
             return true;
@@ -300,12 +343,13 @@ async function setup(): Promise<void> {
 
     // Password validation functions
 
+    // Check if any of the password input fields are empty
     async function checkPasswordValue(inputs: (HTMLInputElement | null)[]): Promise<boolean> {
         let valid: boolean = true;
 
         inputs.forEach(inputPassword => {
             if (inputPassword && inputPassword.value === "") {
-                console.log(inputPassword.name + " is empty!");
+                console.log("Validation: " + inputPassword.name + " is empty!");
                 valid = false;
             }
         });
@@ -313,8 +357,10 @@ async function setup(): Promise<void> {
         return valid;
     }
 
+    // Validates the new password against the passwordRegEx pattern
     async function verifyNewPassword(password: any): Promise<boolean> {
         if (password.value.match(passwordRegEx)) {
+        // Display error message and hide after 5 seconds
             errorPasswordMessageBox?.classList.remove("hidden");
             if (errorPasswordMessageBox) {
                 errorPasswordMessageBox.innerHTML = "Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number, and one special character.";
@@ -327,60 +373,62 @@ async function setup(): Promise<void> {
         } else {
             return true;
         }
-
     }
 
-// Validates the confirmation password and displays an error message if not matching
-async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
-    if (!password.value.match(newPassword.value)) {
+    // Validates the confirmation password and displays an error message if not matching
+    async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
+        if (!password.value.match(newPassword.value)) {
         // Show error message and hide after 5 seconds
-        errorPasswordMessageBox?.classList.remove("hidden");
-        if (errorPasswordMessageBox) {
-            errorPasswordMessageBox.innerHTML = "Password does not match!";
-            setTimeout(() => {
-                errorPasswordMessageBox.classList.add("hidden");
-                errorPasswordMessageBox.innerHTML = "";
-            }, 5000);
+            errorPasswordMessageBox?.classList.remove("hidden");
+            if (errorPasswordMessageBox) {
+                errorPasswordMessageBox.innerHTML = "Password does not match!";
+                setTimeout(() => {
+                    errorPasswordMessageBox.classList.add("hidden");
+                    errorPasswordMessageBox.innerHTML = "";
+                }, 5000);
+            }
+            return false;
+        } else {
+            console.log("Validation: Password matches!");
+            return true;
         }
-        return false;
-    } else {
-        console.log("Password matches!");
-        return true;
     }
-}
 
-// Updates user data in the database
-async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagIds: any[], firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
-    const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
-    console.log(arrayUserData);
+    // Updates user data in the database
+    async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagIds: any[], firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
+        const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
+        console.log("Updating user data with: ", arrayUserData);
 
-    // Update user data in the database
-    const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
+        // Update user data in the database
+        // const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
 
-    // Update user tags in the database
-    tagIds.forEach(tagId => {
-        const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER_TAG, userId, tagId);
-        console.log(userTagDatabase);
-    });
+        // Update user tags in the database
+        tagIds.forEach(tagId => {
+            const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER_TAG, userId, tagId);
+            console.log("Updating user tags with: ", userTagDatabase);
+        });
 
-    console.log(userDatabase);
-    return;
-}
+        console.log("User data updated successfully in the database.");
+        return;
+    }
 
-// Updates user password in the database
-async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
+    // Updates user password in the database
+    async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
     // Hash the new password
-    const hashedPassword: string | null = await hashPassword(updatedPassword);
+        const hashedPassword: string | null = await hashPassword(updatedPassword);
 
-    // Handle hashing error
-    if (!hashedPassword) {
-        return new Error("Error hashing the password.");
+        // Handle hashing error
+        if (!hashedPassword) {
+            console.error("Error hashing the password.");
+            return new Error("Error hashing the password.");
+        }
+
+        // Update password in the database
+        const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD, hashedPassword, userId);
+
+        console.log("Password updated successfully in the database.");
+        return passwordDatabase;
     }
-
-    // Update password in the database
-    const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD, hashedPassword, userId);
-
-    console.log(passwordDatabase);
-    console.log("SUCCESS! WOOHOO!");
-    return;
 }
+
+await setup();
