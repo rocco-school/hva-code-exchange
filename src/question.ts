@@ -61,7 +61,7 @@ async function setup(): Promise<void> {
 
         reader.readAsBinaryString(image?.files[0]);
 
-        reader.onload = function(): voidg {
+        reader.onload = function(): void {
             console.log(reader.result);
         };
 

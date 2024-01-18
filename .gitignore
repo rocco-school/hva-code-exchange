@@ -2,7 +2,10 @@ node_modules
 /dist
 .DS_Store
 .env
+
+# Vscode
 .vscode
 
-# Phpstorm files
+# PHPStorm
 .idea
+
