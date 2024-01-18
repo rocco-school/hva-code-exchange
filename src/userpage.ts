@@ -1,12 +1,12 @@
-import { hashPassword } from "./components/hashPassword";
+import {hashPassword} from "./components/hashPassword";
 import "./config";
-import { api } from "@hboictcloud/api";
-import { USER_QUERY } from "./query/user.query";
-import { JWTPayload } from "jose";
-import { security } from "./components/security";
-import { User } from "./models/user";
-import { initializeTagSelect } from "./components/initializeSelect";
-import { handleButtonClick } from "./components/customSelect";
+import {api} from "@hboictcloud/api";
+import {USER_QUERY} from "./query/user.query";
+import {JWTPayload} from "jose";
+import {security} from "./components/security";
+import {User} from "./models/user";
+import {initializeTagSelect} from "./components/initializeSelect";
+import {handleButtonClick} from "./components/customSelect";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -85,14 +85,6 @@ async function setup(): Promise<void> {
 
     if (yearsOfExperienceUser) {
         yearsOfExperienceUser.innerHTML = retrievedUser.experienceYears + " years of programming experience";
-    }
-
-    // Populate expertise options in the select element
-    if (expertiseOptions) {
-        retrievedAllUserTags.forEach(async (allUserTags: any) => {
-            const optionContent: HTMLOptionElement = expertiseOptions?.appendChild(document.createElement("option"));
-            optionContent.innerHTML = allUserTags.tagName;
-        });
     }
 
     // Display user tags in the UI
@@ -249,20 +241,8 @@ async function setup(): Promise<void> {
         });
     }
 
-    // Validation functions
-
-    async function checkValue(inputs: (HTMLInputElement | HTMLSelectElement | null)[]): Promise<void> {
-        inputs.forEach(input => {
-            if (input && input.value === "") {
-                console.log("there is no value at " + input.name);
-                return;
-            }
-        });
-    }
-
-    async function retrieveTagId(tagName: string | undefined): Promise<number> {
-        const getTagId: any = await api.queryDatabase(USER_QUERY.GET_TAG, tagName);
-        return getTagId;
+    async function retrieveTagId(tagName: string | undefined): Promise<any> {
+        return await api.queryDatabase(USER_QUERY.GET_TAG, tagName);
     }
 
     /**
@@ -330,57 +310,60 @@ async function setup(): Promise<void> {
 
     }
 
-// Validates the confirmation password and displays an error message if not matching
-async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
-    if (!password.value.match(newPassword.value)) {
-        // Show error message and hide after 5 seconds
-        errorPasswordMessageBox?.classList.remove("hidden");
-        if (errorPasswordMessageBox) {
-            errorPasswordMessageBox.innerHTML = "Password does not match!";
-            setTimeout(() => {
-                errorPasswordMessageBox.classList.add("hidden");
-                errorPasswordMessageBox.innerHTML = "";
-            }, 5000);
+    // Validates the confirmation password and displays an error message if not matching
+    async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
+        if (!password.value.match(newPassword.value)) {
+            // Show error message and hide after 5 seconds
+            errorPasswordMessageBox?.classList.remove("hidden");
+            if (errorPasswordMessageBox) {
+                errorPasswordMessageBox.innerHTML = "Password does not match!";
+                setTimeout(() => {
+                    errorPasswordMessageBox.classList.add("hidden");
+                    errorPasswordMessageBox.innerHTML = "";
+                }, 5000);
+            }
+            return false;
+        } else {
+            console.log("Password matches!");
+            return true;
         }
-        return false;
-    } else {
-        console.log("Password matches!");
-        return true;
+    }
+
+    // Updates user data in the database
+    async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagIds: any[], firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
+        const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
+        console.log(arrayUserData);
+
+        // Update user data in the database
+        const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
+
+        // Update user tags in the database
+        tagIds.forEach(tagId => {
+            const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER_TAG, userId, tagId);
+            console.log(userTagDatabase);
+        });
+
+        console.log(userDatabase);
+        return;
+    }
+
+    // Updates user password in the database
+    async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
+        // Hash the new password
+        const hashedPassword: string | null = await hashPassword(updatedPassword);
+
+        // Handle hashing error
+        if (!hashedPassword) {
+            return new Error("Error hashing the password.");
+        }
+
+        // Update password in the database
+        const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD, hashedPassword, userId);
+
+        console.log(passwordDatabase);
+        console.log("SUCCESS! WOOHOO!");
+        return;
     }
 }
 
-// Updates user data in the database
-async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagIds: any[], firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
-    const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
-    console.log(arrayUserData);
-
-    // Update user data in the database
-    const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
-
-    // Update user tags in the database
-    tagIds.forEach(tagId => {
-        const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER_TAG, userId, tagId);
-        console.log(userTagDatabase);
-    });
-
-    console.log(userDatabase);
-    return;
-}
-
-// Updates user password in the database
-async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
-    // Hash the new password
-    const hashedPassword: string | null = await hashPassword(updatedPassword);
-
-    // Handle hashing error
-    if (!hashedPassword) {
-        return new Error("Error hashing the password.");
-    }
-
-    // Update password in the database
-    const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD, hashedPassword, userId);
-
-    console.log(passwordDatabase);
-    console.log("SUCCESS! WOOHOO!");
-    return;
-}
+await setup();

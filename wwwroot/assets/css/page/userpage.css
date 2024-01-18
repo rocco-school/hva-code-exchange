@@ -13,72 +13,68 @@
     padding: 1rem;
 }
 
-.profileHeader { 
+.profileHeader {
     margin: 0 14rem;
     border-bottom: 1px grey solid;
 }
 
-    .profileHeaderContainer {
-        display: flex;
-        flex-direction: row;
-        justify-content:space-between;
+.profileHeaderContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
-        padding: 1rem 2rem;
-    }
+    padding: 1rem 2rem;
+}
 
-        .profileNameCard {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
+.profileNameCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 
-            .profileNameCard img {
-                height: 8rem;
-                width: 8rem;
-                border-radius: 1rem;
-            }
+.profileNameCard img {
+    height: 8rem;
+    width: 8rem;
+    border-radius: 1rem;
+}
 
-            .profileNameCard .nameAndRankContainer {
-                display: flex;
-                flex-direction: column;
-            }
+.profileNameCard .nameAndRankContainer {
+    display: flex;
+    flex-direction: column;
+}
 
-            .profileNameCard .nameCardUsername {
-                display: flex;
-                justify-content: center;
+.profileNameCard .nameCardUsername {
+    display: flex;
+    justify-content: center;
 
-                width: 8rem;
-                font-size: 1.5rem;
-                margin-top: 0.5rem;
-            }
+    width: 8rem;
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+}
 
-    .profileHeaderContainer .editProfileBtn {
-        margin: 1rem;
-        width: 6rem;
-        height: 2rem;
-    }
+.profileHeaderContainer .editProfileBtn {
+    margin: 1rem;
+    width: 6rem;
+    height: 2rem;
+}
 
-    .profileHeaderContainer .userStatsContainer {
-        display: flex;
-        flex-direction: row;
-        list-style: none;
-        
-    }
-        .userStatsContainer li {
-            display: flex;
-            flex-direction: row;
-        }
+.profileHeaderContainer .userStatsContainer {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 1rem;
+    margin-left: 1.5rem;
 
-        .userStatsContainer div {
-            margin-left: 0.5rem;
-        }
-    
-        .userStatsContainer .statSVG {
-            margin-left: 1rem;
-            width: 1.5rem;
-            height: 1.5rem;
-        }
+}
 
+.userStatsContainer li {
+    display: flex;
+    flex-direction: row;
+}
+
+.userStatsContainer div {
+    margin-left: 0.5rem;
+}
 
 .profileTabs {
     margin: 0 14rem;
@@ -90,14 +86,14 @@
     list-style: none;
 }
 
-    .profileTabsContainer li {
-        margin-right: 1rem;
-    }
+.profileTabsContainer li {
+    margin-right: 1rem;
+}
 
-    .profileTabsContainer button {
-        width: 4rem;
-        height: 1.5rem;
-    }
+.profileTabsContainer button {
+    width: 4rem;
+    height: 1.5rem;
+}
 
 /* public profile section */
 .publicProfileSection.hidden {
@@ -109,34 +105,34 @@
     padding: 2rem;
 }
 
-.publicProfileSection h2{
+.publicProfileSection h2 {
     margin-bottom: 1rem;
 }
 
-    .profileStats {
-        display: flex;
-        flex-direction: column;
-    }
+.profileStats {
+    display: flex;
+    flex-direction: column;
+}
 
-        .profileStats .profileExpertise {
-            display: flex;
-            flex-direction: row;
-        }
+.profileStats .profileExpertise {
+    display: flex;
+    flex-direction: row;
+}
 
-        .profileStats h3 {
-            margin: 1rem 0;
-        }
+.profileStats h3 {
+    margin: 1rem 0;
+}
 
-        .profileStats ul {
-            list-style-type: none;
-        }
+.profileStats ul {
+    list-style-type: none;
+}
 
-        .profileStats li {
-            padding: 0.5rem;
-            margin-right: 0.5rem;
-            border-radius: 1rem;
-            background-color: #f1f1f1;
-        }
+.profileStats li {
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 1rem;
+    background-color: #f1f1f1;
+}
 
 /* editProfileSection */
 .editProfileSection.hidden {
@@ -148,38 +144,37 @@
     padding: 1rem 2rem;
 }
 
-    .editProfileSection h1{
-        margin-bottom: 2rem;
-    }
+.editProfileSection h1 {
+    margin-bottom: 2rem;
+}
 
-    .editProfileSection h3{
-        line-height: 1.6;
-    }
+.editProfileSection h3 {
+    line-height: 1.6;
+}
 
-    .editProfileSection #editPasswordBtn {
-        width: 4rem;
-        height: 1rem;
-    }
+.editProfileSection #editPasswordBtn {
+    width: 4rem;
+    height: 1rem;
+}
 
-    .editProfileSection .actionButtons{
-        padding: 1rem 0rem;
-    }
+.editProfileSection .actionButtons {
+    padding: 1rem 0rem;
+}
 
-        .actionButtons .actionButtonsContainer {
-            display: flex;
-            flex-direction: row;
-        }
+.actionButtons .actionButtonsContainer {
+    display: flex;
+    flex-direction: row;
+}
 
-            .actionButtonsContainer li {
-                list-style: none;
-                margin-right: 0.5rem;
-            }
-            
-            .actionButtons button {
-                width: 3rem;
-                height: 1.5rem;
-            }
+.actionButtonsContainer li {
+    list-style: none;
+    margin-right: 0.5rem;
+}
 
+.actionButtons button {
+    width: 3rem;
+    height: 1.5rem;
+}
 
 
 .passwordSection.hidden {
@@ -192,46 +187,46 @@
     margin: 5rem;
 }
 
-    .passwordSectionContainer{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        
-        border: black 2px solid;
-        border-radius: 2rem;
-        padding: 2rem;
-    }
+.passwordSectionContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-    .passwordSectionContainer input {
-        height: 1.5rem;
-        width: 25rem;
-    }
+    border: black 2px solid;
+    border-radius: 2rem;
+    padding: 2rem;
+}
 
-    .passwordSectionContainer #passwordCloseBtn {
-        align-self: flex-end;
-        background: none;
-        border: none;
-        color: red;
-        cursor: pointer;
-        font-size: 2rem;
-        height: 1rem;
-        width: 1rem;
-    }
+.passwordSectionContainer input {
+    height: 1.5rem;
+    width: 25rem;
+}
 
-    .passwordSectionContainer h1, .passwordBox, button {
-        align-self: center;
-        padding-bottom: 1rem;
-    }
+.passwordSectionContainer #passwordCloseBtn {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 2rem;
+    height: 1rem;
+    width: 1rem;
+}
 
-    .passwordSectionContainer #changePasswordBtn {
-        display: flex;
-        justify-content: center;
-        align-items: baseline;
-        height: 1.5rem;
-        font-size: 1rem;
-        width: 25rem;
+.passwordSectionContainer h1, .passwordBox, button {
+    align-self: center;
+    padding-bottom: 1rem;
+}
 
-    }
+.passwordSectionContainer #changePasswordBtn {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    height: 1.5rem;
+    font-size: 1rem;
+    width: 25rem;
+
+}
 
 .errorMessage.hidden {
     display: none;
