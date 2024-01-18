@@ -4,58 +4,76 @@
     <!-- Meta tags for character set and viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- Favicon and stylesheets -->
+    <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/x-icon" href="assets/img/icons/coding-icon.png">
     <link rel="stylesheet" href="assets/css/general.css">
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
     <link rel="stylesheet" href="assets/css/page/create-question.css">
     <link rel="stylesheet" href="assets/css/page/userpage.css">
-    
+
     <!-- Page title -->
     <title>User Page - CodeExchange</title>
 </head>
 <body>
-    <!-- Navigation bar -->
-    <nav class="navbar">
-        <ul class="container">
-            <!-- Burger menu icon -->
-            <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
-            <!-- CodeExchange logo -->
-            <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
-            <!-- Sign up and log in buttons -->
-            <li><button id="signupButton">sign up</button></li>
-            <li><button id="loginButton">log in</button></li>
+<!-- Navigation bar -->
+<nav class="navbar">
+    <ul class="container">
+        <!-- Burger menu icon -->
+        <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
+        <!-- CodeExchange logo -->
+        <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
+        <!-- Sign up and log in buttons -->
+        <li>
+            <button id="signupButton">sign up</button>
+        </li>
+        <li>
+            <button id="loginButton">log in</button>
+        </li>
+    </ul>
+</nav>
+
+<!-- Sidebar menu -->
+<aside class="sidebarMenu">
+    <div class="container">
+        <!-- Close sidebar icon -->
+        <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg"
+                  alt="siderbarClose"></div>
+        <!-- Navigation buttons in the sidebar -->
+        <ul class="containerButtons">
+            <li>
+                <button id="homeButton">Home</button>
+            </li>
+            <li>
+                <button id="aboutButton">about</button>
+            </li>
+            <li>
+                <button id="questionsButton">Questions</button>
+            </li>
         </ul>
-    </nav>
+    </div>
+</aside>
 
-    <!-- Sidebar menu -->
-    <aside class="sidebarMenu">
-        <div class="container">
-            <!-- Close sidebar icon -->
-            <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg" alt="siderbarClose"></div>
-            <!-- Navigation buttons in the sidebar -->
-            <ul class="containerButtons">
-                <li><button id="homeButton">Home</button></li>
-                <li><button id="aboutButton">about</button></li>
-                <li><button id="questionsButton">Questions</button></li>
-            </ul>
-        </div>
-    </aside>
-
+<main>
     <!-- User profile header -->
     <header class="profileHeader">
         <div class="profileHeaderContainer">
             <!-- User's profile picture and username -->
             <div class="profileNameCard">
-                <img src="assets/img/userPictureExample.jpg" id="profilePictureUser" alt="User's profile avatar">
+                <img src="assets/img/userPictureExample.jpg" id="profilePictureUser"
+                     alt="User's profile avatar">
                 <div class="nameAndRankContainer">
                     <div class="nameCardUsername" id="usernameUser"></div>
                     <div class="userStats">
                         <ul class="userStatsContainer">
-                            <li><img class="statSVG" src="assets/img/svg/birthday-cake.svg"><div id="birthdayUser"></div></li>
-                            <li><img class="statSVG" src="assets/img/svg/clock-two.svg"><div id="yearsOfExperienceUser"></div></li>
+                            <li><i class="fa-solid fa-cake-candles"></i>
+                                <div id="birthdayUser"></div>
+                            </li>
+                            <li><i class="fa-solid fa-clock"></i>
+                                <div id="yearsOfExperienceUser"></div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -69,10 +87,18 @@
     <section class="profileTabs">
         <ul class="profileTabsContainer">
             <!-- Profile, Questions, Answers, Settings tabs -->
-            <li><button id="userProfileBtn">Profile</button></li>
-            <li><button id="userQuestionsBtn">Questions</button></li>
-            <li><button id="userAnswersBtn">Answers</button></li>
-            <li><button id="userSettingsBtn">Edit</button></li>
+            <li>
+                <button id="userProfileBtn">Profile</button>
+            </li>
+            <li>
+                <button id="userQuestionsBtn">Questions</button>
+            </li>
+            <li>
+                <button id="userAnswersBtn">Answers</button>
+            </li>
+            <li>
+                <button id="userSettingsBtn">Edit</button>
+            </li>
         </ul>
     </section>
 
@@ -119,7 +145,7 @@ Thank you, God Bless you, and God Bless the United States of America.
         <h3>email</h3>
         <input type="text" name="email" id="emailInput" disabled>
 
-        <h3>expertise</h3> 
+        <h3>expertise</h3>
         <div class="custom-select open">
             <div class="select-box" tabindex="0">
                 <input type="text" class="tags_input" id="tags_input" name="tags" hidden/>
@@ -140,23 +166,29 @@ Thank you, God Bless you, and God Bless the United States of America.
             </div>
             <div class="tag_error_msg error"></div>
         </div>
-        
+
         <!-- Personal Information -->
         <h2>Personal Information</h2>
 
         <!-- Input fields for firstname and lastname -->
         <h3>firstname</h3>
         <input type="text" name="firstname" id="firstnameInput" disabled>
-    
+
         <h3>lastname</h3>
         <input type="text" name="lastname" id="lastnameInput" disabled>
 
         <!-- Action buttons: Save, Edit, Discard -->
         <div class="actionButtons">
             <ul class="actionButtonsContainer">
-                <li><button id="saveBtn" class="hidden">Save</button></li>
-                <li><button id="editBtn" class="">Edit</button></li>
-                <li><button id="discardBtn" class="hidden">Discard</button></li>
+                <li>
+                    <button id="saveBtn" class="hidden">Save</button>
+                </li>
+                <li>
+                    <button id="editBtn" class="">Edit</button>
+                </li>
+                <li>
+                    <button id="discardBtn" class="hidden">Discard</button>
+                </li>
             </ul>
         </div>
 
@@ -186,10 +218,11 @@ Thank you, God Bless you, and God Bless the United States of America.
             <button id="changePasswordBtn">Change password</button>
         </div>
     </section>
+</main>
 
 
-    <!-- TypeScript file inclusion -->
-    <script src="/src/index.ts" type="module"></script>
-    <script src="/src/userpage.ts" type="module"></script>
+<!-- TypeScript file inclusion -->
+<script src="/src/index.ts" type="module"></script>
+<script src="/src/userpage.ts" type="module"></script>
 </body>
 </html>
