@@ -16,15 +16,19 @@ export async function imageToBinaryData(imageElement: HTMLImageElement): Promise
 }
 
 // Function to convert binary data to an image element
-export async function binaryDataToImage(binaryData: Iterable<number>): Promise<HTMLImageElement> {
+export async function binaryDataToImage(binaryData: Iterable<number>, imageType: string): Promise<HTMLImageElement> {
     // Create a new Uint8Array and set the binary data
     const uint8Array: Uint8Array = new Uint8Array(binaryData);
 
-    // Create a Blob from the Uint8Array
-    const blob: Blob = new Blob([uint8Array]);
+    // Convert Uint8Array to base64 string
+    const base64String: string = btoa(String.fromCharCode.apply(null, uint8Array));
 
-    // Create a data URL from the Blob
-    const dataUrl: string = URL.createObjectURL(blob);
+    console.log(imageType);
+    // Create a data URL
+    const dataUrl: string = "data:" + imageType + ";base64," + base64String; // Adjust the type based on your image format
+
+    console.log(dataUrl);
+
 
     // Create an image element
     const image: HTMLImageElement = document.createElement("img");

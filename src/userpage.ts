@@ -7,6 +7,7 @@ import {security} from "./components/security";
 import {User} from "./models/user";
 import {initializeTagSelect} from "./components/initializeSelect";
 import {handleButtonClick} from "./components/customSelect";
+import {binaryDataToImage, imageToBinaryData} from "./components/handleProfilePicture";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -54,43 +55,62 @@ async function setup(): Promise<void> {
 
 
     const file: HTMLInputElement = document.querySelector("#file") as HTMLInputElement;
+    const profilePicture: HTMLImageElement = document.querySelector(".profile-picture") as HTMLImageElement;
 
-    // file.addEventListener("input", function (evt) {
-    //     const uploadedImage: HTMLInputElement = this as HTMLInputElement
-    //
-    //     const selectedFile: any = uploadedImage.files![0];
-    //
-    //     console.log(selectedFile);
-    //
-    //     const fileReader: FileReader = new FileReader();
-    //     fileReader.onload = function (): void {
-    //         const dataUrl: any = fileReader.result;
-    //
-    //         uploadedImage.src = dataUrl;
-    //
-    //         const image: HTMLImageElement = new Image();
-    //
-    //         image.onload = async function (): Promise<void> {
-    //             const binaryData: Uint8Array = await imageToBinaryData(image);
-    //             console.log("Binary Data:", binaryData);
-    //
-    //             // Example: Convert binary data to image and append to body
-    //             const imageElementFromBinary: HTMLImageElement = await binaryDataToImage(binaryData);
-    //             console.log(imageElementFromBinary);
-    //
-    //             uploadedImage.parentElement!.appendChild(imageElementFromBinary);
-    //         };
-    //
-    //         // Set the source of the image
-    //         image.src = dataUrl;
-    //     };
-    //
-    //
-    //     fileReader.readAsDataURL(selectedFile);
-    //
-    //     // console.log(baseImage);
-    //
-    // });
+    file.addEventListener("input", function (evt) {
+        const uploadedImage: HTMLInputElement = this as HTMLInputElement;
+
+        const selectedFile: any = uploadedImage.files![0];
+
+        console.log(selectedFile);
+
+        const fileReader: FileReader = new FileReader();
+
+        fileReader.onload = async function (): Promise<void> {
+            const dataUrl: any = fileReader.result;
+
+            // Create an image element
+            const image: HTMLImageElement = new Image();
+
+            image.onload = async function (): Promise<void> {
+                try {
+                    const binaryData: Uint8Array = await imageToBinaryData(image);
+                    console.log("Binary Data:", binaryData);
+
+                    // Create an image element from binary data
+                    const imageElementFromBinary: HTMLImageElement = await binaryDataToImage(binaryData, selectedFile.type);
+
+                    console.log("Binary data converted to image:", imageElementFromBinary);
+
+
+                    // Set the image as the source for profilePicture
+                    profilePicture.src = URL.createObjectURL(
+                        new Blob([binaryData.buffer], { type: selectedFile.type } /* (1) */)
+                    );
+
+                } catch (error) {
+                    console.error("Error fetching or displaying image:", error);
+                }
+
+            };
+
+            // Set the source of the image directly from the data URL
+            image.src = dataUrl;
+        };
+
+        // Read the file as a data URL
+        fileReader.readAsDataURL(selectedFile);
+    });
+
+// Function to read the image file and convert it to a Buffer
+    function convertImageToBuffer(imagePath) {
+        try {
+            return fs.readFileSync(imagePath);
+        } catch (error) {
+            console.error('Error reading the image file:', error);
+            return null;
+        }
+    }
 
     // Array of elements to be disabled during certain states
     const disabled: (HTMLInputElement | HTMLButtonElement | HTMLSelectElement | null)[] = [
