@@ -52,3 +52,5 @@ async function setup(): Promise<void> {
 
 // Run bij het opstarten de setup functie
 await setup();
+
+

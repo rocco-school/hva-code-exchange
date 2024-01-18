@@ -8,17 +8,21 @@ export class User {
     private _userId: number;
     private _firstname: string;
     private _lastname: string;
+    private _dateOfBirth: string;
     private _username: string;
+    private _experienceYears: number;
     private _password: string;
     private _email: string;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(userId: number, username: string, password: string, email: string, firstname: string, lastname: string) {
+    public constructor(userId: number, username: string, experienceYears: number, dateOfBirth: string, password: string, email: string, firstname: string, lastname: string) {
         this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
+        this._dateOfBirth = dateOfBirth;
         this._username = username;
+        this._experienceYears = experienceYears;
         this._password = password;
         this._email = email;
     }
@@ -30,6 +34,10 @@ export class User {
 
     public get username(): string {
         return this._username;
+    }
+
+    public get experienceYears(): number {
+        return this._experienceYears;
     }
 
     public get password(): string {
@@ -48,12 +56,20 @@ export class User {
         return this._lastname;
     }
 
+    public get dateOfBirth(): string {
+        return this._dateOfBirth;
+    }
+
     public set userId(value: number) {
         this._userId = value;
     }
 
     public set username(value: string) {
         this._username = value;
+    }
+
+    public set experienceYears(value: number) {
+        this._experienceYears = value;
     }
 
     public set password(value: string) {
@@ -72,8 +88,12 @@ export class User {
         this._lastname = value;
     }
 
+    public set dateOfBirth(value: string) {
+        this._dateOfBirth = value;
+    }
+
     public toString(): string {
-        return `User: ${this._userId} ${this._username} ${this._password} ${this._email} ${this._firstname} ${this._lastname}`;
+        return `User: ${this._userId} ${this._username} ${this._experienceYears} ${this._password} ${this._email} ${this._firstname} ${this._lastname} ${this._dateOfBirth}`;
     }
 
 
@@ -323,6 +343,76 @@ export class User {
         } catch (error) {
             // Handling any errors that occur during the process.
             return `Error retrieving user expertises: ${error}`;
+        }
+    }
+
+
+    /**
+     * Retrieves user tags for a given user ID using the UserService.
+     *
+     * @param {number} userId - The ID of the user to retrieve tags for.
+     * @returns {Promise<User | string>} A Promise resolving to either the user tags or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to retrieve tags for a specific user from the database.
+     * It handles the retrieval operation asynchronously and returns a Promise that resolves to either
+     * the user tags or an error message if the retrieval fails.
+     *
+     * @example
+     * // Example: Retrieve user tags by user ID
+     * try {
+     *   const userTags = await User.getUserTags(userId);
+     *   console.log('User tags:', userTags);
+     * } catch (error) {
+     *   console.error('Failed to retrieve user tags:', error.message);
+     * }
+     */
+    public static async getUserTags(userId: number): Promise<any[] | string> {
+        try {
+            // Calling the retrieveUserTags method from the service.
+            return await UserService.retrieveUserTags(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving user tags: ${error}`;
+        }
+    }
+
+
+    /**
+     * Inserts tags for a given user into the database using the UserService.
+     *
+     * @param {number} userId - The ID of the user to associate with the tags.
+     * @param {number[]} tagIds - An array of tag IDs to associate with the user.
+     * @returns {Promise<boolean | string>} A Promise resolving to either the insertion status or an error message.
+     * @throws {Error} Throws an error if the insertion operation fails.
+     *
+     * @description
+     * This static method leverages the UserService to insert tags for a specific user into the database.
+     * It handles the insertion operation asynchronously and returns a Promise that resolves to either
+     * the insertion status (true if successful) or an error message if the insertion fails.
+     *
+     * @example
+     * // Example: Insert tags for a user
+     * try {
+     *   const userTags: number[] = [1, 2, 3]; // tag IDs.
+     *   const insertStatus = await User.insertUserTag(userId, userTags);
+     *   if (insertStatus) {
+     *     console.log('User tags inserted successfully.');
+     *   } else {
+     *     console.log('Failed to insert user tags.');
+     *   }
+     * } catch (error) {
+     *   console.error('Error inserting user tags:', error.message);
+     * }
+     */
+    public static async insertUserTag(userId: number, tagIds: number[]): Promise<boolean | string> {
+        try {
+            // Call the insertUserTag method from the UserService.
+            return await UserService.insertUserTag(userId, tagIds);
+        } catch (error) {
+            // Handle any errors that occur during the process.
+            return `Error inserting user tags: ${error}`;
         }
     }
 }

@@ -151,4 +151,58 @@ export class UserService {
         return codingTags as [CodingTag];
     }
 
+
+    /**
+     * Retrieves user tags for a given user ID from the database using the specified query.
+     *
+     * @param {number} userId - The ID of the user to retrieve tags for.
+     * @returns {Promise<any[]>} A Promise resolving to an array of user tags.
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method queries the database to retrieve user tags for a specific user based on the provided user ID.
+     * It returns a Promise that resolves to an array of user tags, and it throws an error if the database retrieval fails.
+     */
+    public static async retrieveUserTags(userId: number): Promise<any[]> {
+        // Querying the database to retrieve user tags for the specified user.
+        const userTags: any = await api.queryDatabase(USER_QUERY.SELECT_TAGS_BY_USER, userId);
+
+        // Checking if the database retrieval was successful.
+        if (!userTags) {
+            throw new Error(`Failed to retrieve user tags for user with ID: ${userId} from the database!`);
+        }
+
+        return userTags;
+    }
+
+    /**
+     * Inserts tags for a given user into the database.
+     *
+     * @param {number} userId - The ID of the user to associate with the tags.
+     * @param {number[]} tagIds - An array of tag IDs to associate with the user.
+     * @returns {Promise<boolean>} A Promise resolving to true upon successful insertion.
+     * @throws {Error} Throws an error if the database insertion was not successful.
+     *
+     * @description
+     * This static method inserts tags for a specific user into the database.
+     * It iterates through the array of tag IDs and queries the database to create associations between
+     * the user and each tag. It returns a Promise that resolves to true upon successful insertion.
+     */
+    public static async insertUserTag(userId: number, tagIds: number[]): Promise<boolean> {
+        for (const tagId of tagIds) {
+            const userTagData: [number, number] = [userId, tagId];
+
+            // Query the database to insert the user-tag association.
+            const createdUserTag: any = await api.queryDatabase(
+                USER_QUERY.CREATE_USER_TAG,
+                ...userTagData
+            ) as any;
+
+            // Check if the database insertion was successful.
+            if (!createdUserTag) {
+                throw new Error(`Failed to insert user tags for user with ID: ${userId}`);
+            }
+        }
+        return true;
+    }
 }

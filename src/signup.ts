@@ -237,7 +237,7 @@ async function signUpDatabase(firstnameInput: string, lastnameInput: string, use
             .catch((error: Error) => {
                 console.error("Error inserting user:", error);
                 throw error; // Propagate the error for external handling.
-            }) as User;
+            }) as unknown as User;
     } catch (error) {
         // If an unexpected error occurs, return an error object.
         console.error("Unexpected error during user sign-up:", error);
