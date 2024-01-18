@@ -2,20 +2,26 @@ import { hashPassword } from "./components/hashPassword";
 import "./config";
 import { api } from "@hboictcloud/api";
 import { USER_QUERY } from "./query/user.query";
-import {JWTPayload} from "jose";
-import {security} from "./components/security";
+import { JWTPayload } from "jose";
+import { security } from "./components/security";
 import { User } from "./models/user";
-import {initializeTagSelect} from "./components/initializeSelect";
+import { initializeTagSelect } from "./components/initializeSelect";
+import { handleButtonClick } from "./components/customSelect";
 
+// Asynchronous setup function
 async function setup(): Promise<void> {
 
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean | any = await security();
 
+    // Initialize the tag select component
     await initializeTagSelect();
 
+    // Extract user ID from loginStatus
     const currentUserId: number = loginStatus["userId"];
+    console.log(currentUserId);
 
+    // DOM element selections
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
     const userSettingsBtn: HTMLButtonElement | null = document.querySelector("#userSettingsBtn");
     const publicProfileSection: HTMLElement | null = document.querySelector(".publicProfileSection");
@@ -27,8 +33,8 @@ async function setup(): Promise<void> {
     const yearsOfExperienceUser: HTMLDivElement | null = document.querySelector("#yearsOfExperienceUser");
     const profileExpertise: HTMLUListElement | null = document.querySelector(".profileExpertise");
 
+    // Input elements for user details
     const usernameInput: HTMLInputElement | null = document.querySelector("#usernameInput");
-    // const oldPasswordInput: HTMLInputElement | null = document.querySelector("#oldPasswordInput");
     const newPasswordInput: HTMLInputElement | null = document.querySelector("#newPasswordInput");
     const confirmPasswordInput: HTMLInputElement | null = document.querySelector("#confirmPasswordInput");
     const emailInput: HTMLInputElement | null = document.querySelector("#emailInput");
@@ -38,6 +44,7 @@ async function setup(): Promise<void> {
     const programmingExperienceInput: HTMLInputElement | null = document.querySelector("#programmingExperienceInput");
     const expertiseOptions: HTMLSelectElement | null = document.querySelector("#expertiseOptions");
 
+    // Buttons for user interactions
     const editPasswordBtn: HTMLButtonElement | null = document.querySelector("#editPasswordBtn");
     const changePasswordBtn: HTMLButtonElement | null = document.querySelector("#changePasswordBtn");
     const passwordCloseBtn: HTMLButtonElement | null = document.querySelector("#passwordCloseBtn");
@@ -45,7 +52,12 @@ async function setup(): Promise<void> {
     const editBtn: HTMLButtonElement | null = document.querySelector("#editBtn");
     const discardBtn: HTMLButtonElement | null = document.querySelector("#discardBtn");
 
-    const disabled: (HTMLInputElement | HTMLButtonElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, editPasswordBtn, emailInput, expertiseOptions, firstnameInput, lastnameInput, saveBtn, discardBtn];
+    // Array of elements to be disabled during certain states
+    const disabled: (HTMLInputElement | HTMLButtonElement | HTMLSelectElement | null)[] = [
+        usernameInput, birthdayInput, programmingExperienceInput,
+        editPasswordBtn, emailInput, expertiseOptions,
+        firstnameInput, lastnameInput, saveBtn, discardBtn
+    ];
 
     // Regular Expression for email
     // Needs alphanumerics before the @ which follows with a dot and 2-4 letters
@@ -56,26 +68,26 @@ async function setup(): Promise<void> {
     const passwordRegEx: RegExp = /^((?!(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,60}$).)*$/;
 
     // Regular Expression for firstname and lastname
-    // only letters are allowed and numbers are not allowed
     const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
 
     const retrievedUser: any = await User.retrieveUser(loginStatus.userId);
     const retrievedUserTags: any = await User.getUserTags(loginStatus.userId);
     const retrievedAllUserTags: any = await api.queryDatabase(USER_QUERY.GET_TAGS);
 
-
+    // Display user information in the UI
     if (usernameUser) {
         usernameUser.innerHTML = retrievedUser.username;
     }
 
     if (birthdayUser) {
-        birthdayUser.innerHTML = retrievedUser.dateOfBirth.replace("T", "  ").replace("00:00", "").slice(0, -8);;
+        birthdayUser.innerHTML = retrievedUser.dateOfBirth.replace("T", "  ").replace("00:00", "").slice(0, -8);
     }
 
     if (yearsOfExperienceUser) {
-        yearsOfExperienceUser.innerHTML = retrievedUser.experienceYears + " years of progamming experience";
+        yearsOfExperienceUser.innerHTML = retrievedUser.experienceYears + " years of programming experience";
     }
 
+    // Populate expertise options in the select element
     if (expertiseOptions) {
         retrievedAllUserTags.forEach(async (allUserTags: any) => {
             const optionContent: HTMLOptionElement = expertiseOptions?.appendChild(document.createElement("option"));
@@ -83,6 +95,7 @@ async function setup(): Promise<void> {
         });
     }
 
+    // Display user tags in the UI
     if (profileExpertise) {
         retrievedUserTags.forEach((userTag: any) => {
             const liContent: HTMLLIElement = profileExpertise.appendChild(document.createElement("li"));
@@ -90,8 +103,9 @@ async function setup(): Promise<void> {
         });
     }
 
+    // Event listeners for UI buttons
     if (editBtn) {
-        editBtn.addEventListener("click", (): void => {;
+        editBtn.addEventListener("click", (): void => {
             disabled.forEach(element => {
                 element?.removeAttribute("disabled");
             });
@@ -104,7 +118,7 @@ async function setup(): Promise<void> {
     if (discardBtn) {
         discardBtn.addEventListener("click", (): void => {
             disabled.forEach(element => {
-                element?.setAttribute("disabled", ""); 
+                element?.setAttribute("disabled", "");
             });
             editBtn?.classList.remove("hidden");
             saveBtn?.classList.add("hidden");
@@ -155,12 +169,12 @@ async function setup(): Promise<void> {
 
     // editProfileSection
     if (changePasswordBtn) {
-        changePasswordBtn.addEventListener("click", async(): Promise<void> => {
+        changePasswordBtn.addEventListener("click", async (): Promise<void> => {
             const passwordInputs: (HTMLInputElement | null)[] = [newPasswordInput, confirmPasswordInput];
 
             // TODO password comparison
             const emptyPasswordInputs: any = await checkPasswordValue(passwordInputs);
-            if(!emptyPasswordInputs) return;
+            if (!emptyPasswordInputs) return;
             const verifiedNewPassword: boolean = await verifyNewPassword(newPasswordInput);
             if (!verifiedNewPassword) return;
             const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput, newPasswordInput);
@@ -170,7 +184,7 @@ async function setup(): Promise<void> {
                 try {
                     const updatedPassword: any = await updatePasswordData(loginStatus.userId, confirmPasswordInput!.value);
                     passwordSection?.classList.add("hidden");
-                    editProfileSection?.classList.remove("hidden"); 
+                    editProfileSection?.classList.remove("hidden");
                     console.log(updatedPassword);
                 } catch (e) {
                     console.error(e);
@@ -185,23 +199,44 @@ async function setup(): Promise<void> {
             // const verifiedInputs: any = checkValue(inputs);
             const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
 
-            const verifiedEmail: boolean = await verifyEmail(emailInput);
-            if(!verifiedEmail) return;
-            const verifiedFirstname: boolean = await verifyFirstname(firstnameInput);
-            if(!verifiedFirstname) return;
-            const verifiedLastname: boolean = await verifyLastname(lastnameInput);
-            if(!verifiedLastname) return;
+            let questionTags: any[] = [];
 
-            if(verifiedEmail && verifiedFirstname && verifiedLastname) {
+            // Use the async function handleButtonClick when the submit button is clicked
+            await handleButtonClick().then((result: string | null): void => {
+                if (result !== null) {
+                    // Handle the valid result
+                    const tags: string[] = result.split(", ");
+
+                    for (const tagsKey in tags) {
+                        questionTags.push(tags[tagsKey]);
+                    }
+                } else {
+                    // Handle the case where the input is not valid
+                    console.log("Input is not valid.");
+                }
+            });
+
+            questionTags.forEach(questionTag => {
+                console.log(questionTag);
+            });
+
+            const verifiedEmail: boolean = await verifyEmail(emailInput);
+            if (!verifiedEmail) return;
+            const verifiedFirstname: boolean = await verifyFirstname(firstnameInput);
+            if (!verifiedFirstname) return;
+            const verifiedLastname: boolean = await verifyLastname(lastnameInput);
+            if (!verifiedLastname) return;
+
+            if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
                     const updatedUser: any = await updateUserData(
                         usernameInput!.value,
                         birthdayInput?.value,
                         programmingExperienceInput?.value,
-                        emailInput?.value, 
-                        getTagIdExpertise,
-                        firstnameInput?.value, 
-                        lastnameInput?.value, 
+                        emailInput?.value,
+                        questionTags,
+                        firstnameInput?.value,
+                        lastnameInput?.value,
                         loginStatus.userId
                     );
 
@@ -214,7 +249,9 @@ async function setup(): Promise<void> {
         });
     }
 
-    async function checkValue(inputs:(HTMLInputElement | HTMLSelectElement | null)[]): Promise<void> {
+    // Validation functions
+
+    async function checkValue(inputs: (HTMLInputElement | HTMLSelectElement | null)[]): Promise<void> {
         inputs.forEach(input => {
             if (input && input.value === "") {
                 console.log("there is no value at " + input.name);
@@ -223,7 +260,7 @@ async function setup(): Promise<void> {
         });
     }
 
-    async function retrieveTagId(tagName:string | undefined): Promise<number> {
+    async function retrieveTagId(tagName: string | undefined): Promise<number> {
         const getTagId: any = await api.queryDatabase(USER_QUERY.GET_TAG, tagName);
         return getTagId;
     }
@@ -252,11 +289,6 @@ async function setup(): Promise<void> {
         }
     }
 
-    /**
-     * Validates the lastname field and sets a custom validation message if needed.
-     *
-     * @param lastname
-     */
     async function verifyLastname(lastname: any): Promise<boolean> {
         if (!lastname.value.match(nameRegEx)) {
             console.log(lastname.name + " format is not correct!");
@@ -266,8 +298,9 @@ async function setup(): Promise<void> {
         }
     }
 
-    // Password
-    async function checkPasswordValue(inputs:(HTMLInputElement | null)[]): Promise<boolean> {
+    // Password validation functions
+
+    async function checkPasswordValue(inputs: (HTMLInputElement | null)[]): Promise<boolean> {
         let valid: boolean = true;
 
         inputs.forEach(inputPassword => {
@@ -284,63 +317,70 @@ async function setup(): Promise<void> {
         if (password.value.match(passwordRegEx)) {
             errorPasswordMessageBox?.classList.remove("hidden");
             if (errorPasswordMessageBox) {
-                errorPasswordMessageBox.innerHTML="Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.";
+                errorPasswordMessageBox.innerHTML = "Your password needs a minimum of eight characters, at least one uppercase letter, one lowercase letter, one number, and one special character.";
                 setTimeout(() => {
                     errorPasswordMessageBox.classList.add("hidden");
-                    errorPasswordMessageBox.innerHTML="";
+                    errorPasswordMessageBox.innerHTML = "";
                 }, 5000);
             }
             return false;
         } else {
             return true;
         }
+
     }
 
-    async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
-        if (!password.value.match(newPassword.value)) {
-            errorPasswordMessageBox?.classList.remove("hidden");
-            if (errorPasswordMessageBox) {
-                errorPasswordMessageBox.innerHTML="Password does not match!";
-                setTimeout(() => {
-                    errorPasswordMessageBox.classList.add("hidden");
-                    errorPasswordMessageBox.innerHTML="";
-                }, 5000);
-            }
-            return false;
-        } else {
-            console.log("Password matches!");
-            return true;
+// Validates the confirmation password and displays an error message if not matching
+async function verifyConfirmPassword(password: any, newPassword: any): Promise<boolean> {
+    if (!password.value.match(newPassword.value)) {
+        // Show error message and hide after 5 seconds
+        errorPasswordMessageBox?.classList.remove("hidden");
+        if (errorPasswordMessageBox) {
+            errorPasswordMessageBox.innerHTML = "Password does not match!";
+            setTimeout(() => {
+                errorPasswordMessageBox.classList.add("hidden");
+                errorPasswordMessageBox.innerHTML = "";
+            }, 5000);
         }
+        return false;
+    } else {
+        console.log("Password matches!");
+        return true;
     }
-
-    async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagId: number, firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
-        const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
-        console.log(arrayUserData);
-        const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
-        const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER_TAG, tagId);
-        console.log(userTagDatabase);
-        console.log(userDatabase);
-        return;
-    }
-
-    async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
-        const hashedPassword: string | null = await hashPassword(updatedPassword);
-
-        if (!hashedPassword) {
-            return new Error("Error hashing the password.");
-        }
-
-        const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD,
-            hashedPassword,
-            userId
-        );
-
-        console.log(passwordDatabase);
-        console.log("SUCCES! WOOHOO!");
-        return;
-    }
-
-
 }
 
-await setup();
+// Updates user data in the database
+async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagIds: any[], firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
+    const arrayUserData: (string | number | Date | null)[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
+    console.log(arrayUserData);
+
+    // Update user data in the database
+    const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
+
+    // Update user tags in the database
+    tagIds.forEach(tagId => {
+        const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER_TAG, userId, tagId);
+        console.log(userTagDatabase);
+    });
+
+    console.log(userDatabase);
+    return;
+}
+
+// Updates user password in the database
+async function updatePasswordData(userId: number, updatedPassword: string): Promise<any> {
+    // Hash the new password
+    const hashedPassword: string | null = await hashPassword(updatedPassword);
+
+    // Handle hashing error
+    if (!hashedPassword) {
+        return new Error("Error hashing the password.");
+    }
+
+    // Update password in the database
+    const passwordDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_PASSWORD, hashedPassword, userId);
+
+    console.log(passwordDatabase);
+    console.log("SUCCESS! WOOHOO!");
+    return;
+}
