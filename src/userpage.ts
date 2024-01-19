@@ -1,13 +1,13 @@
 import {hashPassword} from "./components/hashPassword";
 import "./config";
-import {api} from "@hboictcloud/api";
+import {api, types, utils} from "@hboictcloud/api";
 import {USER_QUERY} from "./query/user.query";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import {User} from "./models/user";
 import {initializeTagSelect} from "./components/initializeSelect";
 import {handleButtonClick} from "./components/customSelect";
-import {convertImageToBinary, uint8ArrayToBlob} from "./components/handleProfilePicture";
+import {showSuccessMessage} from "./components/successMessage";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -55,7 +55,7 @@ async function setup(): Promise<void> {
 
 
     const file: HTMLInputElement = document.querySelector("#file") as HTMLInputElement;
-    // const profilePicture: HTMLImageElement = document.querySelector(".profile-picture") as HTMLImageElement;
+    const profilePicture: HTMLImageElement = document.querySelector(".profile-picture") as HTMLImageElement;
 
     // Array of elements to be disabled during certain states
     const disabled: (HTMLInputElement | HTMLButtonElement | HTMLSelectElement | null)[] = [
@@ -83,21 +83,29 @@ async function setup(): Promise<void> {
     );
 
     file.addEventListener("input", async function (): Promise<void> {
-        const uploadedImage: HTMLInputElement = this as HTMLInputElement;
+        const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
 
-        const selectedFile: File = uploadedImage.files![0];
+        const fileName: string = user.profilePicture?.split(url)[0];
 
-        const binaryImage: Uint8Array = await convertImageToBinary(selectedFile);
+        if (fileName) {
+            await api.deleteFile(fileName);
+        }
 
-        user.profilePicture = uint8ArrayToBlob(binaryImage);
-
-        console.log(uint8ArrayToBlob(binaryImage));
-        console.log(binaryImage);
-
-        console.log(user);
+        const filename: string = file?.files[0].name;
+        const imageData: types.DataURL = await utils.getDataUrl(file) as types.DataURL;
+        user.profilePicture = await api.uploadFile(filename, imageData.url);
 
         await user.updateUser();
+
+        await showSuccessMessage("Successfully added profile picture!", 2000, "success", null, null);
+        location.reload();
     });
+
+
+    if (profilePicture) {
+        profilePicture.src = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
+    }
+
 
     // Display user information in the UI
     if (usernameUser) {
@@ -105,7 +113,7 @@ async function setup(): Promise<void> {
     }
 
     if (birthdayUser) {
-        birthdayUser.innerHTML = retrievedUser.dateOfBirth.replace("T", "  ").replace("00:00", "").slice(0, -8);
+        birthdayUser.innerHTML = retrievedUser.dateOfBirth?.replace("T", "  ").replace("00:00", "").slice(0, -8);
     }
 
     if (yearsOfExperienceUser) {

@@ -61,16 +61,6 @@ export function addCertifyClickListener(currentUserId: number, questionUserId: n
 }
 
 /**
- * Gets the avatar URL for a given username.
- *
- * @param {string} username - The username for which to get the avatar URL.
- * @returns {string} - The avatar URL.
- */
-export function getAvatarUrl(username: string): string {
-    return "https://ui-avatars.com/api/?name=" + username;
-}
-
-/**
  * Calculates the upvote count for a given answer.
  *
  * @param {AnswerWithUser} answer - The answer for which to calculate the upvote count.

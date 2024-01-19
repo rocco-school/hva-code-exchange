@@ -11,13 +11,13 @@ export class User {
     private _dateOfBirth: Date;
     private _username: string;
     private _experienceYears: number;
-    private _profilePicture: Blob;
+    private _profilePicture: string;
     private _password: string;
     private _email: string;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: Date, username: string, experienceYears: number, profilePicture: Blob, password: string, email: string) {
+    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: Date, username: string, experienceYears: number, profilePicture: string, password: string, email: string) {
         this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
@@ -54,7 +54,7 @@ export class User {
         return this._experienceYears;
     }
 
-    public get profilePicture(): Blob {
+    public get profilePicture(): string {
         return this._profilePicture;
     }
 
@@ -90,7 +90,7 @@ export class User {
         this._experienceYears = value;
     }
 
-    public set profilePicture(value: Blob) {
+    public set profilePicture(value: string) {
         this._profilePicture = value;
     }
 

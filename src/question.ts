@@ -18,7 +18,6 @@ import {
     addEditButtonListeners,
     addEventListeners,
     formatDates,
-    getAvatarUrl,
     getCertifyVisibility,
     getCheckMarkUrl,
     getExtraClass,
@@ -208,6 +207,8 @@ async function generateQuestionUserInfo(userId: number, question: Question): Pro
     const updatedDate: string = theUpdatedAtDate.toISOString().slice(0, 10);
 
 
+    const AvatarUrl: string = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
+
     /**
      * Represents user information displayed in a question.
      * @type {string}
@@ -215,7 +216,7 @@ async function generateQuestionUserInfo(userId: number, question: Question): Pro
     const questionUser: string = createQuestionPerson(
         createdDate,
         updatedDate,
-        "https://ui-avatars.com/api/?name=" + username,
+        AvatarUrl,
         username,
         totalAnswers.toString(),
         totalQuestions.toString(),
@@ -451,13 +452,15 @@ async function addAnswersToPage(userId: number): Promise<void> {
         const username: string = getUsername(answer);
         const upvoteCount: number = getUpvoteCount(answer);
 
+        const AvatarUrl: string = answer.profilePicture ? answer.profilePicture : `https://ui-avatars.com/api/?name=${answer.firstname}+${answer.lastname}&background=random`;
+
         const answerElement: string = createAnswerElement(
             answer.answerId!,
             answer.answerBody,
             upvoteCount.toString(),
             createdAt,
             updatedAt,
-            getAvatarUrl(username),
+            AvatarUrl,
             username,
             totalAnswers,
             totalQuestions,

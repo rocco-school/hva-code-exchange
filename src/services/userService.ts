@@ -58,7 +58,7 @@ export class UserService {
             const dateString: Date = user.dateOfBirth;
             const dateObject: Date = new Date(dateString);
 
-            const userData: any[] = [user.firstname, user.lastname, dateObject, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
+            const userData: any[] = [user.firstname, user.lastname, null, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
             console.log(userData);
             await api.queryDatabase(USER_QUERY.UPDATE_USER, ...userData);
 

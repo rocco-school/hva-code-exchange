@@ -1,3 +1,5 @@
+import {Buffer} from "buffer";
+
 /**
  * Converts a File object to a base64-encoded string asynchronously.
  * @param file - The File object to be converted.
@@ -20,7 +22,7 @@ async function convertImageToBase64(file: File): Promise<string> {
 
         // Start reading the file as a data URL
         reader.readAsDataURL(file);
-    });
+    }) as string;
 }
 
 /**
