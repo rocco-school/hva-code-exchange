@@ -24,6 +24,7 @@ export class UserService {
     public static async saveUser(user: User): Promise<User> {
         // Querying the database with the new user data.
         const param: (string | number | boolean | null)[] = [user.firstname, user.lastname, user.username, user.password, user.email];
+
         const newUser: any = await api.queryDatabase(USER_QUERY.CREATE_USER, ...param);
 
         // Retrieving the newly created user from the database.
@@ -54,11 +55,17 @@ export class UserService {
     public static async updateUser(user: User): Promise<User> {
         try {
             // Update the user in the User table.
-            const userData: any[] = [user.firstname, user.lastname, user.dateOfBirth, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
+            const dateString: Date = user.dateOfBirth;
+            const dateObject: Date = new Date(dateString);
+
+            const userData: any[] = [user.firstname, user.lastname, dateObject, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
+            console.log(userData);
             await api.queryDatabase(USER_QUERY.UPDATE_USER, ...userData);
 
             // Retrieve the updated user from the database.
             const getUser: [User] = await api.queryDatabase(USER_QUERY.SELECT_USER, user.userId) as [User];
+
+            console.log(getUser);
 
             // Checking if the database retrieval was successful.
             if (!getUser) {

@@ -66,11 +66,6 @@ export class User {
         return this._email;
     }
 
-
-    public get dateOfBirth(): string {
-        return this._dateOfBirth;
-    }
-
     public set userId(value: number) {
         this._userId = value;
     }
@@ -107,8 +102,9 @@ export class User {
         this._email = value;
     }
 
+
     public toString(): string {
-        return `User: ${this._userId} ${this._firstname} ${this._lastname} ${this._dateOfBirth} ${this._username} ${this._experienceYears} ${this._profilePicture} ${this._password} ${this._email} `;
+        return `User: ${this._userId} ${this._username} ${this._experienceYears} ${this._password} ${this._email} ${this._firstname} ${this._lastname} ${this._dateOfBirth}`;
     }
 
 
