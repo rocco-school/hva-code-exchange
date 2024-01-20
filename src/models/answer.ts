@@ -5,7 +5,7 @@ export class Answer extends Post {
     // private fields
     private _answerId: number | null;
     private _questionId: number;
-    private _userId: number;
+    private _userId: number | null;
     private _answerBody: string;
     private _totalUpvotes: number | null;
     private _totalDownvotes: number | null;
@@ -13,7 +13,7 @@ export class Answer extends Post {
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, isAccepted: boolean, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(answerId: number | null, questionId: number, userId: number | null, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, isAccepted: boolean, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
@@ -33,7 +33,7 @@ export class Answer extends Post {
         return this._questionId;
     }
 
-    public get userId(): number {
+    public get userId(): number | null{
         return this._userId;
     }
 
@@ -61,7 +61,7 @@ export class Answer extends Post {
         this._questionId = value;
     }
 
-    public set userId(value: number) {
+    public set userId(value: number | null) {
         this._userId = value;
     }
 

@@ -2,6 +2,11 @@ import {api} from "@hboictcloud/api";
 import {User} from "../models/user";
 import {USER_QUERY} from "../query/user.query";
 import {CodingTag} from "../models/codingTag";
+import {Question} from "../models/question";
+import {QUESTION_QUERY} from "../query/question.query";
+import {Answer} from "../models/answer";
+import {ANSWER_QUERY} from "../query/answer.query";
+import {createNewAnswerInstance, createNewQuestionInstance} from "../components/handleModelInstances";
 
 /**
  * A service class for handling operations related to users in the database.
@@ -58,7 +63,7 @@ export class UserService {
             const dateString: Date = user.dateOfBirth;
             const dateObject: Date = new Date(dateString);
 
-            const userData: any[] = [user.firstname, user.lastname, null, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
+            const userData: any[] = [user.firstname, user.lastname, dateObject, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
             console.log(userData);
             await api.queryDatabase(USER_QUERY.UPDATE_USER, ...userData);
 
@@ -113,24 +118,46 @@ export class UserService {
      *
      * @description
      * This static method deletes a specific user from the database based on its ID.
-     * It queries the database to delete the user with the given user and returns
+     * It queries the database to delete the user with the given user ID and returns
      * a Promise that resolves to a boolean indicating whether the deletion was successful.
      */
-    public static async deleteUser(userId: number): Promise<boolean> {
-        // Querying the database to delete the user with the given userId.
-        const deleteUser: any = await api.queryDatabase(USER_QUERY.DELETE_USER, userId) as any;
+    public static async deleteUser(userId: number): Promise<boolean | string> {
+        try {
+            // Retrieve user questions and answers before deleting the user.
+            const questions: Question[] = await this.retrieveUserQuestions(userId);
+            const answers: Answer[] = await this.retrieveUserAnswers(userId);
 
-        // Checking if the database deletion was successful.
-        if (deleteUser.affectedRows === 0) {
-            return false; // No rows affected, indicating the user was not found.
+            // Update references in answers by setting userId to null.
+            for (const answer of answers) {
+                const updatedAnswer: Answer = createNewAnswerInstance(answer);
+                updatedAnswer.userId = null;
+                await updatedAnswer.updateAnswer();
+            }
+
+            // Update references in questions by setting userId to null.
+            for (const question of questions) {
+                const updatedQuestion: Question = createNewQuestionInstance(question);
+                updatedQuestion.userId = null;
+                await updatedQuestion.updateQuestion();
+            }
+
+            // Querying the database to delete the user with the given user ID.
+            const deleteUserResult: any = await api.queryDatabase(USER_QUERY.DELETE_USER, userId) as any;
+
+            // Checking if the database deletion was successful.
+            if (deleteUserResult.affectedRows === 0) {
+                return false; // No rows affected, indicating the user was not found.
+            }
+
+            if (deleteUserResult.affectedRows > 0) {
+                return true; // Deletion successful.
+            }
+
+            // If affectedRows is not 0 or greater than 0, something unexpected happened.
+            throw new Error(`Failed to delete user with ID: ${userId}`);
+        } catch (error) {
+            throw new Error(`Error while deleting user with ID: ${userId}`);
         }
-
-        if (deleteUser.affectedRows > 0) {
-            return true; // Deletion successful.
-        }
-
-        // If affectedRows is not 0 or greater than 0, something unexpected happened.
-        throw new Error(`Failed to delete user with ID: ${userId}`);
     }
 
 
@@ -212,4 +239,52 @@ export class UserService {
         }
         return true;
     }
+
+
+    /**
+     * Retrieves user tags for a given user ID from the database using the specified query.
+     *
+     * @param {number} userId - The ID of the user to retrieve tags for.
+     * @returns {Promise<any[]>} A Promise resolving to an array of user tags.
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method queries the database to retrieve user tags for a specific user based on the provided user ID.
+     * It returns a Promise that resolves to an array of user tags, and it throws an error if the database retrieval fails.
+     */
+    public static async retrieveUserQuestions(userId: number): Promise<[Question]> {
+        // Querying the database to retrieve user tags for the specified user.
+        const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.GET_QUESTIONS_BY_USER, userId) as [Question];
+
+        // Checking if the database retrieval was successful.
+        if (!questions) {
+            throw new Error(`Failed to retrieve user tags for user with ID: ${userId} from the database!`);
+        }
+
+        return questions as [Question];
+    }
+
+    /**
+     * Retrieves user tags for a given user ID from the database using the specified query.
+     *
+     * @param {number} userId - The ID of the user to retrieve tags for.
+     * @returns {Promise<any[]>} A Promise resolving to an array of user tags.
+     * @throws {Error} Throws an error if the database retrieval was not successful.
+     *
+     * @description
+     * This static method queries the database to retrieve user tags for a specific user based on the provided user ID.
+     * It returns a Promise that resolves to an array of user tags, and it throws an error if the database retrieval fails.
+     */
+    public static async retrieveUserAnswers(userId: number): Promise<[Answer]> {
+        // Querying the database to retrieve user tags for the specified user.
+        const answers: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_BY_USER, userId) as [Answer];
+
+        // Checking if the database retrieval was successful.
+        if (!answers) {
+            throw new Error(`Failed to retrieve user tags for user with ID: ${userId} from the database!`);
+        }
+
+        return answers as [Answer];
+    }
+
 }

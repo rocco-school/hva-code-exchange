@@ -4,6 +4,7 @@ import {AnswerWithUser} from "../models/interface/answerWithUser";
 import {Answer} from "../models/answer";
 import {CodingTag} from "../models/codingTag";
 import {User} from "../models/user";
+import {createNewAnswerInstanceFromAnswerWithUser} from "./handleModelInstances";
 
 /**
  * Adds click event listeners to elements matching the given selector.
@@ -48,7 +49,7 @@ export function addCertifyClickListener(currentUserId: number, questionUserId: n
     document.querySelector(".certified-answer-check")?.addEventListener("click", async (): Promise<void> => {
         if (currentUserId === questionUserId) {
             // Create a new instance of the answer
-            const newAnswer: Answer = createNewAnswerInstance(answer);
+            const newAnswer: Answer = createNewAnswerInstanceFromAnswerWithUser(answer);
 
             // Toggle the acceptance status and update the answer
             const updated: Answer = await newAnswer.toggleIsAcceptedAndUpdate() as Answer;
@@ -138,24 +139,4 @@ export async function getUserExpertise(userId: number): Promise<string> {
     const userExpertises: [CodingTag] = await User.getUserExpertises(userId) as [CodingTag];
     const tagNames: string[] = [...new Set(userExpertises.map(item => item.tagName))];
     return tagNames.length === 0 ? "No expertise!" : tagNames.join(", ");
-}
-
-/**
- * Creates a new instance of the Answer class.
- *
- * @param {AnswerWithUser} answer - The answer to create a new instance for.
- * @returns {Answer} - A new instance of the Answer class.
- */
-export function createNewAnswerInstance(answer: AnswerWithUser): Answer {
-    return new Answer(
-        answer.answerId,
-        answer.questionId,
-        answer.userId,
-        answer.answerBody,
-        answer.totalUpvotes,
-        answer.totalDownvotes,
-        answer.isAccepted,
-        answer.createdAt,
-        answer.updatedAt
-    );
 }

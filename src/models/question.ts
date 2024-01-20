@@ -6,7 +6,7 @@ import {Post} from "./post";
 export class Question extends Post {
     // private fields
     private _questionId: number | null;
-    private _userId: number;
+    private _userId: number | null;
     private _questionTitle: string;
     private _questionBody: string;
     private _isClosed: boolean;
@@ -15,7 +15,7 @@ export class Question extends Post {
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(questionId: number | null, userId: number | null, questionTitle: string, questionBody: string, isClosed: boolean, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._questionId = questionId;
         this._userId = userId;
@@ -31,7 +31,7 @@ export class Question extends Post {
         return this._questionId;
     }
 
-    public get userId(): number {
+    public get userId(): number | null {
         return this._userId;
     }
 
@@ -59,7 +59,7 @@ export class Question extends Post {
         this._questionId = value;
     }
 
-    public set userId(value: number) {
+    public set userId(value: number | null) {
         this._userId = value;
     }
 

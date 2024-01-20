@@ -53,7 +53,7 @@ export class QuestionService {
     public static async updateQuestion(question: Question): Promise<Question> {
         try {
             // Update the question in the Question table.
-            const questionData: (string | number | boolean | null)[] = [question.questionTitle, question.questionBody, question.isClosed, question.questionId];
+            const questionData: (string | number | boolean | null)[] = [question.userId, question.questionTitle, question.questionBody, question.isClosed, question.questionId];
             await api.queryDatabase(QUESTION_QUERY.UPDATE_QUESTION, ...questionData);
 
             // Retrieve the updated question from the database.
