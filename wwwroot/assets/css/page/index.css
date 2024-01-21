@@ -90,13 +90,16 @@
 .mainHeader {
     height: auto;
     width: auto;
-    margin: 10rem 16rem;
+    padding: 10rem 4rem 0 16rem;
 }
 
 /* Styling for the main header container */
 .mainHeader .container {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
 
 /* Styling for layout within the main header */
@@ -116,8 +119,14 @@
     margin-top: 1rem;
 }
 
+.picture-border {
+    display: flex;
+    margin: auto;
+}
+
 .mainHeader #unsplashPicture1 {
     height: 18rem;
+    border-radius: .5rem;
 }
 
 /* Styling for the perks section */

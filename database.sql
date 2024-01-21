@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`user`
     `profilePicture` VARCHAR(255) NULL,
     `password` VARCHAR(60) NOT NULL,
     `email`    VARCHAR(255) NOT NULL,
+    `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 )  ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`question`

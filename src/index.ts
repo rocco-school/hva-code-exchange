@@ -1,10 +1,19 @@
 import "./config";
 import {url} from "@hboictcloud/api";
+import {handleAuthentication} from "./components/handleNavbar";
+import {JWTPayload} from "jose";
+import {security} from "./components/security";
 
 /**
  * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
  */
 async function setup(): Promise<void> {
+
+    // Check the security status by calling the 'security' function.
+    const isAuthenticated: JWTPayload | boolean = await security();
+
+    await handleAuthentication(isAuthenticated);
+
     // Get references to various HTML elements
     const signupButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#signupButton"));
     const loginButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#loginButton"));
@@ -26,7 +35,15 @@ async function setup(): Promise<void> {
 
     burgerMenu?.addEventListener("click", () => {
         // Show the sidebar menu when the burger menu is clicked
-        sidebarMenu?.classList.add("show");
+        sidebarMenu?.classList.toggle("show");
+
+        if (sidebarMenu.classList.contains("show")) {
+            burgerMenu.src = "assets/img/svg/burgerMenuClose.svg";
+        }
+
+        if (!sidebarMenu.classList.contains("show")) {
+            burgerMenu.src = "assets/img/svg/burgerMenu.svg";
+        }
     });
 
     sidebarClose?.addEventListener("click", () => {

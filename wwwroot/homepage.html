@@ -9,6 +9,7 @@
     <title>Code Exchange Homepage</title>
     <!-- External stylesheet links for styling -->
 
+    <link rel="stylesheet" href="assets/css/general.css">
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
     <link rel="stylesheet" href="assets/css/page/homepage.css">
@@ -17,35 +18,42 @@
 
 <!-- Sidebar Section -->
 <aside class="sidebarMenu">
-    <div class="container">
-        <!-- Close button for the sidebar -->
-        <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg"
-                  alt="siderbarClose"></div>
-        <!-- Sidebar menu buttons -->
-        <ul class="containerButtons">
-            <li>
-                <button id="homeButton">Home</button>
-            </li>
-            <li>
-                <button id="aboutButton">about</button>
-            </li>
-            <li>
-                <button id="questionsButton">Questions</button>
-            </li>
-        </ul>
+    <div class="sidebarContainer">
+        <div class="containerButtons">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="homepage.html" class="buttonItem" id="homeButton">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="index.html" class="buttonItem" id="aboutButton">
+                        <i class="fa-regular fa-window-maximize"></i>
+                        <span>About</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="questions.html" class="buttonItem" id="questionsButton">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>Questions</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
     </div>
 </aside>
 
 <!-- Navbar Section -->
-
-
 <nav class="navbar">
     <div class="container">
         <img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu">
 
         <div class="centered-block">
             <img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo">
-            <input id="searchBarInput" type="text" placeholder="  search...">
         </div>
         <div class="end-block">
             <div class="logged-out hidden">
@@ -53,10 +61,27 @@
                 <button id="loginButton">log in</button>
             </div>
 
-            <div class="hidden">
+            <div class="profile-block hidden">
+                <img tabindex="0" class="profilePicture" src="" alt="Profile picture Button">
+
+                <div class="userDropdown hidden">
+                    <div id="arrow" class="tooltip-arrow-up"></div>
+
+                    <div class="personalInfo">
+                        <div class="nameCardUsername"></div>
+                        <div class="nameCardEmail"></div>
+                    </div>
+                    <ul class="avatarButtons" aria-labelledby="avatarButton">
+                        <li class="avatarButton-cover">
+                            <a href="user-page.html" class="avatarButton"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                        </li>
+                    </ul>
+                    <div class="sign-out-block py-1">
+                        <a tabindex="0" class="avatarButton signOut"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                    </div>
+                </div>
 
             </div>
-
         </div>
     </div>
 </nav>

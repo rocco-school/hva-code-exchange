@@ -8,6 +8,7 @@ import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 
 // Define an asynchronous function to fetch and display the most recent questions
 async function getMostRecentQuestions(): Promise<void> {
+
     try {
         // Fetch recent questions from the database using an API call
         const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_FIVE_QUESTIONS) as [Question];
@@ -153,7 +154,7 @@ async function getMostRecentQuestions(): Promise<void> {
 
                 if (questionCreator) {
                     // Search for the user data based on the user ID
-                    const userData: User = await User.retrieveUser(singleQuestion.userId) as User;
+                    const userData: User = await User.retrieveUser(singleQuestion.userId!) as User;
 
                     // Display the username of the question creator
                     questionCreator.innerHTML = userData.username;

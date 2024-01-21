@@ -1,6 +1,7 @@
 .create-question-container {
     max-width: 70%;
-    margin: 5rem auto auto;
+    margin: auto auto;
+    padding-top: 6rem;
 }
 
 .answer-container {

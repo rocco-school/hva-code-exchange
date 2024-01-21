@@ -14,10 +14,12 @@ export class User {
     private _profilePicture: string;
     private _password: string;
     private _email: string;
+    private _createdAt: Date | null;
+    private _updatedAt: Date | null;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: Date, username: string, experienceYears: number, profilePicture: string, password: string, email: string) {
+    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: Date, username: string, experienceYears: number, profilePicture: string, password: string, email: string, createdAt: Date | null, updatedAt: Date | null) {
         this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
@@ -27,6 +29,8 @@ export class User {
         this._profilePicture = profilePicture;
         this._password = password;
         this._email = email;
+        this._createdAt = createdAt;
+        this._updatedAt = updatedAt;
     }
 
     // Getters en setters
@@ -66,6 +70,14 @@ export class User {
         return this._email;
     }
 
+    public get createdAt(): Date | null {
+        return this._createdAt;
+    }
+
+    public get updatedAt(): Date | null {
+        return this._updatedAt;
+    }
+
     public set userId(value: number) {
         this._userId = value;
     }
@@ -102,9 +114,16 @@ export class User {
         this._email = value;
     }
 
+    public set createdAt(value: Date | null) {
+        this._createdAt = value;
+    }
+
+    public set updatedAt(value: Date | null) {
+        this._updatedAt = value;
+    }
 
     public toString(): string {
-        return `User: ${this._userId} ${this._username} ${this._experienceYears} ${this._password} ${this._email} ${this._firstname} ${this._lastname} ${this._dateOfBirth}`;
+        return `User: ${this._userId} ${this._username} ${this._experienceYears} ${this._password} ${this._email} ${this._firstname} ${this._lastname} ${this._dateOfBirth} ${this._createdAt} ${this._updatedAt}`;
     }
 
 

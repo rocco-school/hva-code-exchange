@@ -14,12 +14,15 @@ import {Answer} from "./models/answer";
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
+
     // Get max number of pages for loading all questions.
     const getMaxPages: number | string = await Question.getMaxQuestionPages();
     const pageNumbers: number[] = [...Array(getMaxPages).keys()].map(i => i + 1);
 
     // populate question table.
     await populateQuestionTable();
+
+
 
     // Add pagination page numbers
     await addPagination(pageNumbers);

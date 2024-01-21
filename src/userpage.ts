@@ -1,4 +1,4 @@
-import {hashPassword} from "./components/hashPassword";
+import {comparePasswords, hashPassword} from "./components/hashPassword";
 import "./config";
 import {api, types, utils} from "@hboictcloud/api";
 import {USER_QUERY} from "./query/user.query";
@@ -6,8 +6,10 @@ import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import {User} from "./models/user";
 import {initializeTagSelect} from "./components/initializeSelect";
-import {handleButtonClick} from "./components/customSelect";
+import {handleButtonClick, updateSelectedOptions} from "./components/customSelect";
 import {showSuccessMessage} from "./components/successMessage";
+import {CodingTag} from "./models/codingTag";
+import {createNewUserInstance} from "./components/handleModelInstances";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -22,22 +24,20 @@ async function setup(): Promise<void> {
     const currentUserId: number = loginStatus["userId"];
     console.log(currentUserId);
 
-    // await User.deleteUser(5);
+    await initializeUserSettings(currentUserId);
 
     // DOM element selections
-    const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
-    const userSettingsBtn: HTMLButtonElement | null = document.querySelector("#userSettingsBtn");
-    const publicProfileSection: HTMLElement | null = document.querySelector(".publicProfileSection");
     const editProfileSection: HTMLElement | null = document.querySelector(".editProfileSection");
     const passwordSection: HTMLElement | null = document.querySelector(".passwordSection");
     const errorPasswordMessageBox: HTMLDivElement | null = document.querySelector("#errorPasswordMessageBox");
     const usernameUser: HTMLDivElement | null = document.querySelector("#usernameUser");
-    const birthdayUser: HTMLDivElement | null = document.querySelector("#birthdayUser");
-    const yearsOfExperienceUser: HTMLDivElement | null = document.querySelector("#yearsOfExperienceUser");
+    const memberSince: HTMLDivElement | null = document.querySelector(".memberUser");
+    const yearsOfExperienceUser: HTMLDivElement | null = document.querySelector(".yearsOfExperienceUser");
     const profileExpertise: HTMLUListElement | null = document.querySelector(".profileExpertise");
 
     // Input elements for user details
     const usernameInput: HTMLInputElement | null = document.querySelector("#usernameInput");
+    const oldpasswordInput: HTMLInputElement | null = document.querySelector("#oldPasswordInput");
     const newPasswordInput: HTMLInputElement | null = document.querySelector("#newPasswordInput");
     const confirmPasswordInput: HTMLInputElement | null = document.querySelector("#confirmPasswordInput");
     const emailInput: HTMLInputElement | null = document.querySelector("#emailInput");
@@ -45,45 +45,31 @@ async function setup(): Promise<void> {
     const lastnameInput: HTMLInputElement | null = document.querySelector("#lastnameInput");
     const birthdayInput: HTMLInputElement | null = document.querySelector("#birthdayInput");
     const programmingExperienceInput: HTMLInputElement | null = document.querySelector("#programmingExperienceInput");
-    const expertiseOptions: HTMLSelectElement | null = document.querySelector("#expertiseOptions");
 
     // Buttons for user interactions
-    const editPasswordBtn: HTMLButtonElement | null = document.querySelector("#editPasswordBtn");
-    const changePasswordBtn: HTMLButtonElement | null = document.querySelector("#changePasswordBtn");
-    const passwordCloseBtn: HTMLButtonElement | null = document.querySelector("#passwordCloseBtn");
+    const editPasswordBtn: HTMLButtonElement | null = document.querySelector(".editPasswordBtn");
+    const changePasswordBtn: HTMLButtonElement | null = document.querySelector(".changePasswordBtn");
+    const passwordCloseBtn: HTMLButtonElement | null = document.querySelector(".passwordCloseBtn");
     const saveBtn: HTMLButtonElement | null = document.querySelector("#saveBtn");
-    const editBtn: HTMLButtonElement | null = document.querySelector("#editBtn");
-    const discardBtn: HTMLButtonElement | null = document.querySelector("#discardBtn");
 
 
     const file: HTMLInputElement = document.querySelector("#file") as HTMLInputElement;
     const profilePicture: HTMLImageElement = document.querySelector(".profile-picture") as HTMLImageElement;
 
-    // Array of elements to be disabled during certain states
-    const disabled: (HTMLInputElement | HTMLButtonElement | HTMLSelectElement | null)[] = [
-        usernameInput, birthdayInput, programmingExperienceInput,
-        editPasswordBtn, emailInput, expertiseOptions,
-        firstnameInput, lastnameInput, saveBtn, discardBtn
-    ];
+    document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
+
+    document.querySelectorAll(".profile-tab").forEach(item => {
+        item.addEventListener("click", handleHeroTab);
+    });
 
     // Regular Expression for firstname and lastname
     // only letters are allowed and numbers are not allowed
     const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
 
-    const retrievedUser: any = await User.retrieveUser(loginStatus.userId);
+    const retrievedUser: User = await User.retrieveUser(loginStatus.userId) as User;
     const retrievedUserTags: any = await User.getUserTags(loginStatus.userId);
 
-    const user: User = new User(
-        retrievedUser.userId,
-        retrievedUser.firstname,
-        retrievedUser.lastname,
-        retrievedUser.dateOfBirth,
-        retrievedUser.username,
-        retrievedUser.experienceYears,
-        retrievedUser.profilePicture,
-        retrievedUser.password,
-        retrievedUser.email
-    );
+    const user: User = createNewUserInstance(retrievedUser);
 
     file.addEventListener("input", async function (): Promise<void> {
         const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
@@ -109,17 +95,14 @@ async function setup(): Promise<void> {
         profilePicture.src = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
     }
 
-
-    // Display user information in the UI
-
     // Display the username in the UI
     if (usernameUser) {
         usernameUser.innerHTML = retrievedUser.username;
     }
 
     // Display the formatted date of birth in the UI
-    if (birthdayUser) {
-        birthdayUser.innerHTML = retrievedUser.dateOfBirth?.replace("T", "  ").replace("00:00", "").slice(0, -8);
+    if (memberSince) {
+        memberSince.innerHTML = "Member since " + retrievedUser.createdAt?.toString().replace("T", "  ").replace("00:00", "").slice(0, -8) ?? "Unknown";
     }
 
     // Display years of programming experience in the UI
@@ -137,61 +120,7 @@ async function setup(): Promise<void> {
         });
     }
 
-    // Event listeners for UI buttons
 
-    // Event listener for the "Edit" button
-    if (editBtn) {
-        editBtn.addEventListener("click", (): void => {
-        // Enable input fields and buttons for editing
-            disabled.forEach(element => {
-                element?.removeAttribute("disabled");
-            });
-            // Hide the "Edit" button, show the "Save" and "Discard" buttons
-            editBtn?.classList.add("hidden");
-            saveBtn?.classList.remove("hidden");
-            discardBtn?.classList.remove("hidden");
-        });
-    }
-
-    // Event listener for the "Discard" button
-    if (discardBtn) {
-        discardBtn.addEventListener("click", (): void => {
-        // Disable input fields and buttons, and reset the UI
-            disabled.forEach(element => {
-                element?.setAttribute("disabled", "");
-            });
-            // Show the "Edit" button, hide the "Save" and "Discard" buttons
-            editBtn?.classList.remove("hidden");
-            saveBtn?.classList.add("hidden");
-            discardBtn?.classList.add("hidden");
-        });
-    }
-
-    // Event listener for the "User Profile" button
-    if (userProfileBtn) {
-        userProfileBtn.addEventListener("click", (): void => {
-        // Show the public profile section and hide the edit profile section if visible
-            publicProfileSection?.classList.remove("hidden");
-            if (editProfileSection?.classList.contains("hidden")) {
-                return;
-            } else {
-                editProfileSection?.classList.add("hidden");
-            }
-        });
-    }
-
-    // Event listener for the "User Settings" button
-    if (userSettingsBtn) {
-        userSettingsBtn.addEventListener("click", (): void => {
-        // Show the edit profile section and hide the public profile section if visible
-            editProfileSection?.classList.remove("hidden");
-            if (publicProfileSection?.classList.contains("hidden")) {
-                return;
-            } else {
-                publicProfileSection?.classList.add("hidden");
-            }
-        });
-    }
 
     // Event listener for the "Edit Password" button
     if (editPasswordBtn) {
@@ -210,7 +139,7 @@ async function setup(): Promise<void> {
     // Event listener for the "Password Close" button
     if (passwordCloseBtn) {
         passwordCloseBtn.addEventListener("click", (): void => {
-        // Hide the password section and show the edit profile section
+            // Hide the password section and show the edit profile section
             passwordSection?.classList.add("hidden");
             editProfileSection?.classList.remove("hidden");
         });
@@ -219,25 +148,34 @@ async function setup(): Promise<void> {
     // Event listener for the "Change Password" button in the editProfileSection
     if (changePasswordBtn) {
         changePasswordBtn.addEventListener("click", async (): Promise<void> => {
-        // Gather password inputs for validation
-            const passwordInputs: (HTMLInputElement | null)[] = [newPasswordInput, confirmPasswordInput];
+            let noErrors: boolean = true;
 
-            // TODO: Implement password comparison logic
+            // Gather password inputs for validation
+            const passwordInputs: (HTMLInputElement | null)[] = [oldpasswordInput, newPasswordInput, confirmPasswordInput];
 
-            // Check if any password inputs are empty
+            if (!oldpasswordInput) return;
+            const checkPassword: boolean = await comparePasswords(oldpasswordInput?.value, user.password);
             const emptyPasswordInputs: any = await checkPasswordValue(passwordInputs);
-            if (!emptyPasswordInputs) return;
-
-            // Validate the new password format
             const verifiedNewPassword: boolean = await verifyNewPassword(newPasswordInput, errorPasswordMessageBox!);
-            if (!verifiedNewPassword) return;
-
-            // Validate the confirmation password
             const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput, newPasswordInput, errorPasswordMessageBox!);
-            if (!verifiedConfirmPassword) return;
 
-            // If all validations pass, update the password
-            if (emptyPasswordInputs && verifiedNewPassword && verifiedConfirmPassword) {
+            if (!checkPassword || !emptyPasswordInputs || !verifiedNewPassword || !verifiedConfirmPassword) {
+                noErrors = false;
+            }
+
+            if (!noErrors) {
+                errorPasswordMessageBox?.classList.remove("hidden");
+                if (errorPasswordMessageBox) {
+                    errorPasswordMessageBox.innerHTML = "Something went wrong when changing password!";
+                    setTimeout((): void => {
+                        errorPasswordMessageBox.classList.add("hidden");
+                        errorPasswordMessageBox.innerHTML = "";
+                    }, 5000);
+                }
+            }
+
+            //If all validations pass, update the password
+            if (noErrors && emptyPasswordInputs && verifiedNewPassword && verifiedConfirmPassword) {
                 try {
                     const updatedPassword: any = await updatePasswordData(loginStatus.userId, confirmPasswordInput!.value);
                     // Hide the password section and show the edit profile section
@@ -254,8 +192,8 @@ async function setup(): Promise<void> {
     // Event listener for the "Save" button in the editProfileSection
     if (saveBtn) {
         saveBtn.addEventListener("click", async (): Promise<void> => {
-        // const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
-        // const verifiedInputs: any = checkValue(inputs);
+            // const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
+            // const verifiedInputs: any = checkValue(inputs);
 
             // Retrieve the tag ID for the selected expertise
             // const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
@@ -265,14 +203,14 @@ async function setup(): Promise<void> {
             // Use the async function handleButtonClick when the submit button is clicked
             await handleButtonClick().then((result: string | null): void => {
                 if (result !== null) {
-                // Handle the valid result
+                    // Handle the valid result
                     const tags: string[] = result.split(", ");
 
                     for (const tagsKey in tags) {
                         questionTags.push(tags[tagsKey]);
                     }
                 } else {
-                // Handle the case where the input is not valid
+                    // Handle the case where the input is not valid
                     console.log("Input is not valid.");
                 }
             });
@@ -293,14 +231,14 @@ async function setup(): Promise<void> {
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
                     const updatedUser: any = await updateUserData(
-                    usernameInput!.value,
-                    birthdayInput?.value,
-                    programmingExperienceInput?.value,
-                    emailInput?.value,
-                    questionTags,
-                    firstnameInput?.value,
-                    lastnameInput?.value,
-                    loginStatus.userId
+                        usernameInput!.value,
+                        birthdayInput?.value,
+                        programmingExperienceInput?.value,
+                        emailInput?.value,
+                        questionTags,
+                        firstnameInput?.value,
+                        lastnameInput?.value,
+                        loginStatus.userId
                     );
 
                     console.log(updatedUser);
@@ -445,4 +383,146 @@ async function updatePasswordData(userId: number, updatedPassword: string): Prom
     console.log(passwordDatabase);
     console.log("SUCCESS! WOOHOO!");
     return;
+}
+
+/**
+ * Toggle password visibility on icon click.
+ * @param {Element} icon - The icon element to attach the click event to.
+ */
+function togglePasswordVisibility(icon: Element): void {
+    icon.addEventListener("click", (): void => {
+        // Find the closest ancestor with class "passwordBox"
+        const passwordBox: Element = icon.closest(".passwordBox") as Element;
+
+        // Find the input element within the passwordBox
+        const inputElem: HTMLInputElement = passwordBox?.querySelector(".inputBox") as HTMLInputElement;
+
+        // Check if the input element is of type "password"
+        if (inputElem && inputElem.type === "password") {
+            // If it's a password input, change type to "text"
+            inputElem.type = "text";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
+        } else {
+            // If it's not a password input or doesn't exist, change type to "password"
+            inputElem.type = "password";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        }
+    });
+}
+
+
+/**
+ * Initializes user settings based on the provided user ID.
+ * @param {number} userId - The ID of the user for whom to initialize settings.
+ * @returns {Promise<void>} - A Promise that resolves when the initialization is complete.
+ */
+async function initializeUserSettings(userId: number): Promise<void> {
+    try {
+        // Retrieve user information and user expertise asynchronously
+        const user: User = await User.retrieveUser(userId) as User;
+        const userExpertise: CodingTag[] = await User.getUserExpertises(userId) as CodingTag[];
+
+        // Extract unique tag IDs from user expertise
+        const tagIds: number[] = [...new Set(userExpertise.map(item => item.tagId))] as number[];
+
+        // Select input elements
+        const usernameInput: HTMLInputElement = document.querySelector(".usernameInput") as HTMLInputElement;
+        const experienceInput: HTMLInputElement = document.querySelector(".experienceInput") as HTMLInputElement;
+        const birthdayInput: HTMLInputElement = document.querySelector(".birthdayInput") as HTMLInputElement;
+        const emailInput: HTMLInputElement = document.querySelector(".emailInput") as HTMLInputElement;
+        const firstnameInput: HTMLInputElement = document.querySelector(".firstnameInput") as HTMLInputElement;
+        const lastnameInput: HTMLInputElement = document.querySelector(".lastnameInput") as HTMLInputElement;
+
+        // Select all custom-select elements
+        const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
+
+        // Iterate over custom-select elements
+        customSelects.forEach(function (customSelect: Element) {
+            // Select all option elements within the current custom-select
+            const selectOptions: NodeListOf<HTMLDivElement> = customSelect.querySelectorAll(".option");
+
+            // Update the display of selected options
+            selectOptions.forEach(item => {
+                const tagId: string = item.getAttribute("data-value") as string;
+                const expertiseId: number = parseInt(tagId);
+
+                if (tagIds.includes(expertiseId)) {
+                    item.classList.add("active");
+                }
+            });
+
+            // Update the display of selected options
+            updateSelectedOptions(customSelect);
+        });
+
+        // Set values for input elements if they exist and user information is available
+        if (usernameInput && user.username) {
+            usernameInput.value = user.username;
+        }
+
+        if (experienceInput) {
+            experienceInput.value = user.experienceYears.toString();
+        }
+
+        if (birthdayInput && user.dateOfBirth) {
+            birthdayInput.value = user.dateOfBirth.toString();
+        }
+
+        if (emailInput && user.email) {
+            emailInput.value = user.email;
+        }
+
+        if (firstnameInput && user.firstname) {
+            firstnameInput.value = user.firstname;
+        }
+
+        if (lastnameInput && user.lastname) {
+            lastnameInput.value = user.lastname;
+        }
+
+    } catch (error) {
+        // Handle errors, e.g., log or display an error message
+        console.error("Error initializing user settings:", error);
+    }
+}
+
+
+/**
+ * Function to handle tab navigation on the single-event detail page.
+ *
+ * This function is responsible for handling tab navigation on the single-event detail page.
+ * It shows and hides content based on the selected tab and updates the tab's visual state.
+ */
+async function handleHeroTab(this: HTMLElement): Promise<void> {
+    const profileSection: HTMLTableSectionElement = (<HTMLTableSectionElement>document.querySelector(".userProfileSection"));
+    const editUserSection: HTMLTableSectionElement = (<HTMLTableSectionElement>document.querySelector(".editProfileSection"));
+    const activitySection: HTMLTableSectionElement = (<HTMLTableSectionElement>document.querySelector(".userActivitySection"));
+
+    // Remove the "is-active" class from all hero tabs.
+    document.querySelectorAll(".profile-tab").forEach(item => {
+        item.classList.remove("is-active");
+    });
+
+    // Add the "is-active" class to the selected hero tab.
+    this.classList.add("is-active");
+
+    // Hide all content sections by adding the "hidden" class.
+    document.querySelectorAll(".content").forEach(item => {
+        item.classList.add("hidden");
+    });
+
+    // Show content sections based on the selected tab.
+    if (this.classList.contains("userProfile")) {
+        if (editUserSection && !editUserSection.classList.contains("hidden")) editUserSection.classList.add("hidden");
+        if (activitySection && !activitySection.classList.contains("hidden")) activitySection.classList.add("hidden");
+        if (profileSection && activitySection.classList.contains("hidden")) profileSection.classList.remove("hidden");
+    } else if (this.classList.contains("userActivity")) {
+        if (profileSection && !profileSection.classList.contains("hidden")) profileSection.classList.add("hidden");
+        if (editUserSection && !editUserSection.classList.contains("hidden")) editUserSection.classList.add("hidden");
+        if (activitySection && activitySection.classList.contains("hidden")) activitySection.classList.remove("hidden");
+    } else if (this.classList.contains("userSettings")) {
+        if (profileSection && !profileSection.classList.contains("hidden")) profileSection.classList.add("hidden");
+        if (activitySection && !activitySection.classList.contains("hidden")) activitySection.classList.add("hidden");
+        if (editUserSection && editUserSection.classList.contains("hidden")) editUserSection.classList.remove("hidden");
+    }
 }

@@ -5,17 +5,109 @@
     width: auto;
 }
 
-.hidden {
-    display: none;
+body {
+    --tw-bg-opacity: 1;
+    background-color: rgb(249 250 251/var(--tw-bg-opacity));
 }
 
-#usernameUser {
-    padding: 1rem;
+.profileTabs {
+    display: flex;
+    margin: 2rem auto auto;
+    max-width: 100%;
+}
+
+.profileTabsContainer {
+    display: flex;
+    padding: .5rem;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.01), 0 1px 1px rgba(0, 0, 0, 0.1);
+    column-gap: 0.25rem;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 0.75rem;
+}
+
+
+.profile-tab {
+    display: flex;
+    align-items: center;
+    border-radius: 0.75rem;
+    column-gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 75ms;
+}
+
+.profile-tab:hover {
+    background-color: #F9FAFB;
+    color: #0492C2;
+}
+
+.is-active {
+    color: #0492C2;
+    background-color: #F9FAFB;
+}
+
+.edit-block {
+    margin-bottom: 2rem;
+    background-color: whitesmoke;
+    border-radius: 6px;
+    padding: 2rem;
+    max-width: 40rem;
+}
+
+.blockTitle {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.subtitle {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 2rem;
+    font-size: 0.8rem;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+    margin-bottom: 1rem;
+}
+
+.infoBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.firstnameBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.lastnameBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.nameInfo {
+    gap: 1rem;
 }
 
 .profileHeader {
+    padding-top: 3.5rem;
     margin: 0 14rem;
-    border-bottom: 1px grey solid;
+    border-bottom: 1px #ced4da solid;
 }
 
 .profileHeaderContainer {
@@ -32,48 +124,28 @@
     align-items: center;
 }
 
-.profileNameCard img {
-    height: 8rem;
-    width: 8rem;
-    border-radius: 1rem;
-}
-
-.profileNameCard .nameAndRankContainer {
+.nameAndRankContainer {
     display: flex;
     flex-direction: column;
+    margin-left: 2rem;
 }
 
-.profileNameCard .nameCardUsername {
+.userStatsContainer {
     display: flex;
-    justify-content: center;
-
-    width: 8rem;
-    font-size: 1.5rem;
-    margin-top: 0.5rem;
-}
-
-.profileHeaderContainer .editProfileBtn {
-    margin: 1rem;
-    width: 6rem;
-    height: 2rem;
-}
-
-.profileHeaderContainer .userStatsContainer {
-    display: flex;
-    flex-direction: row;
+    flex-direction: column;
     list-style: none;
-    gap: 1rem;
-    margin-left: 1.5rem;
-
+    gap: .5rem;
+    margin-top: .5rem;
 }
 
-.userStatsContainer li {
+.memberSinceBlock {
     display: flex;
-    flex-direction: row;
+    gap: 1rem;
 }
 
-.userStatsContainer div {
-    margin-left: 0.5rem;
+.experienceBlock {
+    display: flex;
+    gap: 1rem;
 }
 
 .profileTabs {
@@ -86,99 +158,21 @@
     list-style: none;
 }
 
-.profileTabsContainer li {
-    margin-right: 1rem;
-}
-
-.profileTabsContainer button {
-    width: 4rem;
-    height: 1.5rem;
-}
-
-/* public profile section */
-.publicProfileSection.hidden {
-    display: none;
-}
-
-.publicProfileSection {
-    margin: 0 14rem;
-    padding: 2rem;
-}
-
-.publicProfileSection h2 {
-    margin-bottom: 1rem;
-}
 
 .profileStats {
     display: flex;
     flex-direction: column;
 }
 
-.profileStats .profileExpertise {
+.profileExpertise {
     display: flex;
     flex-direction: row;
-}
-
-.profileStats h3 {
-    margin: 1rem 0;
-}
-
-.profileStats ul {
-    list-style-type: none;
-}
-
-.profileStats li {
-    padding: 0.5rem;
-    margin-right: 0.5rem;
-    border-radius: 1rem;
-    background-color: #f1f1f1;
-}
-
-/* editProfileSection */
-.editProfileSection.hidden {
-    display: none;
 }
 
 .editProfileSection {
-    margin: 0 14rem;
     padding: 1rem 2rem;
-}
-
-.editProfileSection h1 {
-    margin-bottom: 2rem;
-}
-
-.editProfileSection h3 {
-    line-height: 1.6;
-}
-
-.editProfileSection #editPasswordBtn {
-    width: 4rem;
-    height: 1rem;
-}
-
-.editProfileSection .actionButtons {
-    padding: 1rem 0rem;
-}
-
-.actionButtons .actionButtonsContainer {
-    display: flex;
-    flex-direction: row;
-}
-
-.actionButtonsContainer li {
-    list-style: none;
-    margin-right: 0.5rem;
-}
-
-.actionButtons button {
-    width: 3rem;
-    height: 1.5rem;
-}
-
-
-.passwordSection.hidden {
-    display: none;
+    margin: auto;
+    max-width: 35rem;
 }
 
 .passwordSection {
@@ -190,81 +184,90 @@
 .passwordSectionContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-
-    border: black 2px solid;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 1);
     border-radius: 2rem;
     padding: 2rem;
 }
 
-.passwordSectionContainer input {
-    height: 1.5rem;
-    width: 25rem;
+.errorMessage {
+    margin-bottom: 1rem;
+    text-align: center;
+    max-width: 30rem;
+    color: darkred;
 }
 
-.passwordSectionContainer #passwordCloseBtn {
-    align-self: flex-end;
-    background: none;
-    border: none;
-    color: red;
+.passwordSectionTitle {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+.passwordCloseBtn {
     cursor: pointer;
-    font-size: 2rem;
-    height: 1rem;
-    width: 1rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 1rem;
+    justify-self: end;
 }
 
-.passwordSectionContainer h1, .passwordBox, button {
-    align-self: center;
-    padding-bottom: 1rem;
+.passwordCloseBtn:hover {
+    transform: scale(1.5);
 }
 
-.passwordSectionContainer #changePasswordBtn {
+.changePasswordBtn {
     display: flex;
     justify-content: center;
     align-items: baseline;
     height: 1.5rem;
     font-size: 1rem;
     width: 25rem;
-
+    margin: auto;
 }
 
-.errorMessage.hidden {
-    display: none;
-}
-
-.errorMessage {
-    background-color: #ff0033;
-    color: white;
-    width: 20rem;
-    border-radius: 1rem;
-    font: 1.1rem bold;
-    padding: 1rem;
+.passwordInputs {
     margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.passwordBox {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputBox {
+    height: 1rem;
+    padding: .4rem;
+    border-radius: 6px;
+    border-width: 1px;
+}
+
+.icon-eye {
+    float: right;
+    margin-top: -25px;
+    margin-right: 1rem;
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    z-index: 2;
+    cursor: pointer;
 }
 
 .profile-pic {
     color: transparent;
-    transition: all .3s ease;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    position: relative;
-}
+    display: flex;}
 
-.profile-pic input {
-    display: none;
-}
 
-.profile-pic img {
+.profile-picture {
     position: absolute;
     object-fit: cover;
-    width: 165px;
-    height: 165px;
+    width: 135px;
+    height: 135px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 1);
     border-radius: 100px;
     z-index: 0;
 }
-
 
 .profile-pic label {
     cursor: pointer;
@@ -273,8 +276,7 @@
     width: 135px;
 }
 
-
-.profile-pic:hover .label {
+.label:hover {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -286,9 +288,16 @@
     margin-bottom: 0;
 }
 
-.profile-pic span {
-    display: contents;
-    padding: .2em;
-    height: 2em;
+.labelText {
+    position: relative;
+    text-align: center;
 }
 
+.editTitle {
+    text-align: center;
+    margin: auto auto 1rem;
+}
+
+.hidden {
+    display: none;
+}
