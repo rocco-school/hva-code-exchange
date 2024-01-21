@@ -91,7 +91,7 @@ async function setup(): Promise<void> {
             await api.deleteFile(fileName);
         }
 
-        const filename: string = file?.files[0].name;
+        const filename: string = file.files![0].name;
         const imageData: types.DataURL = await utils.getDataUrl(file) as types.DataURL;
         user.profilePicture = await api.uploadFile(filename, imageData.url);
 
