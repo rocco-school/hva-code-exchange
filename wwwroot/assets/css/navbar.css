@@ -12,10 +12,23 @@
 
 /* Styling for the navigation bar container */
 .navbar .container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.navbar .container .centered-block {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
+}
+
+
+.navbar .container .end-block {
+    display: flex;
+    justify-content: end;
+    gap: 2rem;
+}
+.navbar .container .end-block .logged-out {
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .navbar .container li {
@@ -33,20 +46,30 @@
 .navbar .container #searchBarInput {
     height: 1.5rem;
     width: 40rem;
+    margin: auto auto auto 2rem;
 }
 
 /* Styling for buttons within the navigation bar */
 .navbar .container button {
     padding: 0.5rem;
     cursor: pointer;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /* Styling for specific elements within the navigation bar */
 .navbar .container #burgerMenu {
     height: 2rem;
     cursor: pointer;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .navbar .container #codeExchangeLogo {
     height: 3.5rem;
+}
+
+.hidden {
+    display: none;
 }

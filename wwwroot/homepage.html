@@ -8,6 +8,7 @@
     <!-- Page title -->
     <title>Code Exchange Homepage</title>
     <!-- External stylesheet links for styling -->
+
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
     <link rel="stylesheet" href="assets/css/page/homepage.css">
@@ -36,22 +37,28 @@
 </aside>
 
 <!-- Navbar Section -->
+
+
 <nav class="navbar">
-    <ul class="container">
-        <!-- Burger menu icon -->
-        <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
-        <!-- Code Exchange logo -->
-        <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
-        <!-- Search bar input -->
-        <li><input id="searchBarInput" type="text" placeholder="  search..."></li>
-        <!-- Sign up and log in buttons -->
-        <li>
-            <button id="signupButton">sign up</button>
-        </li>
-        <li>
-            <button id="loginButton">log in</button>
-        </li>
-    </ul>
+    <div class="container">
+        <img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu">
+
+        <div class="centered-block">
+            <img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo">
+            <input id="searchBarInput" type="text" placeholder="  search...">
+        </div>
+        <div class="end-block">
+            <div class="logged-out hidden">
+                <button id="signupButton">sign up</button>
+                <button id="loginButton">log in</button>
+            </div>
+
+            <div class="hidden">
+
+            </div>
+
+        </div>
+    </div>
 </nav>
 
 <!-- Main Content Section (Recent Questions) -->
