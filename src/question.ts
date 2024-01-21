@@ -50,7 +50,7 @@ async function setup(): Promise<void> {
     // Retrieves a question from the database based on the URL parameter question ID.
     const question: Question = await Question.retrieveQuestion(questionId) as Question;
 
-    await generateQuestionUserInfo(userId, question);
+    await generateQuestionUserInfo(question.userId, question);
 
     // If the question does not exist, redirect to the index page
     if (!question) location.replace("index.html");
@@ -173,28 +173,40 @@ await setup();
 /**
  * Generates and displays user information for a given user ID within a question.
  *
- * @param {string} userId - The ID of the user for whom the information is generated.
+ * @param {number | null} userId - The ID of the user for whom the information is generated.
  * @param {Question} question - The Question Object with whom the information is generated.
  * @returns {Promise<void>} A Promise that resolves when the function completes successfully.
  */
-async function generateQuestionUserInfo(userId: number, question: Question): Promise<void> {
-    const user: User = await User.retrieveUser(userId) as User;
+async function generateQuestionUserInfo(userId: number | null, question: Question): Promise<void> {
+    let totalAnswers: number = 0;
+    let totalQuestions: number = 0;
+    let username: string = "Unknown user";
+    let userExpertise: string = "Unknown user";
+    let AvatarUrl: string = "https://ui-avatars.com/api/?name=Unknown+user&background=random";
 
-    // Get total answers and total questions count for the user
-    let totalAnswers: number = await User.getTotalAnswers(user.userId) as number;
-    let totalQuestions: number | string = await User.getTotalQuestions(user.userId) as number;
-    const username: string = user.firstname + " " + user.lastname as string;
+    if (userId) {
+        const user: User = await User.retrieveUser(userId) as User;
 
-    // Retrieve user expertises, which are coding tags associated with the user
-    let userExpertises: [CodingTag] = await User.getUserExpertises(user.userId) as [CodingTag];
+        // Get total answers and total questions count for the user
+        totalAnswers = await User.getTotalAnswers(user.userId) as number;
+        totalQuestions = await User.getTotalQuestions(user.userId) as number;
+        username = user.firstname + " " + user.lastname;
 
-    // Extract unique tag names from user expertises
-    const tagNames: string[] = [...new Set(userExpertises.map((item: { tagName: any; }) => item.tagName))];
-    let userExpertise: string = tagNames.join(", ");
+        // Retrieve user expertises, which are coding tags associated with the user
+        let userExpertises: [CodingTag] = await User.getUserExpertises(user.userId) as [CodingTag];
 
-    // Check if the user has no expertise and update the userExpertise accordingly
-    if (tagNames.length === 0) {
-        userExpertise = "No expertise!";
+        // Extract unique tag names from user expertises
+        const tagNames: string[] = [...new Set(userExpertises.map((item: {
+            tagName: any;
+        }) => item.tagName))];
+        userExpertise = tagNames.join(", ");
+
+        // Check if the user has no expertise and update the userExpertise accordingly
+        if (tagNames.length === 0) {
+            userExpertise = "No expertise!";
+        }
+
+        AvatarUrl = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
     }
 
     // Format the creation date of the answer
@@ -205,9 +217,6 @@ async function generateQuestionUserInfo(userId: number, question: Question): Pro
     const theUpdatedAtDate: Date = new Date(updatedAt);
     const createdDate: string = theCreatedAtDate.toISOString().slice(0, 10);
     const updatedDate: string = theUpdatedAtDate.toISOString().slice(0, 10);
-
-
-    const AvatarUrl: string = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
 
     /**
      * Represents user information displayed in a question.
@@ -439,20 +448,35 @@ async function addAnswersToPage(userId: number): Promise<void> {
     // Check if there are any answers to display
     for (const singleAnswer of answers) {
         const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
-        const totalAnswers: number = await User.getTotalAnswers(answer.userId) as number;
-        const totalQuestions: number = await User.getTotalQuestions(answer.userId) as number;
-        const userExpertise: string = await getUserExpertise(answer.userId);
+
+        let totalAnswers: number = 0;
+        let totalQuestions: number = 0;
+        let userExpertise: string = "Unknown user";
+        let extraClass: string = "hidden";
+        let canUserCertify: string = "hidden";
+        let username: string = "Unknown user";
+        let AvatarUrl: string = "https://ui-avatars.com/api/?name=Unknown+user&background=random";
+
+        if (answer.userId) {
+            totalAnswers = await User.getTotalAnswers(answer.userId) as number;
+            totalQuestions = await User.getTotalQuestions(answer.userId) as number;
+            userExpertise = await getUserExpertise(answer.userId);
+            extraClass = getExtraClass(userId, answer.userId);
+            username = getUsername(answer);
+            AvatarUrl = answer.profilePicture ? answer.profilePicture : `https://ui-avatars.com/api/?name=${answer.firstname}+${answer.lastname}&background=random`;
+        }
+
+        if (answer.userId && question.userId) {
+            canUserCertify = getCertifyVisibility(currentUserId, question.userId, answer.isAccepted);
+        }
 
         const {createdAt, updatedAt} = formatDates(answer.createdAt as Date, answer.updatedAt as Date);
 
-        const extraClass: string = getExtraClass(userId, answer.userId);
-        const canUserCertify: string = getCertifyVisibility(currentUserId, question.userId, answer.isAccepted);
         const checkMarkUrl: string = getCheckMarkUrl(answer.isAccepted);
 
-        const username: string = getUsername(answer);
+
         const upvoteCount: number = getUpvoteCount(answer);
 
-        const AvatarUrl: string = answer.profilePicture ? answer.profilePicture : `https://ui-avatars.com/api/?name=${answer.firstname}+${answer.lastname}&background=random`;
 
         const answerElement: string = createAnswerElement(
             answer.answerId!,
@@ -472,7 +496,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
 
         answersBody.innerHTML += answerElement;
 
-        addCertifyClickListener(currentUserId, question.userId, answer);
+        addCertifyClickListener(currentUserId, question.userId as number, answer);
     }
 
     addEventListeners(".answer-upvote", async (item: Element) => {

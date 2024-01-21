@@ -22,6 +22,8 @@ async function setup(): Promise<void> {
     const currentUserId: number = loginStatus["userId"];
     console.log(currentUserId);
 
+    // await User.deleteUser(5);
+
     // DOM element selections
     const userProfileBtn: HTMLButtonElement | null = document.querySelector("#userProfileBtn");
     const userSettingsBtn: HTMLButtonElement | null = document.querySelector("#userSettingsBtn");

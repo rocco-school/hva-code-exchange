@@ -54,7 +54,8 @@ export class AnswerService {
     public static async updateAnswer(answer: Answer): Promise<Answer> {
         try {
             // Update the answer in the Answer table.
-            const answerData: any[] = [answer.answerBody, answer.isAccepted, answer.answerId];
+            const answerData: any[] = [answer.userId, answer.answerBody, answer.isAccepted, answer.answerId];
+
             await api.queryDatabase(ANSWER_QUERY.UPDATE_ANSWER, ...answerData);
 
             // Retrieve the updated answer from the database.
