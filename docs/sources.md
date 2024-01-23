@@ -8,7 +8,7 @@ https://www.deepl.com/nl/translator
 
 ## Mindmap:
 
-https://www.marketingevolution.com/marketing-essentials/target-audience
+https://www.marketingevolution.com/marketing-essentials/target-audience 
 https://www.edrawmind.com/article/how-to-use-mind-map-for-programming.html
 https://www.careerexplorer.com/careers/computer-programmer/personality/
 https://www.exasol.com/resource/seven-traits-needed-for-success-tech-2/
