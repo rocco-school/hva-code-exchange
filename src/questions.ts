@@ -7,6 +7,8 @@ import {CodingTag} from "./models/codingTag";
 import {createNewQuestionInstance} from "./components/handleModelInstances";
 import DOMPurify from "dompurify";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import {delay} from "./components/delay";
+import {createQuestionElement} from "./components/htmlTemplate";
 
 /**
  * The main application entry point for the home page.
@@ -25,14 +27,22 @@ async function setup(): Promise<void> {
     await populatePaginationResult();
 
     // Get all create question form elements.
-    const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
-
     const createQuestionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
     const questionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-form"));
     const cancelForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".cancel-create-question"));
     const allPages: NodeListOf<HTMLSpanElement> = (<NodeListOf<HTMLSpanElement>>document.querySelectorAll(".page"));
+    const createButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".createQuestionButton"));
 
     const itemsPerPageSelector: HTMLSelectElement = (<HTMLSelectElement>document.querySelector(".questionAmount"));
+
+
+    createButton.addEventListener("click", async (): Promise<void> => {
+        createButton.classList.add("createButtonFocus");
+        await delay(100);
+        createButton.classList.remove("createButtonFocus");
+
+        url.redirect("create-question.html");
+    });
 
 
     itemsPerPageSelector.addEventListener("change", () => {
@@ -84,11 +94,6 @@ async function setup(): Promise<void> {
             // Reload the page
             location.reload();
         });
-    });
-
-    // Show question form on click
-    createQuestion?.addEventListener("click", (): void => {
-        url.redirect("create-question.html");
     });
 
     // Cancel creating question on click
@@ -281,55 +286,6 @@ function displayNumbers(page: number, array: number[]): number[] {
 
     // Extract the subset of numbers to display
     return array.slice(startIndex, endIndex);
-}
-
-
-/**
- * Creates HTML markup for displaying a question.
- *
- * @param {string} questionTitle - The title of the question.
- * @param {string} username - The username of the user who posted the question.
- * @param {string} questionTags - The Tags of the question.
- * @param questionPreviewTitle
- * @param questionPreviewContent
- * @param {string} questionId - The id of the question
- * @returns {string} - HTML markup for the question.
- */
-function createQuestionElement(
-    questionTitle: string,
-    username: string,
-    questionTags: string,
-    questionPreviewTitle: string,
-    questionPreviewContent: string,
-    questionId: string
-): string {
-    return `
-        <div class="question-body" id="${questionId}">
-            <div class="single-question">
-                <div class="question-header">
-                    <h2 class="questionTitle">${questionTitle}</h2>
-
-                    <div class="questionUser">By ${username}</div>
-                </div>
-
-                <div class="question-tag-section">
-                    <span>Tags</span>
-                    <i class="fa-solid fa-slash fa-rotate-by fa-xs" style="--fa-rotate-angle: 80deg;"></i>
-                    <div class="questionTags">
-                        <span>${questionTags}</span>
-                    </div>
-                    <i class="fa-solid fa-slash fa-rotate-by fa-xs" style="--fa-rotate-angle: 80deg;"></i>
-                </div>
-                
-                <div class="question-box">
-                    <div class="question-preview">
-                        <div class="question-preview-title">${questionPreviewTitle}</div>
-                        <div class="question-preview-content">${questionPreviewContent}<div>
-                    </div>
-                </div>
-
-            </div>
-        </div>`;
 }
 
 async function populatePaginationResult(): Promise<void> {

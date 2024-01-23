@@ -4,24 +4,23 @@
     margin: 0;
 }
 
-/* Styling for the main header section */
-.mainHeader {
-    height: auto;
-    width: auto;
-    padding: 10rem 4rem 0 16rem;
+
+.contentContainer {
+    padding-left: 14.5rem;
+    padding-right: 2rem;
+    padding-top: 5.5rem;
 }
 
-/* Styling for the main header container */
-.mainHeader .container {
+/* Styling for the main header section */
+.headerContainer {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    padding-left: 4rem;
-    padding-right: 4rem;
+    padding: 5rem 2rem 2rem;
+    gap: 6rem;
 }
 
 /* Styling for layout within the main header */
-.mainHeader .container .mainHeaderTextLayout {
+.mainHeaderTextLayout {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -29,21 +28,20 @@
 }
 
 /* Styling for specific elements within the main header */
-.mainHeader .container .mainHeaderTextLayout h1 {
+.mainHeaderTextLayout h1 {
     margin-bottom: 1rem;
 }
 
-.mainHeader .container .mainHeaderTextLayout button {
+.mainHeaderTextLayout button {
     margin-top: 1rem;
 }
 
 .picture-border {
     display: flex;
-    margin: auto;
 }
 
-.mainHeader #unsplashPicture1 {
-    height: 18rem;
+#unsplashPicture1 {
+    height: 20rem;
     border-radius: .5rem;
 }
 
@@ -51,7 +49,8 @@
 .sectionPerks {
     height: auto;
     width: auto;
-    margin-top: 10rem;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
 }
 
 /* Styling for the perks container */
@@ -61,54 +60,19 @@
     align-items: center;
 }
 
-/* Styling for the perk boxes container */
-.sectionPerks .container .containerPerkBoxes {
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    margin-top: 4rem;
+.perkBox {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4rem;
 }
 
-/* Styling for individual perk boxes */
-.sectionPerks .container .containerPerkBoxes .perkBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 10rem;
-    margin: 0 2rem;
-    padding: 2rem;
-    background-color: #f1f1f1;
-}
 
-/* Margin adjustment for text within perk boxes */
-.sectionPerks .container .containerPerkBoxes .perkBox p {
-    margin-top: 1rem;
-}
 
-/* Styling for the contact section */
-.sectionContact {
-    height: auto;
-    width: auto;
-    margin-top: 10rem;
-    background-color: #f1f1f1;
-}
 
-/* Styling for the contact container */
-.sectionContact .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
-/* Styling for the contact boxes container */
-.sectionContact .container .containerContactBoxes {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
 
-/* Styling for individual contact boxes */
-.sectionContact .container .containerContactBoxes .contactBox {
-    padding: 2rem;
-}
+
+
+
+

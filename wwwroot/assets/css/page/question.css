@@ -356,3 +356,16 @@ body {
 .show-tooltip {
     visibility: visible;
 }
+
+.button {
+    background-color: transparent;
+    border-width: 0;
+    cursor: pointer;
+    margin: auto;
+    padding: 1rem 1.5rem;
+    border-radius: .5rem;
+}
+
+.button:hover {
+    background-color: #f4f4f4;
+}
