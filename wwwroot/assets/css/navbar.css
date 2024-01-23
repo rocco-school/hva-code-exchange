@@ -18,18 +18,20 @@
     z-index: 15;
     height: 3.5rem;
     width: 100%;
-    padding: 0 1rem;
+    padding-left: 1rem;
 }
 
 /* Styling for the navigation bar container */
 .navbar .container {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
 }
 
 .navbar .container .centered-block {
     display: flex;
     justify-content: center;
+    grid-column-start: 2;
 }
 
 
@@ -67,13 +69,21 @@
 }
 
 /* Styling for specific elements within the navigation bar */
-.navbar .container #burgerMenu {
+#burgerMenu {
     height: 2rem;
     cursor: pointer;
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
 }
+
+
+@media only screen and (min-width: 1024px) {
+    #burgerMenu {
+        display: none;
+    }
+}
+
 
 .navbar .container #codeExchangeLogo {
     height: 3.5rem;
@@ -94,13 +104,13 @@
     height: 3rem;
     border-radius: 2rem;
     cursor: pointer;
-    margin-right: 2.5rem;
+    margin-right: 1.5rem;
     display: flex;
 }
 
 .userDropdown {
     position: absolute;
-    right: 3rem;
+    right: 1rem;
     z-index: 10;
     background-color: #ffffff;
     border-radius: 0.5rem;

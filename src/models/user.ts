@@ -8,10 +8,10 @@ export class User {
     private _userId: number;
     private _firstname: string;
     private _lastname: string;
-    private _dateOfBirth: Date;
+    private _dateOfBirth: string;
     private _username: string;
     private _experienceYears: number;
-    private _profilePicture: string;
+    private _profilePicture: string | null;
     private _password: string;
     private _email: string;
     private _createdAt: Date | null;
@@ -19,7 +19,7 @@ export class User {
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: Date, username: string, experienceYears: number, profilePicture: string, password: string, email: string, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(userId: number, firstname: string, lastname: string, dateOfBirth: string, username: string, experienceYears: number, profilePicture: string | null, password: string, email: string, createdAt: Date | null, updatedAt: Date | null) {
         this._userId = userId;
         this._firstname = firstname;
         this._lastname = lastname;
@@ -46,7 +46,7 @@ export class User {
         return this._lastname;
     }
 
-    public get dateOfBirth(): Date {
+    public get dateOfBirth(): string {
         return this._dateOfBirth;
     }
 
@@ -58,7 +58,7 @@ export class User {
         return this._experienceYears;
     }
 
-    public get profilePicture(): string {
+    public get profilePicture(): string | null {
         return this._profilePicture;
     }
 
@@ -90,7 +90,7 @@ export class User {
         this._lastname = value;
     }
 
-    public set dateOfBirth(value: Date) {
+    public set dateOfBirth(value: string) {
         this._dateOfBirth = value;
     }
 
@@ -102,7 +102,7 @@ export class User {
         this._experienceYears = value;
     }
 
-    public set profilePicture(value: string) {
+    public set profilePicture(value: string | null) {
         this._profilePicture = value;
     }
 

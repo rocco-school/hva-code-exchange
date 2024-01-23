@@ -267,4 +267,37 @@ export class CodingTag {
             return `Error removing question tags: ${error}`;
         }
     }
+
+
+    /**
+     * Removes all coding tags associated with a specific user using the CodingTagService.
+     *
+     * @param {number} userId - The ID of the user for whom coding tags are to be removed.
+     * @returns {Promise<boolean | string>} - A Promise resolving to a boolean indicating the success of the removal or an error message.
+     * @throws {Error} - Throws an error if there is an issue with the removal process.
+     *
+     * @description
+     * This static method leverages the CodingTagService to remove all coding tags associated with a specific user.
+     * It handles the removal operation asynchronously and returns a Promise that resolves to either a boolean indicating
+     * the success of the removal or an error message if there is an issue with the removal process.
+     *
+     * @example
+     * // Example: Remove all coding tags associated with a specific user
+     * const userIdToRemoveTags = 456;
+     * try {
+     *   const isRemoved = await CodingTag.removeAllUserTags(userIdToRemoveTags);
+     *   console.log('User tags removal successful:', isRemoved);
+     * } catch (error) {
+     *   console.error('Failed to remove user tags:', error.message);
+     * }
+     */
+    public static async removeAllUserTags(userId: number): Promise<boolean | string> {
+        try {
+            // Calling the removeAllUserTags method from the service.
+            return await CodingTagService.removeAllUserTags(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error removing user tags: ${error}`;
+        }
+    }
 }

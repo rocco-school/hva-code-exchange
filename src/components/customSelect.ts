@@ -47,13 +47,13 @@ export function setupCustomSelect(customSelect: Element): void {
 
     // Event listener for 'All Tags' option click
     allTagsOption.addEventListener("click", function (): void {
-        toggleAllTagsOption(allTagsOption, customSelect);
+        toggleAllTagsOption(customSelect);
     });
 
     // Event listener for keydown event (e.g., Enter key) on 'All Tags' option
     allTagsOption.addEventListener("keydown", function (event: KeyboardEvent): void {
         if (event.key === "Enter") {
-            toggleAllTagsOption(allTagsOption, customSelect);
+            toggleAllTagsOption(customSelect);
         }
     });
 
@@ -77,23 +77,19 @@ export function setupCustomSelect(customSelect: Element): void {
 
 
 /**
- * Toggles the 'active' class for all options excluding the 'All Tags' option.
+ * Toggles the 'active' class for all options, including the 'All Tags' option.
  *
- * @param {Element} allTagsOption - The 'All Tags' option element.
  * @param {Element} customSelect - The custom select element.
  */
-function toggleAllTagsOption(allTagsOption: Element, customSelect: Element): void {
-    // Toggle 'active' class for all options (excluding 'All Tags')
+function toggleAllTagsOption(customSelect: Element): void {
+    // Toggle 'active' class for all options (including 'All Tags')
     (<NodeListOf<Element>>customSelect.querySelectorAll(".option")).forEach(function (option: Element): void {
-        if (option !== allTagsOption) {
-            option.classList.toggle("active");
-        }
+        option.classList.toggle("active");
     });
 
     // Update the selected options display
     updateSelectedOptions(customSelect);
 }
-
 
 /**
  * Clears the search input and resets the options display.
@@ -199,17 +195,9 @@ function handleSearchInput(
  * @param {MouseEvent} event - The click event.
  */
 export function handleDocumentClick(event: MouseEvent): void {
-    const customSelects: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".custom-select"));
     const targetElem: HTMLElement = event.target as HTMLElement;
     const removeTag: HTMLElement = (<HTMLElement>targetElem.closest(".remove-tag"));
     const customSelect: HTMLElement = (<HTMLElement>targetElem.closest(".custom-select"));
-
-    if (!removeTag && !customSelect) {
-        // Close all custom selects if the click is outside of them and not on a remove tag
-        customSelects.forEach(function (select) {
-            select.classList.remove("open");
-        });
-    }
 
     // Handle removing tags
     if (removeTag && customSelect) {
@@ -350,7 +338,7 @@ export function resetCustomSelects(): void {
     (<NodeListOf<Element>>document.querySelectorAll(".custom-select")).forEach(function (customSelect: Element) {
         // Remove 'active' class from all selected options
 
-        (<NodeListOf<Element>>customSelect.querySelectorAll(".option.active")).forEach(function (option: Element) {
+        (<NodeListOf<Element>>customSelect.querySelectorAll(".option")).forEach(function (option: Element) {
             option.classList.remove("active");
         });
 
