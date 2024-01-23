@@ -7,6 +7,7 @@
     <title>SE Code Exchange</title>
 
     <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/css/component/pagination.css">
     <link rel="stylesheet" href="assets/css/general.css"/>
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
@@ -37,6 +38,13 @@
                     <a href="homepage.html" class="buttonItem" id="questionsButton">
                         <i class="fa-solid fa-circle-question"></i>
                         <span>Questions</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
                     </a>
                 </div>
 
@@ -71,11 +79,13 @@
                     </div>
                     <ul class="avatarButtons" aria-labelledby="avatarButton">
                         <li class="avatarButton-cover">
-                            <a href="user-page.html" class="avatarButton"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
                         </li>
                     </ul>
                     <div class="sign-out-block py-1">
-                        <a tabindex="0" class="avatarButton signOut"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
                     </div>
                 </div>
 
@@ -88,27 +98,47 @@
 <main>
     <div class="questions-container">
 
-        <div class="button">
-            <button type="button" class="button create-question">Ask question</button>
+        <div class="questionsTitle">
+            <h1>Questions</h1>
         </div>
 
-        <table class="table table-fit table-dark table-striped">
-            <tbody class="questions-body">
+        <div class="questions-table">
 
-            </tbody>
-        </table>
+        </div>
 
         <div class="pagination">
-            <div class="prev">
-                <i class="fa-solid fa-angle-right prev-icon paginate-icon"></i>
-                <i class="fa-solid fa-angles-right prev-all-icon paginate-icon"></i>
-            </div>
-            <div class="pages">
+            <div class="pagination-inner">
+                <div class="paginator hidden">
+                    <div class="prev paginate">
+                        <i class="fa-solid fa-angle-right fa-xl prev-icon paginate-icon" style="color: #d3d3d3;"></i>
+                    </div>
+                    <div class="pages">
 
-            </div>
-            <div class="next">
-                <i class="fa-solid fa-angle-right next-icon paginate-icon"></i>
-                <i class="fa-solid fa-angles-right next-all-icon paginate-icon"></i>
+                    </div>
+                    <div class="next paginate">
+                        <i class="fa-solid fa-angle-right fa-xl next-icon paginate-icon" style="color: #d3d3d3;"></i>
+                    </div>
+                </div>
+
+                <div class="pagination-info">
+                    <div class="paginate-select">
+                        <label for="questionAmount" hidden="hidden"></label>
+                        <select class="questionAmount" name="questionAmount" id="questionAmount">
+                            <option value="1" selected>10</option>
+                            <option value="2">20</option>
+                            <option value="3">50</option>
+                            <option value="4">100</option>
+                            <option value="5">All</option>
+                        </select>
+                    </div>
+
+                    <div class="current-pagination">
+                        <span>Results:</span>
+                        <span class="currentPageRange">1 - 15</span>
+                        <span>of</span>
+                        <span class="totalResults">365</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

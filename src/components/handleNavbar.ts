@@ -7,8 +7,6 @@ import {endUserSession} from "./handleUserSession";
  * @returns {Promise<JWTPayload | boolean>} A promise that resolves to the authentication status or JWT payload.
  */
 export async function handleAuthentication(isAuthenticated: JWTPayload | boolean): Promise<any> {
-    console.log(isAuthenticated);
-
     try {
 
         const loggedOutBlock: HTMLElement = (<HTMLElement>document.querySelector(".logged-out"));
@@ -26,13 +24,15 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
             const nameCardUsername: HTMLElement = (<HTMLElement>document.querySelector(".nameCardUsername"));
             const nameCardEmail: HTMLElement = (<HTMLElement>document.querySelector(".nameCardEmail"));
             const signOutButton: HTMLElement = (<HTMLElement>document.querySelector(".signOut"));
+            const profileButton: HTMLElement = (<HTMLElement>document.querySelector("#profileButton"));
+
+            profileButton.parentElement?.classList.remove("hidden");
 
             // @ts-ignore
             const userId: number = isAuthenticated["userId"] as number;
             const user: User = await User.retrieveUser(userId) as User;
 
             profilePicture.src = user.profilePicture ?? "https://ui-avatars.com/api/?name=" + user.firstname + "+" + user.lastname + "&background=random";
-            ;
 
             profilePicture.addEventListener("click", (): void => {
                 // Update the name and email in the UI.

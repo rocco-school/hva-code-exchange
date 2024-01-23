@@ -13,6 +13,7 @@ export const QUESTION_QUERY: {
     GET_QUESTIONS_BY_USER: string;
     GET_MAX_QUESTION_PAGES: string;
     GET_QUESTION_BY_PAGE_NUMBER: string;
+    COUNT_QUESTIONS: string;
 } = {
     SELECT_QUESTIONS: "SELECT * FROM question LIMIT 50",
     SELECT_RECENT_FIVE_QUESTIONS: "SELECT * FROM question ORDER BY updatedAt DESC LIMIT 5",
@@ -26,6 +27,7 @@ export const QUESTION_QUERY: {
     UPDATE_TOTAL_UPVOTES: "UPDATE question SET totalUpvotes = totalUpvotes + ? WHERE questionId = ?",
     UPDATE_TOTAL_DOWNVOTES: "UPDATE question SET totalDownvotes = totalDownvotes + ? WHERE questionId = ?",
     GET_QUESTIONS_BY_USER: "SELECT * FROM question WHERE userId = ?",
-    GET_MAX_QUESTION_PAGES: "SELECT CEIL(COUNT(*) / 10) AS max_pages FROM question",
-    GET_QUESTION_BY_PAGE_NUMBER: "SELECT * FROM question ORDER BY questionId LIMIT 10 OFFSET ?",
+    GET_MAX_QUESTION_PAGES: "SELECT CEIL(COUNT(*) / ?) AS max_pages FROM question",
+    GET_QUESTION_BY_PAGE_NUMBER: "SELECT * FROM question ORDER BY questionId LIMIT ? OFFSET ?",
+    COUNT_QUESTIONS: "SELECT COUNT(*) AS rowCount FROM question"
 };

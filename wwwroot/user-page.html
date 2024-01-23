@@ -116,9 +116,16 @@
                 </div>
 
                 <div class="sidebarButtons-cover">
-                    <a href="questions.html" class="buttonItem" id="questionsButton">
+                    <a href="homepage.html" class="buttonItem" id="questionsButton">
                         <i class="fa-solid fa-circle-question"></i>
                         <span>Questions</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
                     </a>
                 </div>
 
@@ -153,11 +160,13 @@
                     </div>
                     <ul class="avatarButtons" aria-labelledby="avatarButton">
                         <li class="avatarButton-cover">
-                            <a href="user-page.html" class="avatarButton"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
                         </li>
                     </ul>
                     <div class="sign-out-block py-1">
-                        <a tabindex="0" class="avatarButton signOut"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
                     </div>
                 </div>
 
@@ -199,7 +208,9 @@
             </div>
 
             <div class="buttonContainer">
-                <button type="submit" class="deleteUserButton userButton"><i class="fa-solid fa-trash-can"></i>Delete account</button>
+                <button type="submit" class="deleteUserButton userButton"><i
+                    class="fa-solid fa-trash-can"></i>Delete account
+                </button>
             </div>
         </div>
     </header>
@@ -236,19 +247,23 @@
 
 
                             <div class="firstnameBlock info-block">
-                                <label for="firstnameInput" class="firstnameTitle inputLabel">Firstname</label>
+                                <label for="firstnameInput"
+                                       class="firstnameTitle inputLabel">Firstname</label>
                                 <input class="firstnameInput inputBox" type="text" name="firstname"
                                        id="firstnameInput" required>
                             </div>
 
                             <div class="usernameInfo info-block">
                                 <label for="usernameInput" class="usernameTitle inputLabel">Username</label>
-                                <input class="usernameInput inputBox" type="text" name="username" id="usernameInput" required>
+                                <input class="usernameInput inputBox" type="text" name="username"
+                                       id="usernameInput" required>
                             </div>
 
                             <div class="experienceInfo info-block">
-                                <label for="experienceInput" class="experienceTitle inputLabel">Programming experience</label>
-                                <input class="experienceInput inputBox" type="number" name="programmingExperience" id="experienceInput" required>
+                                <label for="experienceInput" class="experienceTitle inputLabel">Programming
+                                    experience</label>
+                                <input class="experienceInput inputBox" type="number"
+                                       name="programmingExperience" id="experienceInput" required>
                             </div>
 
                         </div>
@@ -257,17 +272,20 @@
 
                             <div class="lastnameBlock info-block">
                                 <label for="lastnameInput" class="lastnameTitle inputLabel">Lastname</label>
-                                <input class="lastnameInput inputBox" type="text" name="lastname" id="lastnameInput" required>
+                                <input class="lastnameInput inputBox" type="text" name="lastname"
+                                       id="lastnameInput" required>
                             </div>
 
                             <div class="birthdayInfo info-block">
                                 <label for="birthdayInput" class="birthdayTitle inputLabel">Birthday</label>
-                                <input class="birthdayInput inputBox" type="date" name="birthday" id="birthdayInput" required>
+                                <input class="birthdayInput inputBox" type="date" name="birthday"
+                                       id="birthdayInput" required>
                             </div>
 
                             <div class="emailInfo info-block">
                                 <label for="emailInput" class="emailTitle inputLabel">Email</label>
-                                <input class="emailInput inputBox" type="text" name="email" id="emailInput" required>
+                                <input class="emailInput inputBox" type="text" name="email" id="emailInput"
+                                       required>
                             </div>
 
                         </div>
@@ -287,9 +305,11 @@
                                 <div class="options">
                                     <div class="option-search-tags">
                                         <input type="text" class="search-tags" placeholder="Search tags..."/>
-                                        <button type="button" class="clear"><i class="fa fa-close"></i></button>
+                                        <button type="button" class="clear"><i class="fa fa-close"></i>
+                                        </button>
                                     </div>
-                                    <div class="option all-tags" tabindex="0" data-value="All">Select All</div>
+                                    <div class="option all-tags" tabindex="0" data-value="All">Select All
+                                    </div>
                                     <div class="no-result-message hidden">No result match</div>
                                 </div>
                                 <div class="tag_error_msg error"></div>
@@ -298,7 +318,9 @@
                     </div>
                 </div>
                 <div class="buttonContainer">
-                    <button type="submit" class="updateUserButton userButton"><i class="fa-solid fa-pen-to-square"></i>Update</button>
+                    <button type="submit" class="updateUserButton userButton"><i
+                        class="fa-solid fa-pen-to-square"></i>Update
+                    </button>
                 </div>
             </form>
 

@@ -58,8 +58,13 @@ async function setup(): Promise<void> {
     // Initialize the text editor.
     await initializeTextEditor();
 
+    const tooltipUpvote: HTMLDivElement = (<HTMLDivElement>document.querySelector(".tooltip-upvote"));
+    const tooltipDownvote: HTMLDivElement = (<HTMLDivElement>document.querySelector(".tooltip-downvote"));
+
     // Calculate the upvote count for the question
     const upvoteSum: number = question.totalUpvotes! - question.totalDownvotes!;
+    tooltipUpvote.innerHTML = "Currently " + question.totalUpvotes + " upvote('s) on this question!";
+    tooltipDownvote.innerHTML = "Currently " + question.totalDownvotes + " downvote('s) on this question!";
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
@@ -71,6 +76,22 @@ async function setup(): Promise<void> {
 
     // Populate all answers by questionID
     await addAnswersToPage(userId);
+
+    (<HTMLInputElement>document.querySelector(".upvote-question")).addEventListener("mouseenter", () => {
+        tooltipUpvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".upvote-question")).addEventListener("mouseleave", () => {
+        tooltipUpvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".downvote-question")).addEventListener("mouseenter", () => {
+        tooltipDownvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".downvote-question")).addEventListener("mouseleave", () => {
+        tooltipDownvote.classList.toggle("show-tooltip");
+    });
 
     // Add event listeners for upvoting and downvoting the question
     (<HTMLElement>document.querySelector(".upvote-question")).addEventListener("click", async (): Promise<void> => {
@@ -325,6 +346,8 @@ function createAnswerElement(
     extraClass: string,
     certifiedPictureSrc: string,
     canUserCertify: string,
+    tooltipUpvote: string,
+    tooltipDownvote: string,
 ): string {
     return `
         <div class="answer">
@@ -332,10 +355,17 @@ function createAnswerElement(
                 <div class="answer-sidebar">
                     <div id="${answerId}" class="vote">
                         <!-- Upvote button and count -->
-                        <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                        <div class="upvote">
+                            <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                             <div role="tooltip" class="tooltip-upvote tool-tip">${tooltipUpvote}</div>
+                        </div>
+                        
                         <span class="upvote-count">${upvoteCount}</span>
                         <!-- Downvote button -->
-                        <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                        <div class="downvote">
+                            <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
+                            <div role="tooltip" class="tooltip-downvote tool-tip">${tooltipDownvote}</div>
+                        </div>
                     </div>
                     <div class="certified-answer-check ${canUserCertify}">
                         <img class="certified-answer" alt="Certified answer" src="${certifiedPictureSrc}">
@@ -491,7 +521,9 @@ async function addAnswersToPage(userId: number): Promise<void> {
             userExpertise,
             extraClass,
             checkMarkUrl,
-            canUserCertify
+            canUserCertify,
+            "Currently " + answer.totalUpvotes + " upvote('s) on this answer!",
+            "Currently " + answer.totalDownvotes + " downvote('s) on this answer!"
         );
 
         answersBody.innerHTML += answerElement;
@@ -509,9 +541,34 @@ async function addAnswersToPage(userId: number): Promise<void> {
         answerId && await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
     });
 
+
+    // Select and toggle tooltips for upvote buttons
+    toggleTooltipOnHover(document.querySelectorAll(".answer-upvote"));
+
+    // Select and toggle tooltips for downvote buttons
+    toggleTooltipOnHover(document.querySelectorAll(".answer-downvote"));
+
+
     addEditButtonListeners();
 }
 
+/**
+ * Toggle tooltip visibility on mouse enter and mouse leave events.
+ * @param {NodeListOf<HTMLElement>} elements - The elements to attach the event listeners to.
+ */
+function toggleTooltipOnHover(elements: NodeListOf<HTMLElement>): void {
+    elements.forEach(item => {
+        item.addEventListener("mouseenter", async (): Promise<void> => {
+            const tooltip: Element = item.parentElement?.lastElementChild as Element;
+            tooltip.classList.toggle("show-tooltip");
+        });
+
+        item.addEventListener("mouseleave", async (): Promise<void> => {
+            const tooltip: Element = item.parentElement?.lastElementChild as Element;
+            tooltip.classList.toggle("show-tooltip");
+        });
+    });
+}
 
 /**
  * Function to check and retrieve the `questionId` from the URL parameters.

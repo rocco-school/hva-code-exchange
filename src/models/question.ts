@@ -422,10 +422,10 @@ export class Question extends Post {
      *   console.error('Failed to retrieve max question pages:', error);
      * }
      */
-    public static async getMaxQuestionPages(): Promise<number | string> {
+    public static async getMaxQuestionPages(itemsPerPage: number): Promise<number | string> {
         try {
             // Calling the getMaxQuestionPages method from the service.
-            return await QuestionService.getMaxQuestionPages();
+            return await QuestionService.getMaxQuestionPages(itemsPerPage);
         } catch (error) {
             // Handling any errors that occur during the process.
             return `Error retrieving max question pages: ${error}`;
