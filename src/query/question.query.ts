@@ -11,6 +11,7 @@ export const QUESTION_QUERY: {
     UPDATE_TOTAL_UPVOTES: string;
     UPDATE_TOTAL_DOWNVOTES: string;
     GET_QUESTIONS_BY_USER: string;
+    GET_RECENT_QUESTIONS_BY_USER: string;
     GET_MAX_QUESTION_PAGES: string;
     GET_QUESTION_BY_PAGE_NUMBER: string;
 } = {
@@ -26,6 +27,7 @@ export const QUESTION_QUERY: {
     UPDATE_TOTAL_UPVOTES: "UPDATE question SET totalUpvotes = totalUpvotes + ? WHERE questionId = ?",
     UPDATE_TOTAL_DOWNVOTES: "UPDATE question SET totalDownvotes = totalDownvotes + ? WHERE questionId = ?",
     GET_QUESTIONS_BY_USER: "SELECT * FROM question WHERE userId = ?",
+    GET_RECENT_QUESTIONS_BY_USER: "SELECT * FROM question WHERE userId = ? ORDER BY createdAt DESC",
     GET_MAX_QUESTION_PAGES: "SELECT CEIL(COUNT(*) / 10) AS max_pages FROM question",
     GET_QUESTION_BY_PAGE_NUMBER: "SELECT * FROM question ORDER BY questionId LIMIT 10 OFFSET ?",
 };

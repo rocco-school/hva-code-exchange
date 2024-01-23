@@ -300,4 +300,34 @@ export class QuestionService {
 
         return maxPages[0]["max_pages"];
     }
+
+    /**
+     * Retrieves questions associated with a specific user from the database using the provided user ID.
+     *
+     * @param {number} userId - The unique identifier of the user.
+     * @returns {Promise<[Question]>} A Promise resolving to an array of questions for the specified user.
+     * @throws {Error} Throws an error if the retrieval operation fails or if no questions are found.
+     *
+     * @description
+     * This static method queries the database using the `api` service and the `QUESTION_QUERY.GET_QUESTIONS_BY_USER`
+     * query to retrieve questions associated with a specific user. It expects the result to be an array of questions
+     * and handles the case where no questions are found. The function returns a Promise that resolves to the array of questions.
+     */
+    public static async getMostRecentQuestionByUser(userId: number): Promise<[Question]> {
+        try {
+            // Query the database using the provided user ID.
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.GET_RECENT_QUESTIONS_BY_USER, userId) as [Question];
+
+            if (!question) {
+                // Throw an error if no questions are found for the specified user.
+                throw new Error(`Failed to get question for user with ID ${userId}!`);
+            }
+
+            return question;
+        } catch (error) {
+            // Forward any errors that occur during the database query.
+            throw new Error(`Error retrieving questions for user with ID ${userId}: ${error}`);
+        }
+    }
+
 }
