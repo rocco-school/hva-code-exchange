@@ -275,4 +275,33 @@ export class AnswerService {
             throw new Error(`Failed to update total answer downvotes for ${answerId}: ${error}`);
         }
     }
+
+    /**
+     * Retrieves answers associated with a specific user ID.
+     *
+     * @param {number} userId - The ID of the user for whom answers are retrieved.
+     * @returns {Promise<Array<Answer>>} A promise that resolves to an array of Answer objects.
+     * @throws {Error} Throws an error if the retrieval of answers fails.
+     *
+     * @description
+     * This method queries the database to retrieve answers associated with the provided user ID.
+     * It returns a promise that resolves to an array of Answer objects. If the retrieval fails,
+     * it throws an error with an appropriate error message.
+     */
+    public static async getAnswersByUserId(userId: number): Promise<[Answer]> {
+        try {
+            // Use try-catch to handle errors during the asynchronous operation
+            const answers: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_BY_USER, userId) as [Answer];
+
+            if (!answers) {
+                throw new Error(`Failed to get answers for the userId ${userId}`);
+            }
+
+            return answers;
+        } catch (error) {
+            // You can log or handle the error appropriately here
+            throw new Error(`Error in getAnswersByUserId for userId ${userId}: ${error}`);
+        }
+    }
+
 }

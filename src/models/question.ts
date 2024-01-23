@@ -463,5 +463,13 @@ export class Question extends Post {
             return `Error getting questions by user ${error}`;
         }
     }
+
+    public static async getMostRecentQuestionsByAnswer(userId: number): Promise<Question[] | string> {
+        try {
+            return await QuestionService.getMostRecentQuestionsByAnswer(userId);
+        } catch (error) {
+            return `Error getting answers for the userId ${userId}: ${error}`;
+        }
+    }
 }
 

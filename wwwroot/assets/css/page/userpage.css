@@ -435,20 +435,21 @@ body {
 
 .questionBoxes {
     margin-left: 14.5rem;
+    margin-right: 2rem;
 }
 
 .questionBoxesContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-around;
 }
 
-.question-box {
+.question-box, .answer-box{
     display: flex;
     flex-direction: column;
 }
 
-.question-box:hover {
+.question-box:hover, .answer-box:hover {
     cursor: pointer;
     background-color:#ced4da;
 }

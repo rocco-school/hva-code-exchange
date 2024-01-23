@@ -330,4 +330,18 @@ export class QuestionService {
         }
     }
 
+    public static async getMostRecentQuestionsByAnswer(userId: number): Promise<Question[]> {
+        try {
+            const question: Question[] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_BY_ANSWER_ID, userId) as Question[];
+
+            if (!question) {
+                throw new Error(`Failed to get questions for user with ID ${userId}!`);
+            }
+            
+            return question;
+        } catch (error) {
+            throw new Error(`Error retrieving questions for user with ID ${userId}: ${error}`);
+        }
+    }
+
 }
