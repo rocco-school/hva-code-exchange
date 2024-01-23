@@ -220,4 +220,37 @@ export class CodingTagService {
         // If affectedRows is not 0 or greater than 0, something unexpected happened.
         throw new Error(`Failed to remove question tags with questionId: ${questionId}`);
     }
+
+
+    /**
+     * Remove all coding tags associated with a specific user from the database.
+     *
+     * @param {number} userId - The ID of the user for which coding tags are to be removed.
+     * @returns {Promise<boolean>} - A Promise resolving to a boolean indicating the success of the removal.
+     * @throws {Error} - Throws an error if there is an issue with the database removal process.
+     *
+     * @description
+     * This static method queries the database to remove all coding tags associated with a specific user.
+     * It returns a Promise that resolves to a boolean indicating whether the removal was successful.
+     * If the database removal is not successful, it throws an error.
+     */
+    public static async removeAllUserTags(userId: number): Promise<boolean> {
+        // Querying the database to remove all coding tags associated with the user.
+        const deletedUserTags: any = await api.queryDatabase(
+            CODING_TAG_QUERY.DELETE_ALL_USER_TAGS_BY_USER_ID,
+            userId
+        ) as any;
+
+        // Checking if the database removal was successful.
+        if (deletedUserTags.affectedRows === 0) {
+            return false; // No rows affected, indicating no coding tags were found for the user.
+        }
+
+        if (deletedUserTags.affectedRows > 0) {
+            return true; // Removal successful.
+        }
+
+        // If affectedRows is not 0 or greater than 0, something unexpected happened.
+        throw new Error(`Failed to remove user tags with userId: ${userId}`);
+    }
 }

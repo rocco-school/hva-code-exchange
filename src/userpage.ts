@@ -1,6 +1,6 @@
 import {comparePasswords, hashPassword} from "./components/hashPassword";
 import "./config";
-import {api, types, utils} from "@hboictcloud/api";
+import {api, types, url, utils} from "@hboictcloud/api";
 import {USER_QUERY} from "./query/user.query";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
@@ -10,6 +10,7 @@ import {handleButtonClick, updateSelectedOptions} from "./components/customSelec
 import {showSuccessMessage} from "./components/successMessage";
 import {CodingTag} from "./models/codingTag";
 import {createNewUserInstance} from "./components/handleModelInstances";
+import {delay} from "./components/delay";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -17,49 +18,78 @@ async function setup(): Promise<void> {
     // Check the user login status by calling the 'security' function.
     const loginStatus: JWTPayload | boolean | any = await security();
 
+    if (!loginStatus) {
+        url.redirect("homepage.html");
+    }
+
     // Initialize the tag select component
     await initializeTagSelect();
 
     // Extract user ID from loginStatus
     const currentUserId: number = loginStatus["userId"];
-    console.log(currentUserId);
 
     await initializeUserSettings(currentUserId);
 
     // DOM element selections
-    const editProfileSection: HTMLElement | null = document.querySelector(".editProfileSection");
-    const passwordSection: HTMLElement | null = document.querySelector(".passwordSection");
-    const errorPasswordMessageBox: HTMLDivElement | null = document.querySelector("#errorPasswordMessageBox");
-    const usernameUser: HTMLDivElement | null = document.querySelector("#usernameUser");
-    const memberSince: HTMLDivElement | null = document.querySelector(".memberUser");
-    const yearsOfExperienceUser: HTMLDivElement | null = document.querySelector(".yearsOfExperienceUser");
-    const profileExpertise: HTMLUListElement | null = document.querySelector(".profileExpertise");
+    const updateButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".updateUserButton"));
+    const deleteButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".deleteUserButton"));
+    const updateForm: HTMLFormElement = (<HTMLFormElement>document.querySelector(".edit-user"));
+
+    const editProfileSection: HTMLElement = (<HTMLElement>document.querySelector(".editProfileSection"));
+    const passwordSection: HTMLElement = (<HTMLElement>document.querySelector(".passwordSection"));
+    const errorPasswordMessageBox: HTMLDivElement = (<HTMLDivElement>document.querySelector("#errorPasswordMessageBox"));
+    const usernameUser: HTMLDivElement = (<HTMLDivElement>document.querySelector("#usernameUser"));
+    const memberSince: HTMLDivElement = (<HTMLDivElement>document.querySelector(".memberUser"));
+    const yearsOfExperienceUser: HTMLDivElement = (<HTMLDivElement>document.querySelector(".yearsOfExperienceUser"));
+    const profileExpertise: HTMLUListElement = (<HTMLUListElement>document.querySelector(".profileExpertise"));
 
     // Input elements for user details
-    const usernameInput: HTMLInputElement | null = document.querySelector("#usernameInput");
-    const oldpasswordInput: HTMLInputElement | null = document.querySelector("#oldPasswordInput");
-    const newPasswordInput: HTMLInputElement | null = document.querySelector("#newPasswordInput");
-    const confirmPasswordInput: HTMLInputElement | null = document.querySelector("#confirmPasswordInput");
-    const emailInput: HTMLInputElement | null = document.querySelector("#emailInput");
-    const firstnameInput: HTMLInputElement | null = document.querySelector("#firstnameInput");
-    const lastnameInput: HTMLInputElement | null = document.querySelector("#lastnameInput");
-    const birthdayInput: HTMLInputElement | null = document.querySelector("#birthdayInput");
-    const programmingExperienceInput: HTMLInputElement | null = document.querySelector("#programmingExperienceInput");
+    const usernameInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#usernameInput"));
+    const oldpasswordInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#oldPasswordInput"));
+    const newPasswordInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#newPasswordInput"));
+    const confirmPasswordInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#confirmPasswordInput"));
+    const emailInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#emailInput"));
+    const firstnameInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#firstnameInput"));
+    const lastnameInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#lastnameInput"));
+    const birthdayInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#birthdayInput"));
+    const programmingExperienceInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#experienceInput"));
 
     // Buttons for user interactions
-    const editPasswordBtn: HTMLButtonElement | null = document.querySelector(".editPasswordBtn");
-    const changePasswordBtn: HTMLButtonElement | null = document.querySelector(".changePasswordBtn");
-    const passwordCloseBtn: HTMLButtonElement | null = document.querySelector(".passwordCloseBtn");
-    const saveBtn: HTMLButtonElement | null = document.querySelector("#saveBtn");
+    const editPasswordBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".editPasswordBtn"));
+    const changePasswordBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".changePasswordBtn"));
+    const passwordCloseBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".passwordCloseBtn"));
 
 
-    const file: HTMLInputElement = document.querySelector("#file") as HTMLInputElement;
-    const profilePicture: HTMLImageElement = document.querySelector(".profile-picture") as HTMLImageElement;
+    const file: HTMLInputElement = (<HTMLInputElement>document.querySelector("#file"));
+    const profilePicture: HTMLImageElement = (<HTMLImageElement>document.querySelector(".profile-picture"));
+
+    const userDeleteButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".continue-button"));
 
     document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
     document.querySelectorAll(".profile-tab").forEach(item => {
         item.addEventListener("click", handleHeroTab);
+    });
+
+    userDeleteButton.addEventListener("click", async (): Promise<void> => {
+        if (userDeleteButton.classList.contains("user")) {
+            await User.deleteUser(parseInt(userDeleteButton.id));
+            location.reload();
+        }
+    });
+
+    updateButton.addEventListener("click", async (): Promise<void> => {
+        updateButton.classList.add("editButtonFocus");
+        await delay(100);
+        updateButton.classList.remove("editButtonFocus");
+    });
+
+    deleteButton.addEventListener("click", async (): Promise<void> => {
+        deleteButton.classList.add("deleteButtonFocus");
+        await delay(100);
+        deleteButton.classList.remove("deleteButtonFocus");
+
+        await showSuccessMessage("Are you sure you want to delete your account?", null, "delete", user.userId, "user");
     });
 
     // Regular Expression for firstname and lastname
@@ -74,7 +104,7 @@ async function setup(): Promise<void> {
     file.addEventListener("input", async function (): Promise<void> {
         const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
 
-        const fileName: string = user.profilePicture?.split(url)[0];
+        const fileName: string = user.profilePicture!.split(url)[0];
 
         if (fileName) {
             await api.deleteFile(fileName);
@@ -120,12 +150,9 @@ async function setup(): Promise<void> {
         });
     }
 
-
-
     // Event listener for the "Edit Password" button
     if (editPasswordBtn) {
         editPasswordBtn.addEventListener("click", (): void => {
-            console.log("click");
             // Show the password section and hide the edit profile section if visible
             passwordSection?.classList.remove("hidden");
             if (editProfileSection?.classList.contains("hidden")) {
@@ -153,11 +180,10 @@ async function setup(): Promise<void> {
             // Gather password inputs for validation
             const passwordInputs: (HTMLInputElement | null)[] = [oldpasswordInput, newPasswordInput, confirmPasswordInput];
 
-            if (!oldpasswordInput) return;
-            const checkPassword: boolean = await comparePasswords(oldpasswordInput?.value, user.password);
+            const checkPassword: boolean = await comparePasswords(oldpasswordInput.value, user.password);
             const emptyPasswordInputs: any = await checkPasswordValue(passwordInputs);
-            const verifiedNewPassword: boolean = await verifyNewPassword(newPasswordInput, errorPasswordMessageBox!);
-            const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput, newPasswordInput, errorPasswordMessageBox!);
+            const verifiedNewPassword: boolean = await verifyNewPassword(newPasswordInput, errorPasswordMessageBox);
+            const verifiedConfirmPassword: boolean = await verifyConfirmPassword(confirmPasswordInput, newPasswordInput, errorPasswordMessageBox);
 
             if (!checkPassword || !emptyPasswordInputs || !verifiedNewPassword || !verifiedConfirmPassword) {
                 noErrors = false;
@@ -177,11 +203,10 @@ async function setup(): Promise<void> {
             //If all validations pass, update the password
             if (noErrors && emptyPasswordInputs && verifiedNewPassword && verifiedConfirmPassword) {
                 try {
-                    const updatedPassword: any = await updatePasswordData(loginStatus.userId, confirmPasswordInput!.value);
+                    await updatePasswordData(loginStatus.userId, confirmPasswordInput.value);
                     // Hide the password section and show the edit profile section
-                    passwordSection?.classList.add("hidden");
-                    editProfileSection?.classList.remove("hidden");
-                    console.log(updatedPassword);
+                    passwordSection.classList.add("hidden");
+                    editProfileSection.classList.remove("hidden");
                 } catch (e) {
                     console.error(e);
                 }
@@ -190,16 +215,19 @@ async function setup(): Promise<void> {
     }
 
     // Event listener for the "Save" button in the editProfileSection
-    if (saveBtn) {
-        saveBtn.addEventListener("click", async (): Promise<void> => {
-            // const inputs: (HTMLInputElement | HTMLSelectElement | null)[] = [usernameInput, birthdayInput, programmingExperienceInput, emailInput, expertiseOptions, firstnameInput, lastnameInput];
-            // const verifiedInputs: any = checkValue(inputs);
+    updateForm.addEventListener("submit", async (evt): Promise<void> => {
+        evt.preventDefault();
 
-            // Retrieve the tag ID for the selected expertise
-            // const getTagIdExpertise: number = await retrieveTagId(expertiseOptions?.value);
 
-            let questionTags: any[] = [];
+        let questionTags: any[] = [];
 
+        // Array of input elements for validation.
+        const inputs: (HTMLInputElement | null)[] = [firstnameInput, lastnameInput, usernameInput, birthdayInput, programmingExperienceInput, emailInput];
+
+        // Validate the user inputs.
+        const verifiedInputs: boolean = await validateInputs(inputs);
+
+        if (verifiedInputs) {
             // Use the async function handleButtonClick when the submit button is clicked
             await handleButtonClick().then((result: string | null): void => {
                 if (result !== null) {
@@ -215,10 +243,6 @@ async function setup(): Promise<void> {
                 }
             });
 
-            questionTags.forEach(questionTag => {
-                console.log(questionTag);
-            });
-
             // Validate email, firstname, and lastname
             const verifiedEmail: boolean = await verifyEmail(emailInput);
             if (!verifiedEmail) return;
@@ -227,33 +251,66 @@ async function setup(): Promise<void> {
             const verifiedLastname: boolean = await verifyLastname(lastnameInput, nameRegEx);
             if (!verifiedLastname) return;
 
+            const birthDate: string = new Date(birthdayInput.value).toISOString().split("T")[0];
+
             // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
-                    const updatedUser: any = await updateUserData(
-                        usernameInput!.value,
-                        birthdayInput?.value,
-                        programmingExperienceInput?.value,
-                        emailInput?.value,
-                        questionTags,
+                    const user: User = new User(
+                        loginStatus?.userId,
                         firstnameInput?.value,
                         lastnameInput?.value,
-                        loginStatus.userId
+                        birthDate,
+                        usernameInput?.value,
+                        parseInt(programmingExperienceInput?.value),
+                        retrievedUser.profilePicture,
+                        retrievedUser.password,
+                        emailInput?.value,
+                        null,
+                        null,
                     );
 
-                    console.log(updatedUser);
+                    const updatedUser: User = await user.updateUser() as User;
+
+                    if (updatedUser) {
+                        await CodingTag.removeAllUserTags(user.userId);
+
+                        const createUserTags: boolean = await User.insertUserTag(user.userId, questionTags) as boolean;
+
+                        if (createUserTags) {
+                            await showSuccessMessage("Successfully updated User!", 2000, "success", null, null);
+                            location.reload();
+                        }
+                    }
 
                 } catch (error) {
                     console.error(error);
                 }
             }
-        });
-    }
-
+        }
+    });
 }
 
 await setup();
 
+
+/**
+ * Validates the input field and sets a custom validation message if needed.
+ * @param {HTMLInputElement | null} inputs - The input element to validate.
+ */
+async function validateInputs(inputs: any): Promise<boolean> {
+    let noError: boolean = true;
+    for (const input of inputs) {
+        if (input && input.value === "") {
+            input.setCustomValidity(input.name + " is required!");
+
+            noError = false;
+            break;
+        }
+    }
+
+    return noError;
+}
 
 /**
  * Validates the email field and sets a custom validation message if needed.
@@ -346,25 +403,6 @@ async function verifyConfirmPassword(password: any, newPassword: any, errorPassw
         console.log("Password matches!");
         return true;
     }
-}
-
-// Updates user data in the database
-async function updateUserData(username: string, dateOfBirth: any, programmingExperience: any, email: string | undefined, tagIds: any[], firstname: string | undefined, lastname: string | undefined, userId: number): Promise<void> {
-    const arrayUserData: any[] = [firstname, lastname, dateOfBirth, username, programmingExperience, email, userId];
-    console.log(arrayUserData);
-
-    // Update user data in the database
-    const userDatabase: Promise<any> = api.queryDatabase(USER_QUERY.UPDATE_USER, ...arrayUserData);
-
-    // Update user tags in the database
-    tagIds.forEach(tagId => {
-        const params: any[] = [userId, tagId];
-        const userTagDatabase: Promise<any> = api.queryDatabase(USER_QUERY.CREATE_USER_TAG, ...params);
-        console.log(userTagDatabase);
-    });
-
-    console.log(userDatabase);
-    return;
 }
 
 // Updates user password in the database
@@ -465,7 +503,8 @@ async function initializeUserSettings(userId: number): Promise<void> {
         }
 
         if (birthdayInput && user.dateOfBirth) {
-            birthdayInput.value = user.dateOfBirth.toString();
+            const birthdate: Date = new Date(user.dateOfBirth);
+            birthdayInput.value = birthdate.toISOString().split("T")[0];
         }
 
         if (emailInput && user.email) {

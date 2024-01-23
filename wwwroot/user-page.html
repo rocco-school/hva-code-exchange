@@ -19,6 +19,83 @@
 </head>
 <body>
 
+<!-- Success/Failed/Delete messages -->
+<div class="darkness-container filter hidden">
+    <!-- Success message -->
+    <div id="successModal" tabindex="-1" aria-hidden="true" class="success-modal">
+        <div class="modal-wrapper">
+            <div class="modal-content">
+                <!-- Modal content -->
+                <button type="button" class="close-modal-button hidden" data-modal-toggle="successModal">
+                    <svg class="close-icon" width="800px" height="800px" viewBox="0 0 512 512"
+                         version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <title>cancel</title>
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="currentColor"
+                           fill-rule="evenodd">
+                            <g id="work-case" fill="currentColor"
+                               transform="translate(91.520000, 91.520000)">
+                                <polygon id="Close"
+                                         points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
+
+                                </polygon>
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+
+                <div class="icon-and-message success-background hidden">
+                    <svg class="icon success-background" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="currentColor" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="sr-only">Success</span>
+                </div>
+                <div class="icon-and-message delete-background hidden">
+                    <svg class="icon delete-background" width="800px" height="800px" viewBox="0 0 24 24"
+                         fill="none">
+                        <path d="M10 12V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M14 12V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10"
+                              stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
+                              stroke="currentColor"
+                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="sr-only">Delete</span>
+                </div>
+                <div class="icon-and-message failed-background hidden">
+                    <svg class="icon failed-background" width="800px" height="800px" viewBox="0 0 512 512"
+                         version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="currentColor"
+                           fill-rule="evenodd">
+                            <g id="work-case" fill="currentColor"
+                               transform="translate(91.520000, 91.520000)">
+                                <polygon id="Close"
+                                         points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
+
+                                </polygon>
+                            </g>
+                        </g>
+                    </svg>
+                    <span class="sr-only">Delete</span>
+                </div>
+                <p class="message">Successfully created!</p>
+                <button data-modal-toggle="successModal" type="button" class="continue-button hidden">
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Sidebar Section -->
 <aside class="sidebarMenu">
     <div class="sidebarContainer">
@@ -120,6 +197,10 @@
                     </div>
                 </div>
             </div>
+
+            <div class="buttonContainer">
+                <button type="submit" class="deleteUserButton userButton"><i class="fa-solid fa-trash-can"></i>Delete account</button>
+            </div>
         </div>
     </header>
 
@@ -143,96 +224,95 @@
 
     </section>
 
+<<<<<<< HEAD
     <section class="editProfileSection content hidden">
         <!-- Section title -->
         <div class="editTitle">
             <h1>Edit your profile</h1>
         </div>
 
+=======
+    <section class="editProfileSection content">
+>>>>>>> origin/features/styling
         <!-- Public Information -->
         <div class="changePublicInfo edit-block">
 
-            <div class="blockTitle">
-                <h2>Public Information</h2>
-            </div>
+            <form class="edit-user" onsubmit="return false;">
+                <h3 class="edit-title">General information</h3>
+                <div class="edit-block--inner">
+                    <div class="field-container">
+                        <div class="infoBlock grid-item">
 
-            <div class="infoBlock">
-                <div class="usernameInfo info-block">
-                    <label for="usernameInput" class="usernameTitle">Username</label>
-                    <input class="usernameInput inputBox" type="text" name="username" id="usernameInput">
-                </div>
 
-                <div class="experienceInfo info-block">
-                    <label for="experienceInput" class="experienceTitle">Programming experience</label>
-                    <input class="experienceInput inputBox" type="number" name="programmingExperience"
-                           id="experienceInput">
-                </div>
+                            <div class="firstnameBlock info-block">
+                                <label for="firstnameInput" class="firstnameTitle inputLabel">Firstname</label>
+                                <input class="firstnameInput inputBox" type="text" name="firstname"
+                                       id="firstnameInput" required>
+                            </div>
 
-            </div>
+                            <div class="usernameInfo info-block">
+                                <label for="usernameInput" class="usernameTitle inputLabel">Username</label>
+                                <input class="usernameInput inputBox" type="text" name="username" id="usernameInput" required>
+                            </div>
 
-            <div class="expertiseInfo">
-                <label for="tags_input" class="expertiseTitle">Expertise</label>
-                <div class="custom-select">
-                    <div class="select-box" tabindex="0">
-                        <input type="text" class="tags_input" id="tags_input" name="tags" hidden/>
-                        <div class="selected-options">
+                            <div class="experienceInfo info-block">
+                                <label for="experienceInput" class="experienceTitle inputLabel">Programming experience</label>
+                                <input class="experienceInput inputBox" type="number" name="programmingExperience" id="experienceInput" required>
+                            </div>
 
                         </div>
-                        <div class="arrow">
-                            <i class="fa fa-angle-down open-select-box"></i>
+
+                        <div class="infoBlock grid-item">
+
+                            <div class="lastnameBlock info-block">
+                                <label for="lastnameInput" class="lastnameTitle inputLabel">Lastname</label>
+                                <input class="lastnameInput inputBox" type="text" name="lastname" id="lastnameInput" required>
+                            </div>
+
+                            <div class="birthdayInfo info-block">
+                                <label for="birthdayInput" class="birthdayTitle inputLabel">Birthday</label>
+                                <input class="birthdayInput inputBox" type="date" name="birthday" id="birthdayInput" required>
+                            </div>
+
+                            <div class="emailInfo info-block">
+                                <label for="emailInput" class="emailTitle inputLabel">Email</label>
+                                <input class="emailInput inputBox" type="text" name="email" id="emailInput" required>
+                            </div>
+
+                        </div>
+
+                        <div class="expertiseInfo grid-item">
+                            <label for="tags_input" class="expertiseTitle inputLabel">Expertise</label>
+                            <div class="custom-select open">
+                                <div class="select-box" tabindex="0">
+                                    <input type="text" class="tags_input" id="tags_input" name="tags" hidden/>
+                                    <div class="selected-options">
+
+                                    </div>
+                                    <div class="arrow">
+                                        <i class="fa fa-angle-down open-select-box"></i>
+                                    </div>
+                                </div>
+                                <div class="options">
+                                    <div class="option-search-tags">
+                                        <input type="text" class="search-tags" placeholder="Search tags..."/>
+                                        <button type="button" class="clear"><i class="fa fa-close"></i></button>
+                                    </div>
+                                    <div class="option all-tags" tabindex="0" data-value="All">Select All</div>
+                                    <div class="no-result-message hidden">No result match</div>
+                                </div>
+                                <div class="tag_error_msg error"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="options">
-                        <div class="option-search-tags">
-                            <input type="text" class="search-tags" placeholder="Search tags..."/>
-                            <button type="button" class="clear"><i class="fa fa-close"></i></button>
-                        </div>
-                        <div class="option all-tags" tabindex="0" data-value="All">Select All</div>
-                        <div class="no-result-message hidden">No result match</div>
-                    </div>
-                    <div class="tag_error_msg error"></div>
                 </div>
-            </div>
+                <div class="buttonContainer">
+                    <button type="submit" class="updateUserButton userButton"><i class="fa-solid fa-pen-to-square"></i>Update</button>
+                </div>
+            </form>
+
         </div>
 
-        <!-- Personal Information -->
-        <div class="changePrivateInfo edit-block">
-
-            <div class="infoBlock">
-                <div class="blockTitle">
-                    <h2>Personal information</h2>
-                    <p class="subtitle">Not shown publicly</p>
-                </div>
-
-                <div class="birthdayInfo info-block">
-                    <label for="birthdayInput" class="birthdayTitle">Birthday</label>
-                    <input class="birthdayInput inputBox" type="date" name="birthday" id="birthdayInput">
-                </div>
-
-                <div class="emailInfo info-block">
-                    <label for="emailInput" class="emailTitle">Email</label>
-                    <input class="emailInput inputBox" type="text" name="email" id="emailInput">
-                </div>
-
-                <div class="nameInfo info-block">
-                    <div class="firstnameBlock">
-                        <label for="firstnameInput" class="firstnameTitle">Firstname</label>
-                        <input class="firstnameInput inputBox" type="text" name="firstname"
-                               id="firstnameInput">
-                    </div>
-                    <div class="lastnameBlock">
-                        <label for="lastnameInput" class="lastnameTitle">Lastname</label>
-                        <input class="lastnameInput inputBox" type="text" name="lastname" id="lastnameInput">
-                    </div>
-                </div>
-
-                <div class="changePassword info-block">
-                    <button class="editPasswordBtn">Change password</button>
-                </div>
-            </div>
-
-
-        </div>
 
     </section>
 
