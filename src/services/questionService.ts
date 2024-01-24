@@ -331,18 +331,34 @@ export class QuestionService {
         }
     }
 
+    /**
+     * Gets the most recent questions answered by a user.
+     *
+     * @param {number | null} userId - The ID of the user or null if not provided.
+     * @returns {Promise<[Question]>} A promise that resolves to an array of questions.
+     *
+     * @throws {Error} If there is an error retrieving questions or if no questions are found for the specified user.
+     *
+     * @description
+     * This function retrieves the most recent questions that have been answered by the specified user.
+     * If the operation is successful, it returns an array of questions; otherwise, it throws an error.
+     */
     public static async getMostRecentQuestionsByAnswer(userId: number | null): Promise<[Question]> {
         try {
-            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_BY_ANSWER_ID, userId) as [Question];
+            // Use api.queryDatabase to fetch most recent questions by answer ID
+            const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_BY_ANSWER_ID, userId) as [Question];
 
-            if (!question) {
+            if (!questions) {
+                // Throw an error if no questions are found for the specified user
                 throw new Error(`Failed to get questions for user with ID ${userId}!`);
             }
             
-            return question;
+            return questions;
         } catch (error) {
+            // Throw an error if there is an issue retrieving questions
             throw new Error(`Error retrieving questions for user with ID ${userId}: ${error}`);
         }
     }
+
 
 }
