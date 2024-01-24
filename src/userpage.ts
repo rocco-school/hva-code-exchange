@@ -532,33 +532,39 @@ async function initializeUserSettings(userId: number): Promise<void> {
     }
 }
 
-async function initializeUserActivity(userId:number): Promise<void> {
+// Function to initialize user activity based on user ID
+async function initializeUserActivity(userId: number): Promise<void> {
+    // Select containers using DOM selectors
     const questionsOfUserContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector("#questionsOfUserContainer"));
     const answersOfUserContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector("#answersOfUserContainer"));
     
+    // Fetch most recent questions by user
     const questions: [Question] = await Question.getMostRecentQuestionsByUser(userId) as [Question];
 
+    // Iterate through fetched questions
     for (const question of questions) {
         // Question Section
         const questionDiv: HTMLDivElement = questionsOfUserContainer.appendChild(document.createElement("div"));
         questionDiv.classList.add("question-box");
 
+        // Add click event to redirect to question detail
         questionDiv.addEventListener("click", (): void => {
             handleRedirectToQuestionDetail(question.questionId);
         });
 
+        // Update question count in the heading
         const questionH1: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#questionCount"));
         const questionLength: string = questions.length.toString();
         questionH1.innerHTML = questionLength + " Questions";
 
+        // Display question title
         const questionTitle: HTMLHeadingElement = questionDiv.appendChild(document.createElement("h3"));
-
         if (questionTitle) {
             questionTitle.innerHTML = question.questionTitle;
         }
 
+        // Display truncated question body
         const questionBodyExample: HTMLDivElement = questionDiv.appendChild(document.createElement("div"));
-        
         if (questionBodyExample) {
             questionBodyExample.innerHTML = question.questionBody.substring(0, 2000);
             // Truncate long question bodies and add ellipsis
@@ -567,64 +573,65 @@ async function initializeUserActivity(userId:number): Promise<void> {
             }
         }
 
+        // Display number of answers for the current question
         const questionAnswers: HTMLDivElement = questionDiv.appendChild(document.createElement("div"));
-
         if (questionAnswers) {
-            // Fetch the number of answers for the current question
             const answerAmount: any = await api.queryDatabase(ANSWER_QUERY.COUNT_ANSWERS_FROM_QUESTION, question.questionId);
             questionAnswers.innerHTML = "answers: " + answerAmount[0].answerCount;
         }
-
-        
     }
 
     // Answer Section
+    // Fetch most recent questions by answer
     const allQuestionsByAnswer: [Question] = await Question.getMostRecentQuestionsByAnswer(userId) as [Question];
 
+    // Update answer count in the heading
     const answerTitle: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#answerCount"));
-
     if (answerTitle) {
         const answerAmount: string = allQuestionsByAnswer.length.toString();
         answerTitle.innerHTML = answerAmount + " Answers";
     }
 
+    // Check if there are any questions answered by the user
     if (allQuestionsByAnswer) {
-
+        // Fetch answer details for each answered question
         const answerBodyArray: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_BY_USER, userId) as [Answer];
 
+        // Iterate through fetched answers
         if (answerBodyArray) {
-            for (const singleAnswer of answerBodyArray ) {
+            for (const singleAnswer of answerBodyArray) {
+                // Answer Section
                 const answerDiv: HTMLDivElement = answersOfUserContainer.appendChild(document.createElement("div"));
                 answerDiv.classList.add("answer-box");
 
+                // Add click event to redirect to question detail
                 answerDiv.addEventListener("click", (): void => {
                     handleRedirectToQuestionDetail(singleAnswer.questionId);
                 });
 
+                // Display the title of the question that was answered
                 const answerTitle: HTMLHeadingElement = answerDiv.appendChild(document.createElement("h3"));
                 const titleArray: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_TITLE, singleAnswer.questionId) as [Question];
                 answerTitle.innerHTML = "The question: " + titleArray[0].questionTitle;
 
+                // Display "You replied with" heading
                 const answerTextTitle: HTMLHeadingElement = answerDiv.appendChild(document.createElement("h4"));
-                answerTextTitle.innerHTML= "You replied with: ";
+                answerTextTitle.innerHTML = "You replied with: ";
 
+                // Display truncated answer body
                 const answerTextContent: HTMLParagraphElement = answerDiv.appendChild(document.createElement("p"));
-
                 if (answerTextContent) {
                     answerTextContent.innerHTML = singleAnswer.answerBody.substring(0, 1000);
-                    // Truncate long question bodies and add ellipsis
+                    // Truncate long answer bodies and add ellipsis
                     if (answerTextContent.innerHTML.length > 1000) {
                         answerTextContent.innerHTML += "...";
                     }
                 }
-
-                
             }
         }
     }
-
-
 }
+
 
 
 
