@@ -254,7 +254,6 @@ async function setup(): Promise<void> {
                 profilePicture = user.profilePicture;
             }
 
-
             // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
@@ -345,7 +344,7 @@ async function updateProfilePicture(file: HTMLInputElement, user: User): Promise
     try {
         const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
 
-        const fileName: string = user.profilePicture!.split(url)[0];
+        const fileName: string | undefined = user.profilePicture?.split(url)[0];
 
         if (fileName) {
             await api.deleteFile(fileName);
