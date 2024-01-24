@@ -16,6 +16,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-weight: 600;
 }
 
 
@@ -72,5 +73,37 @@
 }
 
 .loginButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+
+/* login button css */
+.logButton {
+    color: #1a202c;
+    background-color: #d3d3d3;
+}
+
+.logButton:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.logButtonFocus {
+    box-shadow: 0 0 0 5px lightgrey;
+}
+
+
+/* signup button css */
+.signButton {
+    color: #ffffff;
+    background-color: #1F456E;
+}
+
+.signButton:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.signButtonFocus {
     box-shadow: 0 0 0 5px lightblue;
 }

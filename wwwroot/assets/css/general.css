@@ -214,10 +214,6 @@ body {
     z-index: 100;
 }
 
-.hidden {
-    display: none;
-}
-
 .create-question {
     position: relative;
     display: inline-flex;

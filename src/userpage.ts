@@ -68,20 +68,11 @@ async function setup(): Promise<void> {
     const file: HTMLInputElement = (<HTMLInputElement>document.querySelector("#file"));
     const profilePicture: HTMLImageElement = (<HTMLImageElement>document.querySelector(".profile-picture"));
 
-    // const userDeleteButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".continue-button"));
-
     document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
     document.querySelectorAll(".profile-tab").forEach(item => {
         item.addEventListener("click", handleHeroTab);
     });
-
-    // userDeleteButton.addEventListener("click", async (): Promise<void> => {
-    //     if (userDeleteButton.classList.contains("user")) {
-    //         await User.deleteUser(parseInt(userDeleteButton.id));
-    //         location.reload();
-    //     }
-    // });
 
     updateButton.addEventListener("click", async (): Promise<void> => {
         updateButton.classList.add("editButtonFocus");

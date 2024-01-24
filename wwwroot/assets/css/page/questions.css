@@ -3,10 +3,17 @@ body {
     background-color: rgb(249 250 251/var(--tw-bg-opacity));
 }
 
-.buttonContainer {
-    margin-left: auto;
+.questions-container {
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
-.hidden {
-    display: none;
+@media only screen and (min-width: 1024px) {
+    .questions-container {
+        margin-left: 14.5rem;
+    }
+}
+
+.buttonContainer {
+    margin-left: auto;
 }

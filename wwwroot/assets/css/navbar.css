@@ -44,7 +44,18 @@
 .navbar .container .end-block .logged-out {
     margin-top: auto;
     margin-bottom: auto;
+    display: none;
+    flex-direction: row;
+    gap: 1rem;
+    margin-right: 2rem;
 }
+
+@media only screen and (min-width: 750px) {
+    .navbar .container .end-block .logged-out {
+        display: flex;
+    }
+}
+
 
 .navbar .container li:nth-child(1) {
     margin-right: auto;
@@ -61,8 +72,8 @@
 }
 
 /* Styling for buttons within the navigation bar */
-.navbar .container button {
-    padding: 0.5rem;
+.logButtons {
+    padding: 0.5rem 1.5rem;
     cursor: pointer;
     margin-top: auto;
     margin-bottom: auto;
@@ -88,11 +99,6 @@
 .navbar .container #codeExchangeLogo {
     height: 3.5rem;
 }
-
-.hidden {
-    display: none;
-}
-
 
 .profile-block {
     margin-top: auto;
@@ -198,5 +204,4 @@
 
 .sign-out-button {
     display: block;
-
 }

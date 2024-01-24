@@ -6,9 +6,15 @@
 
 
 .contentContainer {
-    padding-left: 14.5rem;
+    padding-left: 2rem;
     padding-right: 2rem;
     padding-top: 5.5rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .contentContainer {
+        padding-left: 14.5rem;
+    }
 }
 
 /* Styling for the main header section */
@@ -24,7 +30,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30rem;
+    text-align: center;
+    margin: auto;
 }
 
 /* Styling for specific elements within the main header */
@@ -37,12 +44,26 @@
 }
 
 .picture-border {
-    display: flex;
+    display: none;
+    margin: auto;
+}
+
+@media only screen and (min-width: 800px) {
+    .picture-border {
+        display: flex;
+    }
 }
 
 #unsplashPicture1 {
-    height: 20rem;
+    height: 15rem;
     border-radius: .5rem;
+}
+
+@media only screen and (min-width: 1260px) {
+    #unsplashPicture1 {
+        height: 20rem;
+        border-radius: .5rem;
+    }
 }
 
 /* Styling for the perks section */
@@ -72,8 +93,9 @@
     justify-items: center;
 }
 
-
-
+.recentQuestionContainer h2 {
+    text-align: center;
+}
 
 
 

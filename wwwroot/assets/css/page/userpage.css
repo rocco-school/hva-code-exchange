@@ -440,8 +440,12 @@ body {
 
 .questionBoxesContainer {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.questionSection, .answerSection {
+    width: 50%;
 }
 
 .question-box, .answer-box{
@@ -453,8 +457,3 @@ body {
     cursor: pointer;
     background-color:#ced4da;
 }
-
-.hidden {
-    display: none;
-}
-

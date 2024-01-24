@@ -10,11 +10,13 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
     try {
 
         const loggedOutBlock: HTMLElement = (<HTMLElement>document.querySelector(".logged-out"));
+        const sideMenuLogButtons: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".containerLogButtons"));
         const profileBlock: HTMLElement = (<HTMLElement>document.querySelector(".profile-block"));
 
         if (!isAuthenticated) {
             // If not authenticated, display the logged-out block.
             loggedOutBlock.classList.remove("hidden");
+            sideMenuLogButtons.classList.remove("hidden");
         }
 
         if (isAuthenticated) {
@@ -41,7 +43,6 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
 
                 // Toggle the visibility of the user dropdown.
                 userDropdown.classList.toggle("hidden");
-                console.log("toggled!");
 
                 signOutButton.addEventListener("click", endUserSession);
             });

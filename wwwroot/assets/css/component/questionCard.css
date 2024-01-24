@@ -1,19 +1,12 @@
 .questions-container {
     padding-top: 3.5rem;
-    margin-left: 2rem;
-    margin-right: 2rem;
-}
-
-@media only screen and (min-width: 1024px) {
-    .questions-container {
-        margin-left: 14.5rem;
-    }
 }
 
 .questions-table {
     display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
     margin: auto;
+    max-width: 70rem;
 }
 
 @media only screen and (min-width: 1720px) {
@@ -62,6 +55,7 @@
     padding: .5rem 1rem;
     border-radius: 10rem;
     color: #1F456E;
+    white-space: nowrap;
 }
 
 .question-tag-section {
