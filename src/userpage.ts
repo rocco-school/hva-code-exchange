@@ -16,6 +16,7 @@ import {ANSWER_QUERY} from "./query/answer.query";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import {Answer} from "./models/answer";
 import {QUESTION_QUERY} from "./query/question.query";
+import DOMPurify from "dompurify";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -99,23 +100,21 @@ async function setup(): Promise<void> {
 
     const user: User = createNewUserInstance(retrievedUser);
 
-    file.addEventListener("input", async function (): Promise<void> {
-        const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
+    file.addEventListener("change", (): void => {
+        const profileImage: HTMLImageElement = (<HTMLImageElement>document.querySelector(".image"));
+        if (file.files) {
+            const selectedFile: File = file.files[0];
 
-        const fileName: string = user.profilePicture!.split(url)[0];
-
-        if (fileName) {
-            await api.deleteFile(fileName);
+            if (selectedFile) {
+                // Display the selected image
+                profileImage.src = URL.createObjectURL(selectedFile);
+                profileImage.classList.remove("hidden");
+            } else {
+                // Clear the image if no file is selected
+                profileImage.src = "";
+                profileImage.classList.add("hidden");
+            }
         }
-
-        const filename: string = file.files![0].name;
-        const imageData: types.DataURL = await utils.getDataUrl(file) as types.DataURL;
-        user.profilePicture = await api.uploadFile(filename, imageData.url);
-
-        await user.updateUser();
-
-        await showSuccessMessage("Successfully added profile picture!", 2000, "success", null, null);
-        location.reload();
     });
 
 
@@ -216,7 +215,6 @@ async function setup(): Promise<void> {
     updateForm.addEventListener("submit", async (evt): Promise<void> => {
         evt.preventDefault();
 
-
         let questionTags: any[] = [];
 
         // Array of input elements for validation.
@@ -240,6 +238,7 @@ async function setup(): Promise<void> {
                     console.log("Input is not valid.");
                 }
             });
+            let profilePicture: string | null = "";
 
             // Validate email, firstname, and lastname
             const verifiedEmail: boolean = await verifyEmail(emailInput);
@@ -248,6 +247,13 @@ async function setup(): Promise<void> {
             if (!verifiedFirstname) return;
             const verifiedLastname: boolean = await verifyLastname(lastnameInput, nameRegEx);
             if (!verifiedLastname) return;
+            const newProfilePicture: string | unknown = await updateProfilePicture(file, user);
+            if (typeof newProfilePicture === "string") {
+                profilePicture = newProfilePicture;
+            } else {
+                profilePicture = user.profilePicture;
+            }
+
 
             // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
@@ -259,7 +265,7 @@ async function setup(): Promise<void> {
                         birthdayInput.value,
                         usernameInput?.value,
                         parseInt(programmingExperienceInput?.value),
-                        retrievedUser.profilePicture,
+                        profilePicture,
                         retrievedUser.password,
                         emailInput?.value,
                         null,
@@ -325,6 +331,33 @@ async function verifyEmail(email: any): Promise<boolean> {
         return false;
     } else {
         return true;
+    }
+}
+
+
+/**
+ * Updates the uploaded file for the user.
+ *
+ * @param file
+ * @param user
+ */
+async function updateProfilePicture(file: HTMLInputElement, user: User): Promise<string | unknown> {
+    try {
+        const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
+
+        const fileName: string = user.profilePicture!.split(url)[0];
+
+        if (fileName) {
+            await api.deleteFile(fileName);
+        }
+
+        const filename: string = file.files![0].name;
+        const imageData: types.DataURL = await utils.getDataUrl(file) as types.DataURL;
+
+        return await api.uploadFile(filename, imageData.url, true);
+    } catch (error) {
+        console.log(error);
+        return error;
     }
 }
 
@@ -563,7 +596,10 @@ async function initializeUserActivity(userId: number): Promise<void> {
         // Display truncated question body
         const questionBodyExample: HTMLDivElement = questionDiv.appendChild(document.createElement("div"));
         if (questionBodyExample) {
-            questionBodyExample.innerHTML = question.questionBody.substring(0, 2000);
+
+            const questionBody: string = question.questionBody.slice(0, 1000);
+            questionBodyExample.innerHTML = DOMPurify.sanitize(questionBody);
+
             // Truncate long question bodies and add ellipsis
             if (questionBodyExample.innerHTML.length > 2000) {
                 questionBodyExample.innerHTML += "...";
@@ -618,7 +654,8 @@ async function initializeUserActivity(userId: number): Promise<void> {
                 // Display truncated answer body
                 const answerTextContent: HTMLParagraphElement = answerDiv.appendChild(document.createElement("p"));
                 if (answerTextContent) {
-                    answerTextContent.innerHTML = singleAnswer.answerBody.substring(0, 1000);
+                    const answerBody: string = singleAnswer.answerBody.slice(0, 1000);
+                    answerTextContent.innerHTML = DOMPurify.sanitize(answerBody);
                     // Truncate long answer bodies and add ellipsis
                     if (answerTextContent.innerHTML.length > 1000) {
                         answerTextContent.innerHTML += "...";

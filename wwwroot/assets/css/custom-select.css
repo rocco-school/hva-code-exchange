@@ -123,3 +123,7 @@
 .option:hover {
     background-color: #eaeaea;
 }
+
+.tag_error_msg {
+    padding: .5rem;
+}
