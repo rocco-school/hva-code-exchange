@@ -11,11 +11,11 @@ import {showSuccessMessage} from "./components/successMessage";
 import {CodingTag} from "./models/codingTag";
 import {createNewUserInstance} from "./components/handleModelInstances";
 import {delay} from "./components/delay";
-import { Question } from "./models/question";
-import { ANSWER_QUERY } from "./query/answer.query";
-import { handleRedirectToQuestionDetail } from "./components/handleRedirects";
-import { Answer } from "./models/answer";
-import { QUESTION_QUERY } from "./query/question.query";
+import {Question} from "./models/question";
+import {ANSWER_QUERY} from "./query/answer.query";
+import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import {Answer} from "./models/answer";
+import {QUESTION_QUERY} from "./query/question.query";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -67,7 +67,7 @@ async function setup(): Promise<void> {
     const passwordCloseBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".passwordCloseBtn"));
 
 
-    const file: HTMLInputElement = (<HTMLInputElement>document.querySelector("#file"));
+    const file: HTMLInputElement = (<HTMLInputElement>document.querySelector("#file-upload"));
     const profilePicture: HTMLImageElement = (<HTMLImageElement>document.querySelector(".profile-picture"));
 
     document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
@@ -249,8 +249,6 @@ async function setup(): Promise<void> {
             const verifiedLastname: boolean = await verifyLastname(lastnameInput, nameRegEx);
             if (!verifiedLastname) return;
 
-            const birthDate: string = new Date(birthdayInput.value).toISOString().split("T")[0];
-
             // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
@@ -258,7 +256,7 @@ async function setup(): Promise<void> {
                         loginStatus?.userId,
                         firstnameInput?.value,
                         lastnameInput?.value,
-                        birthDate,
+                        birthdayInput.value,
                         usernameInput?.value,
                         parseInt(programmingExperienceInput?.value),
                         retrievedUser.profilePicture,
@@ -468,6 +466,7 @@ async function initializeUserSettings(userId: number): Promise<void> {
         const emailInput: HTMLInputElement = document.querySelector(".emailInput") as HTMLInputElement;
         const firstnameInput: HTMLInputElement = document.querySelector(".firstnameInput") as HTMLInputElement;
         const lastnameInput: HTMLInputElement = document.querySelector(".lastnameInput") as HTMLInputElement;
+        const profilePicture: HTMLImageElement = document.querySelector(".image") as HTMLImageElement;
 
         // Select all custom-select elements
         const customSelects: NodeListOf<Element> = document.querySelectorAll(".custom-select");
@@ -513,6 +512,13 @@ async function initializeUserSettings(userId: number): Promise<void> {
             firstnameInput.value = user.firstname;
         }
 
+        if (profilePicture) {
+            const defaultPicture: string = "https://ui-avatars.com/api/?name=" + user.firstname + "+" + user.lastname + "?background=random";
+            profilePicture.src = user.profilePicture ?? defaultPicture;
+
+            profilePicture.classList.remove("hidden");
+        }
+
         if (lastnameInput && user.lastname) {
             lastnameInput.value = user.lastname;
         }
@@ -528,7 +534,7 @@ async function initializeUserActivity(userId: number): Promise<void> {
     // Select containers using DOM selectors
     const questionsOfUserContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector("#questionsOfUserContainer"));
     const answersOfUserContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector("#answersOfUserContainer"));
-    
+
     // Fetch most recent questions by user
     const questions: [Question] = await Question.getMostRecentQuestionsByUser(userId) as [Question];
 
@@ -622,11 +628,6 @@ async function initializeUserActivity(userId: number): Promise<void> {
         }
     }
 }
-
-
-
-
- 
 
 
 /**

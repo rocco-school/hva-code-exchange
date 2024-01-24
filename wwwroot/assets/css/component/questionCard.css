@@ -4,15 +4,9 @@
 
 .questions-table {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
     margin: auto;
-    max-width: 70rem;
-}
-
-@media only screen and (min-width: 1720px) {
-    .questions-table {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    max-width: 80rem;
 }
 
 .question-body {
@@ -70,6 +64,10 @@
 @media only screen and (max-width: 800px) {
     .questionUser {
         margin-right: auto;
+        margin-left: auto;
+    }
+
+    .questionTitle {
         margin-left: auto;
     }
 }

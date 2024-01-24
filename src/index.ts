@@ -4,7 +4,6 @@ import {handleAuthentication} from "./components/handleNavbar";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import {delay} from "./components/delay";
-import {showSuccessMessage} from "./components/successMessage";
 import {QUESTION_QUERY} from "./query/question.query";
 import {Question} from "./models/question";
 import {createNewQuestionInstance} from "./components/handleModelInstances";
@@ -118,10 +117,10 @@ async function highlightPageItem(): Promise<void> {
 /**
  * Fetches recent questions from the database and displays them in the specified HTML element.
  */
-async function displayRecentQuestions():  Promise<void> {
+async function displayRecentQuestions(): Promise<void> {
     try {
         // Fetch recent questions from the database using an API call
-        const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_FIVE_QUESTIONS) as [Question];
+        const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_SIX_QUESTIONS) as [Question];
 
         // Select the HTML element where recent questions will be displayed
         const recentQuestionsBody: Element = (<Element>document.querySelector(".questions-table"));
@@ -141,7 +140,7 @@ async function displayRecentQuestions():  Promise<void> {
  * @param {Question} question - The question to process.
  * @param {HTMLElement} recentQuestionsBody - The HTML element where recent questions will be displayed.
  */
-async function processSingleQuestion(question, recentQuestionsBody): Promise<void> {
+async function processSingleQuestion(question: Question, recentQuestionsBody: Element): Promise<void> {
     const singleQuestion: Question = createNewQuestionInstance(question);
 
     const userId: number = singleQuestion.userId as number;
