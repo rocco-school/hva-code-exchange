@@ -54,6 +54,7 @@ async function setup(): Promise<void> {
         customSelects,
         selectBoxes,
         postButton,
+        discardButton,
         textarea,
         questionTitleInput,
         customSelectOptions,
@@ -89,6 +90,16 @@ async function setup(): Promise<void> {
             await handleQuestionUpdate(postId, questionTitleInput, textarea);
         } else if (postType === PostType.ANSWER) {
             await handleAnswerUpdate(postId, textarea);
+        }
+    });
+
+    discardButton.addEventListener("click", async (): Promise<void> => {
+        if (postType === PostType.QUESTION) {
+            await handleRedirectToQuestionDetail(parseInt(postId));
+        } else if (postType === PostType.ANSWER) {
+            const answer: Answer = await Answer.retrieveAnswer(parseInt(postId)) as Answer;
+
+            await handleRedirectToQuestionDetail(answer.questionId);
         }
     });
 }
@@ -135,6 +146,7 @@ function getDOMElements(): {
     customSelects: NodeListOf<Element>;
     selectBoxes: NodeListOf<Element>;
     postButton: HTMLButtonElement;
+    discardButton: HTMLButtonElement;
     textarea: HTMLDivElement;
     questionTitleInput: HTMLInputElement;
     customSelectOptions: NodeListOf<HTMLDivElement>;
@@ -146,6 +158,7 @@ function getDOMElements(): {
         customSelects: document.querySelectorAll(".custom-select"),
         selectBoxes: document.querySelectorAll(".select-box"),
         postButton: document.querySelector(".btn_submit") as HTMLButtonElement,
+        discardButton: document.querySelector(".discard-button") as HTMLButtonElement,
         textarea: document.querySelector("#text-input") as HTMLDivElement,
         questionTitleInput: document.querySelector(".question-title-input") as HTMLInputElement,
         customSelectOptions: document.querySelectorAll(".option"),

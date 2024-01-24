@@ -4,136 +4,75 @@
     margin: 0;
 }
 
-/* Styling for the navigation bar */
-.navbar {
-    height: 3.5rem;
-    border-bottom: grey 1px solid;
-    padding: 0 1rem;
+
+.contentContainer {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 5.5rem;
 }
 
-/* Styling for the navigation bar container */
-.navbar .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    list-style: none;
+@media only screen and (min-width: 1024px) {
+    .contentContainer {
+        padding-left: 14.5rem;
+    }
 }
-
-/* Margin adjustments for specific navigation bar items */
-.navbar .container li:nth-child(3),
-.navbar .container li:nth-child(4) {
-    margin-right: 0.5rem;
-}
-
-.navbar .container li:nth-child(1),
-.navbar .container li:nth-child(2) {
-    margin-right: auto;
-}
-
-/* Styling for buttons within the navigation bar */
-.navbar .container button {
-    padding: 0.5rem;
-}
-
-/* Styling for specific elements within the navigation bar */
-.navbar .container #burgerMenu {
-    height: 2rem;
-    cursor: pointer;
-}
-
-.navbar .container #codeExchangeLogo {
-    height: 3.5rem;
-}
-
-/* Styling for the sidebar menu */
-.sidebarMenu {
-    visibility: hidden; /* Initially hide the sidebar */
-    padding: 1rem;
-    width: 12.5rem;
-    background-color: #f1f1f1;
-    position: fixed;
-    height: 100%;
-    overflow: auto;
-}
-
-/* Show the sidebar when the 'show' class is applied */
-.sidebarMenu.show {
-    visibility: visible;
-}
-
-/* Styling for the content container within the sidebar */
-.sidebarMenu .container {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Styling for the close button in the sidebar */
-.sidebarMenu .container #sidebarClose {
-    margin-bottom: 2rem;
-    cursor: pointer;
-}
-
-/* Styling for the list of buttons in the sidebar */
-.sidebarMenu .container .containerButtons {
-    list-style: none; /* Remove default list styling */
-}
-
-/* Styling for individual buttons within the sidebar */
-.sidebarMenu .container .containerButtons button {
-    width: 12rem;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-}
-
 
 /* Styling for the main header section */
-.mainHeader {
-    height: auto;
-    width: auto;
-    padding: 10rem 4rem 0 16rem;
-}
-
-/* Styling for the main header container */
-.mainHeader .container {
+.headerContainer {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    padding-left: 4rem;
-    padding-right: 4rem;
+    padding: 5rem 2rem 2rem;
+    gap: 6rem;
 }
 
 /* Styling for layout within the main header */
-.mainHeader .container .mainHeaderTextLayout {
+.mainHeaderTextLayout {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 30rem;
+    text-align: center;
+    margin: auto;
+    max-width: 40rem;
 }
 
 /* Styling for specific elements within the main header */
-.mainHeader .container .mainHeaderTextLayout h1 {
+.mainHeaderTextLayout h1 {
     margin-bottom: 1rem;
 }
 
-.mainHeader .container .mainHeaderTextLayout button {
+.mainHeaderTextLayout button {
     margin-top: 1rem;
 }
 
 .picture-border {
-    display: flex;
+    display: none;
     margin: auto;
 }
 
-.mainHeader #unsplashPicture1 {
-    height: 18rem;
+@media only screen and (min-width: 800px) {
+    .picture-border {
+        display: flex;
+    }
+}
+
+#unsplashPicture1 {
+    height: 15rem;
     border-radius: .5rem;
+}
+
+@media only screen and (min-width: 1260px) {
+    #unsplashPicture1 {
+        height: 20rem;
+        border-radius: .5rem;
+    }
 }
 
 /* Styling for the perks section */
 .sectionPerks {
     height: auto;
     width: auto;
-    margin-top: 10rem;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
 }
 
 /* Styling for the perks container */
@@ -143,54 +82,28 @@
     align-items: center;
 }
 
-/* Styling for the perk boxes container */
-.sectionPerks .container .containerPerkBoxes {
-    display: flex;
-    flex-direction: row;
-    align-content: center;
-    margin-top: 4rem;
+.containerPerkBoxes {
+    width: 100%;
 }
 
-/* Styling for individual perk boxes */
-.sectionPerks .container .containerPerkBoxes .perkBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 10rem;
-    margin: 0 2rem;
-    padding: 2rem;
-    background-color: #f1f1f1;
+.perkBox {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 4fr));
+    grid-gap: 3.5rem;
+    justify-items: center;
 }
 
-/* Margin adjustment for text within perk boxes */
-.sectionPerks .container .containerPerkBoxes .perkBox p {
-    margin-top: 1rem;
+.recentQuestionContainer h2 {
+    text-align: center;
 }
 
-/* Styling for the contact section */
-.sectionContact {
-    height: auto;
-    width: auto;
-    margin-top: 10rem;
-    background-color: #f1f1f1;
+.recentQuestionContainer {
+    margin-bottom: 5rem;
 }
 
-/* Styling for the contact container */
-.sectionContact .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
-/* Styling for the contact boxes container */
-.sectionContact .container .containerContactBoxes {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
 
-/* Styling for individual contact boxes */
-.sectionContact .container .containerContactBoxes .contactBox {
-    padding: 2rem;
-}
+
+
+

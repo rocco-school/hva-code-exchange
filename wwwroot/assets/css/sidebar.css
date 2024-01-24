@@ -21,6 +21,26 @@
     height: 100%;
     z-index: 10;
     overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.logButtonsContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (min-width: 750px) {
+    .logButtonsContainer {
+        display: none;
+    }
+}
+
+
+.containerLogButtons {
+    margin-top: auto;
 }
 
 .sidebarCloseButton {
@@ -46,9 +66,12 @@
     list-style-type: none;
 }
 
+.sidebarButtons-cover:hover {
+    background-color: lightblue;
+}
 
-.buttonItem:hover {
-    background-color: rgb(243 244 246);
+.current-page {
+    background-color: lightblue;
 }
 
 .buttonItem {
@@ -63,10 +86,6 @@
     font-size: 1rem;
     gap: 1rem;
     border-radius: .5rem;
-}
-
-.buttonItem:hover {
-    transform: scale(110%);
 }
 
 /* Show the sidebar when the 'show' class is applied */

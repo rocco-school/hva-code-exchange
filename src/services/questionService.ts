@@ -290,9 +290,9 @@ export class QuestionService {
      * This static method retrieves the maximum number of question pages from the database using a specified query.
      * It returns a Promise that resolves to the maximum number of question pages.
      */
-    public static async getMaxQuestionPages(): Promise<number> {
+    public static async getMaxQuestionPages(itemsPerPage: number): Promise<number> {
         // Querying the database to retrieve questions for the specified question.
-        const maxPages: any = await api.queryDatabase(QUESTION_QUERY.GET_MAX_QUESTION_PAGES);
+        const maxPages: any = await api.queryDatabase(QUESTION_QUERY.GET_MAX_QUESTION_PAGES, itemsPerPage);
 
         // Checking if the database retrieval was successful.
         if (!maxPages) {

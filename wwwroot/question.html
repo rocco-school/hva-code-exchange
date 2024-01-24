@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="assets/css/sidebar.css"/>
     <link rel="stylesheet" href="assets/css/page/question.css"/>
     <link rel="stylesheet" href="assets/css/text-editor.css"/>
+    <link rel="stylesheet" href="assets/css/component/hide.css"/>
 </head>
 <body>
 
@@ -21,16 +22,9 @@
         <div class="containerButtons">
             <div class="sidebarButtons">
                 <div class="sidebarButtons-cover">
-                    <a href="homepage.html" class="buttonItem" id="homeButton">
+                    <a href="index.html" class="buttonItem" id="homeButton">
                         <i class="fa-solid fa-house"></i>
                         <span>Home</span>
-                    </a>
-                </div>
-
-                <div class="sidebarButtons-cover">
-                    <a href="index.html" class="buttonItem" id="aboutButton">
-                        <i class="fa-regular fa-window-maximize"></i>
-                        <span>About</span>
                     </a>
                 </div>
 
@@ -41,6 +35,33 @@
                     </a>
                 </div>
 
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarContainer logButtonsContainer">
+        <div class="containerButtons containerLogButtons hidden">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="login.html" class="buttonItem" id="login-button">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Login</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="signup.html" class="buttonItem" id="signup-button">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Signup</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -72,11 +93,13 @@
                     </div>
                     <ul class="avatarButtons" aria-labelledby="avatarButton">
                         <li class="avatarButton-cover">
-                            <a href="user-page.html" class="avatarButton"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
                         </li>
                     </ul>
                     <div class="sign-out-block py-1">
-                        <a tabindex="0" class="avatarButton signOut"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
                     </div>
                 </div>
 
@@ -166,135 +189,147 @@
 
 
     <div class="create-question-container">
-        <h1 class="question-title"></h1>
-        <hr>
+        <div class="question-container--outer">
+            <h1 class="question-title"></h1>
+            <hr class="question-divider">
 
-        <div class="question">
-            <div class="vote">
-                <img class="arrow upvote-question" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                <span class="upvote-count">0</span>
-                <img class="arrow arrow-down downvote-question" alt="downvote answer" src="assets/img/icons/arrow-up.svg">
-            </div>
-            <div class="question-inner">
-                <p class="question-body"></p>
+            <div class="question">
+                <div class="vote">
+                    <div class="upvote">
+                        <img class="arrow upvote-question" alt="upvote answer"
+                             src="assets/img/icons/arrow-up.svg">
 
-                <hr class="question-divider hidden">
-
-                <div class="question-info">
-                    <button class="button edit-button question-edit hidden">Edit</button>
-
-
-                </div>
-            </div>
-
-        </div>
-        <hr>
-
-        <div class="answers-count">
-            <span class="answer-count">0</span>
-            <span>Answers</span>
-        </div>
-
-
-        <div class="answers">
-
-        </div>
-
-        <h2 class="new-answer-title">new Answer</h2>
-
-        <!-- Section for Question Body -->
-        <section class="new-answer-section question-body-section">
-            <div class="new-answer-container">
-                <div class="new-answer-container--inner">
-
-                    <div class="text-editor">
-                        <div class="text-editor-options">
-                            <button id="bold" class="option-button format text-editor-button">
-                                <i class="fa-solid fa-bold"></i>
-                            </button>
-                            <button id="codeBlock" class="option-button text-editor-button">
-                                <i class="fa-solid fa-code"></i>
-                            </button>
-                            <button id="superscript" class="option-button script text-editor-button">
-                                <i class="fa-solid fa-superscript"></i>
-                            </button>
-                            <button id="subscript" class="option-button script text-editor-button">
-                                <i class="fa-solid fa-subscript"></i>
-                            </button>
-
-                            <button id="insertOrderedList" class="option-button text-editor-button">
-                                <div class="fa-solid fa-list-ol"></div>
-                            </button>
-                            <button id="insertUnorderedList" class="option-button text-editor-button">
-                                <i class="fa-solid fa-list"></i>
-                            </button>
-
-                            <button id="undo" class="option-button text-editor-button">
-                                <i class="fa-solid fa-rotate-left"></i>
-                            </button>
-                            <button id="redo" class="option-button text-editor-button">
-                                <i class="fa-solid fa-rotate-right"></i>
-                            </button>
-
-                            <button id="createLink" class="adv-option-button text-editor-button">
-                                <i class="fa fa-link"></i>
-                            </button>
-                            <button id="unlink" class="option-button text-editor-button">
-                                <i class="fa fa-unlink"></i>
-                            </button>
-
-                            <button id="justifyLeft" class="option-button align text-editor-button">
-                                <i class="fa-solid fa-align-left"></i>
-                            </button>
-                            <button id="justifyCenter" class="option-button align text-editor-button">
-                                <i class="fa-solid fa-align-center"></i>
-                            </button>
-                            <button id="justifyRight" class="option-button align text-editor-button">
-                                <i class="fa-solid fa-align-right"></i>
-                            </button>
-                            <button id="justifyFull" class="option-button align text-editor-button">
-                                <i class="fa-solid fa-align-justify"></i>
-                            </button>
-                            <button id="indent" class="option-button spacing text-editor-button">
-                                <i class="fa-solid fa-indent"></i>
-                            </button>
-                            <button id="outdent" class="option-button spacing text-editor-button">
-                                <i class="fa-solid fa-outdent"></i>
-                            </button>
-                            <select id="formatBlock" class="adv-option-button text-editor-select">
-                                <option value="H1">H1</option>
-                                <option value="H2">H2</option>
-                                <option value="H3">H3</option>
-                                <option value="H4">H4</option>
-                                <option value="H5">H5</option>
-                                <option value="H6">H6</option>
-                            </select>
-                            <select id="fontName" class="adv-option-button text-editor-select"></select>
-                            <select id="fontSize" class="adv-option-button text-editor-select"></select>
-
-                            <div class="input-wrapper">
-                                <input type="color" id="foreColor" class="adv-option-button">
-                                <label for="foreColor">Font Color</label>
-                            </div>
-                            <div class="input-wrapper">
-                                <input type="color" id="backColor" class="adv-option-button">
-                                <label for="backColor">Highlight Color</label>
-                            </div>
-
+                        <div role="tooltip" class="tooltip-upvote tool-tip">
+                            Currently 0 upvotes on this question!
                         </div>
-                        <div id="text-input" contenteditable="true"></div>
+                    </div>
+
+                    <span class="upvote-count">0</span>
+                    <div class="downvote">
+                        <img class="arrow arrow-down downvote-question" alt="downvote answer"
+                             src="assets/img/icons/arrow-up.svg">
+                        <div role="tooltip" class="tooltip-downvote tool-tip">
+                            Currently 0 downvotes on this question!
+                        </div>
                     </div>
 
                 </div>
-            </div>
-        </section>
+                <div class="question-inner">
+                    <p class="question-body"></p>
+                    <div class="question-info">
+                        <button class="button edit-button question-edit hidden">Edit</button>
+                    </div>
+                </div>
 
-        <!-- Section for submitting -->
-        <section class="new-answer-section submit-section">
-            <div class="submit-container">
-                <button class="submit-button btn_submit">Post answer</button>
             </div>
-        </section>
+            <hr class="question-divider">
+
+            <div class="answers-count">
+                <span class="answer-count">0</span>
+                <span>Answers</span>
+            </div>
+
+
+            <div class="answers">
+
+            </div>
+
+            <h2 class="new-answer-title">new Answer</h2>
+
+            <!-- Section for Question Body -->
+            <section class="new-answer-section question-body-section">
+                <div class="new-answer-container">
+                    <div class="new-answer-container--inner">
+
+                        <div class="text-editor">
+                            <div class="text-editor-options">
+                                <button id="bold" class="option-button format text-editor-button">
+                                    <i class="fa-solid fa-bold fa-xl"></i>
+                                </button>
+                                <button id="codeBlock" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-code fa-xl"></i>
+                                </button>
+                                <button id="superscript" class="option-button script text-editor-button">
+                                    <i class="fa-solid fa-superscript fa-xl"></i>
+                                </button>
+                                <button id="subscript" class="option-button script text-editor-button">
+                                    <i class="fa-solid fa-subscript fa-xl"></i>
+                                </button>
+
+                                <button id="insertOrderedList" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-list-ol fa-xl"></i>
+                                </button>
+                                <button id="insertUnorderedList" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-list fa-xl"></i>
+                                </button>
+
+                                <button id="undo" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-rotate-left fa-xl"></i>
+                                </button>
+                                <button id="redo" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-rotate-right fa-xl"></i>
+                                </button>
+
+                                <button id="createLink" class="adv-option-button text-editor-button">
+                                    <i class="fa fa-link fa-xl"></i>
+                                </button>
+                                <button id="unlink" class="option-button text-editor-button">
+                                    <i class="fa fa-unlink fa-xl"></i>
+                                </button>
+
+                                <button id="justifyLeft" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-left fa-xl"></i>
+                                </button>
+                                <button id="justifyCenter" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-center fa-xl"></i>
+                                </button>
+                                <button id="justifyRight" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-right fa-xl"></i>
+                                </button>
+                                <button id="justifyFull" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-justify fa-xl"></i>
+                                </button>
+                                <button id="indent" class="option-button spacing text-editor-button">
+                                    <i class="fa-solid fa-indent fa-xl"></i>
+                                </button>
+                                <button id="outdent" class="option-button spacing text-editor-button">
+                                    <i class="fa-solid fa-outdent fa-xl"></i>
+                                </button>
+                                <select id="formatBlock" class="adv-option-button text-editor-select">
+                                    <option value="H1">H1</option>
+                                    <option value="H2">H2</option>
+                                    <option value="H3">H3</option>
+                                    <option value="H4">H4</option>
+                                    <option value="H5">H5</option>
+                                    <option value="H6">H6</option>
+                                </select>
+                                <select id="fontName" class="adv-option-button text-editor-select"></select>
+                                <select id="fontSize" class="adv-option-button text-editor-select"></select>
+
+                                <div class="input-wrapper">
+                                    <input type="color" id="foreColor" class="adv-option-button">
+                                    <label for="foreColor">Font Color</label>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="color" id="backColor" class="adv-option-button">
+                                    <label for="backColor">Highlight Color</label>
+                                </div>
+
+                            </div>
+                            <div id="text-input" contenteditable="true"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section for submitting -->
+            <section class="new-answer-section submit-section">
+                <div class="submit-container">
+                    <button class="submit-button btn_submit">Post answer</button>
+                </div>
+            </section>
+        </div>
     </div>
 </main>
 <!--  This typescript file (single-questions.ts) is called and executed here -->

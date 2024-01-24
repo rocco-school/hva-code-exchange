@@ -1,9 +1,14 @@
 import "./config";
 import {api, url, utils} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "./query/question.query";
-import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import {Question} from "./models/question";
-import {Answer} from "./models/answer";
+import {User} from "./models/user";
+import {CodingTag} from "./models/codingTag";
+import {createNewQuestionInstance} from "./components/handleModelInstances";
+import DOMPurify from "dompurify";
+import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import {delay} from "./components/delay";
+import {createQuestionElement} from "./components/htmlTemplate";
 
 /**
  * The main application entry point for the home page.
@@ -14,30 +19,63 @@ import {Answer} from "./models/answer";
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
-
-    // Get max number of pages for loading all questions.
-    const getMaxPages: number | string = await Question.getMaxQuestionPages();
-    const pageNumbers: number[] = [...Array(getMaxPages).keys()].map(i => i + 1);
-
     // populate question table.
     await populateQuestionTable();
 
-
-
     // Add pagination page numbers
-    await addPagination(pageNumbers);
+    await addPagination();
+    await populatePaginationResult();
 
     // Get all create question form elements.
-    const createQuestion: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
-
     const createQuestionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".create-question"));
     const questionForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".question-form"));
     const cancelForm: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".cancel-create-question"));
-    const nextButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".next-icon"));
-    const prevButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".prev-icon"));
-    const firstPageButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".prev-all-icon"));
-    const lastPageButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".next-all-icon"));
     const allPages: NodeListOf<HTMLSpanElement> = (<NodeListOf<HTMLSpanElement>>document.querySelectorAll(".page"));
+    const createButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".createQuestionButton"));
+
+    const itemsPerPageSelector: HTMLSelectElement = (<HTMLSelectElement>document.querySelector(".questionAmount"));
+
+
+    createButton.addEventListener("click", async (): Promise<void> => {
+        createButton.classList.add("createButtonFocus");
+        await delay(100);
+        createButton.classList.remove("createButtonFocus");
+
+        url.redirect("create-question.html");
+    });
+
+
+    itemsPerPageSelector.addEventListener("change", () => {
+        const selectedItemsPerPage: number = itemsPerPageSelector.selectedIndex + 1;
+        const paramName: string = "itemsPerPage";
+
+        // Get the current URL
+        const currentUrl: string = window.location.href;
+
+        // Check if the URL already has a query string
+        const hasQueryString: boolean = currentUrl.includes("?");
+
+
+        // Create a regular expression to match the parameter
+        const paramRegex: RegExp = new RegExp(`([?&])${paramName}=([^&]*)`, "i");
+
+        // Check if the parameter already exists in the URL
+        const paramExists: boolean = paramRegex.test(currentUrl);
+
+        // Update or add the parameter
+        let newUrl: string;
+        if (paramExists) {
+            // If the parameter exists, update its value
+            newUrl = currentUrl.replace(paramRegex, `$1${paramName}=${selectedItemsPerPage}`);
+        } else {
+            // If the parameter doesn't exist, add it
+            const separator: string = hasQueryString ? "&" : "?";
+            newUrl = `${currentUrl}${separator}${paramName}=${selectedItemsPerPage}`;
+        }
+
+        // Redirect to the new URL
+        window.location.href = newUrl;
+    });
 
 
     // Pagination pages navigation
@@ -56,100 +94,6 @@ async function setup(): Promise<void> {
             // Reload the page
             location.reload();
         });
-    });
-
-    // Pagination Navigation: Show next set of questions when the "Next" button is clicked
-    nextButton?.addEventListener("click", (): void => {
-        // Get the current page number from the query string
-        let pageNumber: string = url.getFromQueryString("page");
-
-        // Set default values for the current page and the new page number
-        let currentPage: number = 1;
-        let newPageNumber: number = parseInt(pageNumber) ? parseInt(pageNumber) + 1 : 2;
-
-        // Check if the newPageNumber is within the valid range
-        if (pageNumbers.includes(newPageNumber) && newPageNumber >= 1) {
-            // Set the currentPage variable to the valid newPageNumber
-            currentPage = newPageNumber;
-
-            // Create a new URL with the updated page number
-            const newURL: string = utils.createUrl("questions.html", {
-                page: currentPage
-            });
-
-            // Update the current URL with the new URL
-            window.history.pushState({path: newURL}, "", newURL);
-
-            // Reload the page to show the next set of questions
-            location.reload();
-        }
-    });
-
-    // Pagination Navigation: Show previous set of questions when the "Previous" button is clicked
-    prevButton?.addEventListener("click", (): void => {
-        // Get the current page number from the query string
-        let pageNumber: string = url.getFromQueryString("page");
-
-        // Set default values for the current page and the new page number
-        let currentPage: number = 1;
-        let newPageNumber: number = parseInt(pageNumber) ? parseInt(pageNumber) - 1 : 1;
-
-        // Check if the newPageNumber is included in the valid page numbers
-        if (pageNumbers.includes(newPageNumber) && newPageNumber >= 1) {
-            // Set the currentPage variable to the valid newPageNumber
-            currentPage = newPageNumber;
-
-            // Create a new URL with the updated page number
-            const newURL: string = utils.createUrl("questions.html", {
-                page: currentPage
-            });
-
-            // Update the current URL with the new URL
-            window.history.pushState({path: newURL}, "", newURL);
-
-            // Reload the page to show the previous set of questions
-            location.reload();
-        }
-    });
-
-    // Pagination Navigation: Show first set of questions when the "First Page" button is clicked
-    firstPageButton?.addEventListener("click", (): void => {
-        // Set default values for the current page and the new page number
-        const firstPage: number = pageNumbers[0];
-
-        // Create a new URL with the updated page number
-        const newURL: string = utils.createUrl("questions.html", {
-            page: firstPage
-        });
-
-        // Update the current URL with the new URL
-        window.history.pushState({path: newURL}, "", newURL);
-
-        // Reload the page to show the first set of questions
-        location.reload();
-    });
-
-    // Pagination Navigation: Show last set of questions when the "Last Page" button is clicked
-    lastPageButton?.addEventListener("click", (): void => {
-        // Set default values for the current page and the new page number
-        const lastPage: number = pageNumbers[pageNumbers.length - 1];
-
-        // Create a new URL with the updated page number
-        const newURL: string = utils.createUrl("questions.html", {
-            page: lastPage
-        });
-
-        // Update the current URL with the new URL
-        window.history.pushState({path: newURL}, "", newURL);
-
-        // Reload the page to show the last set of questions
-        location.reload();
-    });
-
-
-    // Show question form on click
-    createQuestion?.addEventListener("click", (): void => {
-        url.redirect("create-question.html");
     });
 
     // Cancel creating question on click
@@ -194,22 +138,53 @@ async function setup(): Promise<void> {
 // Invoke the homepage application entry point.
 await setup();
 
+function mapNumberToPaginationValue(num: number): number | "ALL" {
+    switch (num) {
+        case 1:
+            return 10;
+        case 2:
+            return 20;
+        case 3:
+            return 40;
+        case 4:
+            return 50;
+        case 5:
+            return "ALL";
+        default:
+            throw new Error("Invalid number for pagination");
+    }
+}
+
 
 /**
  * Add page numbers to the pagination element based on the current page and available page numbers.
  *
- * @param {number[]} pageArray - An array of available page numbers.
  * @returns {Promise<void>} - A promise that resolves once the page numbers are added to the DOM.
  */
-async function addPagination(pageArray: number[]): Promise<void> {
-    // Get the pagination element from the DOM
-    const paginationElem: HTMLDivElement = document.querySelector(".pages") as HTMLDivElement;
-
-    // Determine the current page based on the query string or default to 1
+async function addPagination(): Promise<void> {
+    const getParam: number = url.getFromQueryString("itemsPerPage") ?? 1;
     const currentPage: number = url.getFromQueryString("page") ?? 1;
 
+    const pagination: HTMLDivElement = (<HTMLDivElement>document.querySelector(".paginator"));
+    const selectedItemsPerPage: HTMLSelectElement = (<HTMLSelectElement>document.querySelector(".questionAmount"));
+
+    selectedItemsPerPage.value = getParam.toString();
+
+    const itemsPerPage: number | string = mapNumberToPaginationValue(parseInt(String(getParam)));
+    if (itemsPerPage !== "ALL") {
+        pagination.classList.remove("hidden");
+    }
+
+    const items: number = itemsPerPage as number;
+    const getMaxPages: number | string = await Question.getMaxQuestionPages(items);
+    const pageArray: number[] = [...Array(getMaxPages).keys()].map(i => i + 1);
     // Get an array of page numbers to display based on the current page
     const displayPages: number[] = displayNumbers(currentPage, pageArray);
+
+    const lastPage: number = pageArray[pageArray.length - 1];
+
+    // Get the pagination element from the DOM
+    const paginationElem: HTMLDivElement = document.querySelector(".pages") as HTMLDivElement;
 
     // Iterate through the displayPages array and add page numbers to the DOM
     for (const displayPage of displayPages) {
@@ -224,6 +199,71 @@ async function addPagination(pageArray: number[]): Promise<void> {
             paginationElem.innerHTML += `<span class="page">${displayPage}</span>`;
         }
     }
+
+    // Add ellipsis if the last page is not visible
+    if (displayPages[displayPages.length - 1] < lastPage - 1) {
+        paginationElem.innerHTML += "<span class='suppressed-pages'>...</span>";
+        paginationElem.innerHTML += `<span class="page">${lastPage}</span>`;
+    }
+
+    const nextButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".next-icon"));
+    const prevButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".prev-icon"));
+
+
+    // Pagination Navigation: Show next set of questions when the "Next" button is clicked
+    nextButton?.addEventListener("click", (): void => {
+        // Get the current page number from the query string
+        let pageNumber: string = url.getFromQueryString("page");
+
+        // Set default values for the current page and the new page number
+        let currentPage: number = 1;
+        let newPageNumber: number = parseInt(pageNumber) ? parseInt(pageNumber) + 1 : 2;
+
+        // Check if the newPageNumber is within the valid range
+        if (pageArray.includes(newPageNumber) && newPageNumber >= 1) {
+            // Set the currentPage variable to the valid newPageNumber
+            currentPage = newPageNumber;
+
+            // Create a new URL with the updated page number
+            const newURL: string = utils.createUrl("questions.html", {
+                page: currentPage
+            });
+
+            // Update the current URL with the new URL
+            window.history.pushState({path: newURL}, "", newURL);
+
+            // Reload the page to show the next set of questions
+            location.reload();
+        }
+    });
+
+    // Pagination Navigation: Show previous set of questions when the "Previous" button is clicked
+    prevButton?.addEventListener("click", (): void => {
+        // Get the current page number from the query string
+        let pageNumber: string = url.getFromQueryString("page");
+
+        // Set default values for the current page and the new page number
+        let currentPage: number = 1;
+        let newPageNumber: number = parseInt(pageNumber) ? parseInt(pageNumber) - 1 : 1;
+
+        // Check if the newPageNumber is included in the valid page numbers
+        if (pageArray.includes(newPageNumber) && newPageNumber >= 1) {
+            // Set the currentPage variable to the valid newPageNumber
+            currentPage = newPageNumber;
+
+            // Create a new URL with the updated page number
+            const newURL: string = utils.createUrl("questions.html", {
+                page: currentPage
+            });
+
+            // Update the current URL with the new URL
+            window.history.pushState({path: newURL}, "", newURL);
+
+            // Reload the page to show the previous set of questions
+            location.reload();
+        }
+    });
+
 }
 
 
@@ -248,6 +288,45 @@ function displayNumbers(page: number, array: number[]): number[] {
     return array.slice(startIndex, endIndex);
 }
 
+async function populatePaginationResult(): Promise<void> {
+    const currentPageRange: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".currentPageRange"));
+    const totalResults: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".totalResults"));
+
+
+    const pageNumber: number = url.getFromQueryString("page") ?? 1;
+    const getPageItems: number = url.getFromQueryString("itemsPerPage") ?? 1;
+
+    const maxQuestions: any = await api.queryDatabase(QUESTION_QUERY.COUNT_QUESTIONS);
+    const totalQuestions: number = maxQuestions[0]["rowCount"];
+
+    const itemsPerPage: number | string = mapNumberToPaginationValue(parseInt(String(getPageItems)));
+
+    if (itemsPerPage !== "ALL" && typeof itemsPerPage === "number") {
+        currentPageRange.innerHTML = calculateCurrentPageRange(pageNumber, itemsPerPage, totalQuestions);
+        totalResults.innerHTML = totalQuestions.toString();
+    } else {
+        currentPageRange.innerHTML = `1 - ${totalQuestions}`;
+        totalResults.innerHTML = totalQuestions.toString();
+    }
+}
+
+
+function calculateCurrentPageRange(currentPage: number, itemsPerPage: number, totalResults: number): string {
+    // Calculate the start and end indices for the current page
+    const startIndex: number = (currentPage - 1) * itemsPerPage + 1;
+    const endIndex: number = Math.min(currentPage * itemsPerPage, totalResults);
+
+    // Check if the calculated start index exceeds totalResults
+    if (startIndex > totalResults) {
+        // Adjust the start index and end index to fit within totalResults
+        const newStartIndex: number = Math.max(1, totalResults - itemsPerPage + 1);
+        return `${newStartIndex} - ${totalResults}`;
+    }
+
+    // Format the range string
+    return `${startIndex} - ${endIndex}`;
+}
+
 
 /**
  * Asynchronously retrieves all questions from the database and renders them in the UI.
@@ -258,15 +337,25 @@ async function populateQuestionTable(): Promise<void> {
     try {
         // Get the current page number from the query string or default to 1
         const pageNumber: number = url.getFromQueryString("page") ?? 1;
+        const getPageItems: number = url.getFromQueryString("itemsPerPage") ?? 1;
 
-        // Calculate the offset for database query based on the page number
-        const queryOffset: number = (pageNumber - 1) * 10;
+        let questions: [Question];
 
-        // Querying the database to get questions within the specified offset
-        const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.GET_QUESTION_BY_PAGE_NUMBER, queryOffset) as [Question];
+        const itemsPerPage: number | string = mapNumberToPaginationValue(parseInt(String(getPageItems)));
+        if (itemsPerPage !== "ALL") {
+            // Calculate the offset for database query based on the page number
+            const queryOffset: number = (pageNumber - 1) * 10;
+
+            // Querying the database to get questions within the specified offset
+            const queryParam: (string | number)[] = [itemsPerPage, queryOffset];
+            questions = await api.queryDatabase(QUESTION_QUERY.GET_QUESTION_BY_PAGE_NUMBER, ...queryParam) as [Question];
+
+        } else {
+            questions = await Question.getQuestions() as [Question];
+        }
 
         // Get the container element for rendering questions
-        const questionsBody: HTMLButtonElement = document.querySelector(".questions-body") as HTMLButtonElement;
+        const questionsBody: HTMLDivElement = document.querySelector(".questions-table") as HTMLDivElement;
 
         // If there are no questions, return early
         if (!questions) return;
@@ -274,60 +363,51 @@ async function populateQuestionTable(): Promise<void> {
         // Iterating over each question and rendering it in the UI
         for (const question of questions) {
             // Create a Question instance for easier access to properties
-            const singleQuestion: Question = new Question(
-                question.questionId,
-                question.userId,
-                question.questionTitle,
-                question.questionBody,
-                question.isClosed,
-                question.totalUpvotes,
-                question.totalDownvotes,
-                question.createdAt,
-                question.updatedAt
+            const singleQuestion: Question = createNewQuestionInstance(question);
+
+            const userId: number = singleQuestion.userId as number;
+            const questionId: number = singleQuestion.questionId as number;
+            const questionBody: string = singleQuestion.questionBody as string;
+            let questionUsername: string = "Unknown user";
+            let questionTagString: string = "Unknown";
+
+            const user: User = await User.retrieveUser(userId) as User;
+
+            if (user) {
+                questionUsername = user.username;
+            }
+
+            const questionTags: [CodingTag] = await CodingTag.getAllCodingTagsForQuestion(questionId) as [CodingTag];
+
+            if (questionTags.length > 0) {
+                const uniqueTagIds: any = [...new Set(questionTags.map((item: {
+                    tagName: any;
+                }) => item.tagName))];
+                questionTagString = uniqueTagIds.join(", ");
+            }
+
+            const questionElement: string = createQuestionElement(
+                singleQuestion.questionTitle.slice(0, 30),
+                questionUsername,
+                questionTagString,
+                singleQuestion.questionTitle,
+                questionBody.slice(0, 170) + "...",
+                questionId.toString()
             );
 
-            const answers: string | Answer[] = await Answer.getAnswersByQuestionId(singleQuestion.questionId!);
+            const sanitized: string = DOMPurify.sanitize(questionElement);
 
-            // Create a new table row for each question
-            const tr: HTMLTableRowElement = questionsBody?.appendChild(document.createElement("tr"));
+            questionsBody.innerHTML += sanitized;
 
-            if (tr) {
-                // Set attributes for the table row
-                tr.setAttribute("id", String(singleQuestion.questionId));
-                tr.classList.add("question", "pointer"); // Combine multiple class attributes
+            const questionBodyElem: NodeListOf<HTMLDivElement> = (<NodeListOf<HTMLDivElement>>document.querySelectorAll(".question-body"));
 
-                // Create a table cell for the question details
-                const td: HTMLTableCellElement = tr.appendChild(document.createElement("td"));
-
-                // Create a container to hold question details
-                const container: HTMLDivElement = td.appendChild(document.createElement("div"));
-                container.classList.add("d-flex");
-
-                // Create a div to display the answer count
-                const count: HTMLDivElement = container.appendChild(document.createElement("div"));
-                count.classList.add("answer-count");
-
-                // Create a span to display the actual answer count
-                const countSpan: HTMLSpanElement = count.appendChild(document.createElement("span"));
-                countSpan.innerHTML = "Answers: " + answers.length; // Replace with actual count
-
-                // Create a div for the question body
-                const questionBody: HTMLDivElement = container.appendChild(document.createElement("div"));
-
-                // Create a div for the question title
-                const questionTitle: HTMLDivElement = questionBody.appendChild(document.createElement("div"));
-                questionTitle.classList.add("mb-2", "text-primary");
-
-                // Populate the question title
-                if (questionTitle) {
-                    questionTitle.innerHTML = singleQuestion.questionTitle;
-                }
-
-                // Add a click event listener to redirect to the question detail page
-                tr.addEventListener("click", (): void => {
-                    handleRedirectToQuestionDetail(question.questionId);
+            questionBodyElem.forEach(item => {
+                item.addEventListener("click", async (): Promise<void> => {
+                    const questionId: number = parseInt(item.id);
+                    await handleRedirectToQuestionDetail(questionId);
                 });
-            }
+            });
+
         }
     } catch (e) {
         // Handle any errors that occur during the process

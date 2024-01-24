@@ -59,7 +59,9 @@ export class UserService {
      */
     public static async updateUser(user: User): Promise<User> {
         try {
-            const userData: any[] = [user.firstname, user.lastname, user.dateOfBirth, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
+            const birthDate: string = new Date(user.dateOfBirth).toISOString().split("T")[0];
+
+            const userData: any[] = [user.firstname, user.lastname,birthDate, user.username, user.experienceYears, user.profilePicture, user.password, user.email, user.userId];
             await api.queryDatabase(USER_QUERY.UPDATE_USER, ...userData);
 
             // Retrieve the updated user from the database.

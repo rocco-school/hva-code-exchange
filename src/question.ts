@@ -25,6 +25,7 @@ import {
     getUserExpertise,
     getUsername
 } from "./components/handleInitializeAnswers";
+import {createAnswerElement, createQuestionPerson} from "./components/htmlTemplate";
 
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
@@ -58,8 +59,13 @@ async function setup(): Promise<void> {
     // Initialize the text editor.
     await initializeTextEditor();
 
+    const tooltipUpvote: HTMLDivElement = (<HTMLDivElement>document.querySelector(".tooltip-upvote"));
+    const tooltipDownvote: HTMLDivElement = (<HTMLDivElement>document.querySelector(".tooltip-downvote"));
+
     // Calculate the upvote count for the question
     const upvoteSum: number = question.totalUpvotes! - question.totalDownvotes!;
+    tooltipUpvote.innerHTML = "Currently " + question.totalUpvotes + " upvote('s) on this question!";
+    tooltipDownvote.innerHTML = "Currently " + question.totalDownvotes + " downvote('s) on this question!";
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
@@ -71,6 +77,22 @@ async function setup(): Promise<void> {
 
     // Populate all answers by questionID
     await addAnswersToPage(userId);
+
+    (<HTMLInputElement>document.querySelector(".upvote-question")).addEventListener("mouseenter", () => {
+        tooltipUpvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".upvote-question")).addEventListener("mouseleave", () => {
+        tooltipUpvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".downvote-question")).addEventListener("mouseenter", () => {
+        tooltipDownvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".downvote-question")).addEventListener("mouseleave", () => {
+        tooltipDownvote.classList.toggle("show-tooltip");
+    });
 
     // Add event listeners for upvoting and downvoting the question
     (<HTMLElement>document.querySelector(".upvote-question")).addEventListener("click", async (): Promise<void> => {
@@ -294,140 +316,6 @@ async function handleDownvote(postId: number, userId: number, postType: string):
 
 
 /**
- * Creates HTML markup for displaying an answer.
- *
- * @param {number} answerId - The unique identifier for the answer.
- * @param {string} answerText - The text content of the answer.
- * @param {string} upvoteCount - The count of upvotes for the answer.
- * @param {string} createdAt - The creation timestamp of the answer.
- * @param {string} updatedAt - The updated timestamp of the answer.
- * @param {string} profilePictureSrc - The source URL for the user's profile picture.
- * @param {string} username - The username of the user who posted the answer.
- * @param {number} answersCount - The total count of answers posted by the user.
- * @param {number} questionsCount - The total count of questions posted by the user.
- * @param {string} userExpertise - The expertise of the user that posted this answer
- * @param {string} extraClass - Additional CSS class to be applied to action buttons.
- * @param {string} certifiedPictureSrc - The source URL for the current certified check mark picture.
- * @param {string} canUserCertify - Additional CSS class to be applied when user can not certify answers.
- * @returns {string} - HTML markup for the answer.
- */
-function createAnswerElement(
-    answerId: number,
-    answerText: string,
-    upvoteCount: string,
-    createdAt: string,
-    updatedAt: string,
-    profilePictureSrc: string,
-    username: string,
-    answersCount: number,
-    questionsCount: number,
-    userExpertise: string,
-    extraClass: string,
-    certifiedPictureSrc: string,
-    canUserCertify: string,
-): string {
-    return `
-        <div class="answer">
-            <div class="answer-container">
-                <div class="answer-sidebar">
-                    <div id="${answerId}" class="vote">
-                        <!-- Upvote button and count -->
-                        <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                        <span class="upvote-count">${upvoteCount}</span>
-                        <!-- Downvote button -->
-                        <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                    </div>
-                    <div class="certified-answer-check ${canUserCertify}">
-                        <img class="certified-answer" alt="Certified answer" src="${certifiedPictureSrc}">
-                    </div>
-                </div>
-                <div class="answer-body">
-                    <!-- Answer text -->
-                    <span>${answerText}</span>
-                    
-                    <div class="answer-info">
-                        <div class="action-buttons ${extraClass}">
-                            <!-- Delete/edit button with unique ID -->
-                            <button class="button edit-button" id="${answerId}">Edit</button>
-                            <button class="button delete-button" id="${answerId}">Delete</button>
-                        </div>
-                        
-                        <div class="created-info">
-                            <div class="inner-info">
-                                <!-- Creation timestamp -->
-                                <div class="answer-date">
-                                    <span>Created at: ${createdAt}</span>
-                                    <span>Last updated: ${updatedAt}</span>
-                                </div>
-                                <div class="person">
-                                    <!-- User profile picture -->
-                                    <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
-                                    <div class="personal-information">
-                                        <!-- User details -->
-                                        <span>${username}</span>
-                                        <span>Answers: ${answersCount}</span>
-                                        <span>Questions: ${questionsCount}</span>
-                                        <button id="tooltipButton" type="button" class="tool-tip-button">Expertise</button>
-                                        <div id="tooltipContent" role="tooltip" class="tool-tip-content">${userExpertise}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-
-/**
- * Creates HTML markup for displaying an answer.
- *
- * @param {string} createdAt - The creation timestamp of the answer.
- * @param {string} updatedAt - The updated timestamp of the answer.
- * @param {string} profilePictureSrc - The source URL for the user's profile picture.
- * @param {string} username - The username of the user who posted the answer.
- * @param {string} userAnswerCount - The total count of answers posted by the user.
- * @param {string} userQuestionCount - The total count of question posted by the user.
- * @param {string} userExpertise - The expertise of the user that posted this answer
- * @returns {string} - HTML markup for the answer.
- */
-function createQuestionPerson(
-    createdAt: string,
-    updatedAt: string,
-    profilePictureSrc: string,
-    username: string,
-    userAnswerCount: string,
-    userQuestionCount: string,
-    userExpertise: string,
-): string {
-    return `
-        <div class="created-info question-person-info">
-            <div class="inner-info">
-                <!-- Creation timestamp -->
-                <div class="answer-date">
-                    <span>Created at: ${createdAt}</span>
-                    <span>Last updated: ${updatedAt}</span>
-                </div>
-                <div class="person">
-                    <!-- User profile picture -->
-                    <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
-                    <div class="personal-information">
-                        <!-- User details -->
-                        <span>${username}</span>
-                        <span>Answers: ${userAnswerCount}</span>
-                        <span>Questions: ${userQuestionCount}</span>
-                        <button id="tooltipButton" type="button" class="tool-tip-button">Expertise</button>
-                        <div id="tooltipContent" role="tooltip" class="tool-tip-content">${userExpertise}</div>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-}
-
-
-/**
  * Adds answers to the page for a specific question.
  *
  * @param {number} userId - The unique identifier for the current user.
@@ -491,7 +379,9 @@ async function addAnswersToPage(userId: number): Promise<void> {
             userExpertise,
             extraClass,
             checkMarkUrl,
-            canUserCertify
+            canUserCertify,
+            "Currently " + answer.totalUpvotes + " upvote('s) on this answer!",
+            "Currently " + answer.totalDownvotes + " downvote('s) on this answer!"
         );
 
         answersBody.innerHTML += answerElement;
@@ -509,9 +399,34 @@ async function addAnswersToPage(userId: number): Promise<void> {
         answerId && await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
     });
 
+
+    // Select and toggle tooltips for upvote buttons
+    toggleTooltipOnHover(document.querySelectorAll(".answer-upvote"));
+
+    // Select and toggle tooltips for downvote buttons
+    toggleTooltipOnHover(document.querySelectorAll(".answer-downvote"));
+
+
     addEditButtonListeners();
 }
 
+/**
+ * Toggle tooltip visibility on mouse enter and mouse leave events.
+ * @param {NodeListOf<HTMLElement>} elements - The elements to attach the event listeners to.
+ */
+function toggleTooltipOnHover(elements: NodeListOf<HTMLElement>): void {
+    elements.forEach(item => {
+        item.addEventListener("mouseenter", async (): Promise<void> => {
+            const tooltip: Element = item.parentElement?.lastElementChild as Element;
+            tooltip.classList.toggle("show-tooltip");
+        });
+
+        item.addEventListener("mouseleave", async (): Promise<void> => {
+            const tooltip: Element = item.parentElement?.lastElementChild as Element;
+            tooltip.classList.toggle("show-tooltip");
+        });
+    });
+}
 
 /**
  * Function to check and retrieve the `questionId` from the URL parameters.

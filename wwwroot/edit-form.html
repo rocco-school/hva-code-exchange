@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="assets/css/page/create-question.css"/>
     <link rel="stylesheet" href="assets/css/custom-select.css"/>
     <link rel="stylesheet" href="assets/css/text-editor.css"/>
+    <link rel="stylesheet" href="assets/css/component/hide.css"/>
 </head>
 <body>
 <!-- This HTML page is called first when the website is called in the browser -->
@@ -23,16 +24,9 @@
         <div class="containerButtons">
             <div class="sidebarButtons">
                 <div class="sidebarButtons-cover">
-                    <a href="homepage.html" class="buttonItem" id="homeButton">
+                    <a href="index.html" class="buttonItem" id="homeButton">
                         <i class="fa-solid fa-house"></i>
                         <span>Home</span>
-                    </a>
-                </div>
-
-                <div class="sidebarButtons-cover">
-                    <a href="index.html" class="buttonItem" id="aboutButton">
-                        <i class="fa-regular fa-window-maximize"></i>
-                        <span>About</span>
                     </a>
                 </div>
 
@@ -43,6 +37,33 @@
                     </a>
                 </div>
 
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarContainer logButtonsContainer">
+        <div class="containerButtons containerLogButtons hidden">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="login.html" class="buttonItem" id="login-button">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Login</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="signup.html" class="buttonItem" id="signup-button">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Signup</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -74,11 +95,13 @@
                     </div>
                     <ul class="avatarButtons" aria-labelledby="avatarButton">
                         <li class="avatarButton-cover">
-                            <a href="user-page.html" class="avatarButton"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
                         </li>
                     </ul>
                     <div class="sign-out-block py-1">
-                        <a tabindex="0" class="avatarButton signOut"><i class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
                     </div>
                 </div>
 
