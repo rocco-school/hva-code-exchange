@@ -609,7 +609,15 @@ async function initializeUserActivity(userId:number): Promise<void> {
                 answerTextTitle.innerHTML= "You replied with: ";
 
                 const answerTextContent: HTMLParagraphElement = answerDiv.appendChild(document.createElement("p"));
-                answerTextContent.innerHTML = singleAnswer.answerBody;
+
+                if (answerTextContent) {
+                    answerTextContent.innerHTML = singleAnswer.answerBody.substring(0, 1000);
+                    // Truncate long question bodies and add ellipsis
+                    if (answerTextContent.innerHTML.length > 1000) {
+                        answerTextContent.innerHTML += "...";
+                    }
+                }
+
                 
             }
         }
