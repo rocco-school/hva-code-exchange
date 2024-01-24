@@ -1,6 +1,7 @@
 import {JWTPayload} from "jose";
 import {User} from "../models/user";
 import {endUserSession} from "./handleUserSession";
+import {getProfilePicturePath} from "../userpage";
 
 /**
  * Handle authentication and update UI elements accordingly.
@@ -34,7 +35,7 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
             const userId: number = isAuthenticated["userId"] as number;
             const user: User = await User.retrieveUser(userId) as User;
 
-            profilePicture.src = user.profilePicture ?? "https://ui-avatars.com/api/?name=" + user.firstname + "+" + user.lastname + "&background=random";
+            profilePicture.src = await getProfilePicturePath(user);
 
             profilePicture.addEventListener("click", (): void => {
                 // Update the name and email in the UI.
