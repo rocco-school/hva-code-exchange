@@ -255,7 +255,7 @@ async function setup(): Promise<void> {
                 profilePicture = user.profilePicture;
             }
 
-            // If all validations pass, update user data
+            //If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
                     const user: User = new User(
@@ -351,7 +351,8 @@ async function updateProfilePicture(file: HTMLInputElement, user: User): Promise
             await api.deleteFile(fileName);
         }
 
-        const filename: string = file.files![0].name;
+        const filename: string = file.files![0].name.replace(/\s/g, "");
+
         const imageData: types.DataURL = await utils.getDataUrl(file) as types.DataURL;
 
         return await api.uploadFile(filename, imageData.url, true);

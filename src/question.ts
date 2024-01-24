@@ -26,6 +26,7 @@ import {
     getUsername
 } from "./components/handleInitializeAnswers";
 import {createAnswerElement, createQuestionPerson} from "./components/htmlTemplate";
+import {getProfilePicturePath} from "./components/handleProfilePicture";
 
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
@@ -228,7 +229,7 @@ async function generateQuestionUserInfo(userId: number | null, question: Questio
             userExpertise = "No expertise!";
         }
 
-        AvatarUrl = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
+        AvatarUrl = await getProfilePicturePath(user);
     }
 
     // Format the creation date of the answer
@@ -351,7 +352,8 @@ async function addAnswersToPage(userId: number): Promise<void> {
             userExpertise = await getUserExpertise(answer.userId);
             extraClass = getExtraClass(userId, answer.userId);
             username = getUsername(answer);
-            AvatarUrl = answer.profilePicture ? answer.profilePicture : `https://ui-avatars.com/api/?name=${answer.firstname}+${answer.lastname}&background=random`;
+            const user: User = await User.retrieveUser(answer.userId) as User;
+            AvatarUrl = await getProfilePicturePath(user);
         }
 
         if (answer.userId && question.userId) {
@@ -362,9 +364,7 @@ async function addAnswersToPage(userId: number): Promise<void> {
 
         const checkMarkUrl: string = getCheckMarkUrl(answer.isAccepted);
 
-
         const upvoteCount: number = getUpvoteCount(answer);
-
 
         const answerElement: string = createAnswerElement(
             answer.answerId!,
