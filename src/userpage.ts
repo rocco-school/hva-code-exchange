@@ -254,6 +254,8 @@ async function setup(): Promise<void> {
                 profilePicture = user.profilePicture;
             }
 
+            console.log(newProfilePicture);
+
 
             // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
@@ -272,6 +274,8 @@ async function setup(): Promise<void> {
                         null,
                     );
 
+                    console.log(user);
+
                     const updatedUser: User = await user.updateUser() as User;
 
                     if (updatedUser) {
@@ -281,7 +285,7 @@ async function setup(): Promise<void> {
 
                         if (createUserTags) {
                             await showSuccessMessage("Successfully updated User!", 2000, "success", null, null);
-                            location.reload();
+                            // location.reload();
                         }
                     }
 
@@ -345,7 +349,7 @@ async function updateProfilePicture(file: HTMLInputElement, user: User): Promise
     try {
         const url: string = "https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/";
 
-        const fileName: string = user.profilePicture!.split(url)[0];
+        const fileName: string | undefined = user.profilePicture?.split(url)[0];
 
         if (fileName) {
             await api.deleteFile(fileName);
