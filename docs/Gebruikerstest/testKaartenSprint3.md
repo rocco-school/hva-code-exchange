@@ -20,7 +20,7 @@ Om dit te testen geef ik de gebruiker de volgende doelen:
 Ik zal per doel opmeten hoe lang het duurt met een stopwatch.
 
 ### CRITERIA
-De Hypothese klopt als de gemiddelde voltooiing tijd van alle doelen minder dan 3 minuten is.
+De Hypothese klopt als de gemiddelde voltooiing tijd van de gebruiker voor alle doelen minder dan 3 minuten is.
 
 
 
@@ -49,10 +49,10 @@ Om dit te testen moet de gebruiker de volgende doelen behalen:
 11. verander aantal jaren programmeer ervaring.
 
 ### METRIEK
-Ik zal het meten door middel van het aantal kliks die de tester gebruikt om de doelen te behalen
+Ik zal het meten door middel van het aantal clicks die de tester gebruikt om de doelen te behalen.
 
 ### CRITERIA
-De hypothese klopt als de gebruiker minder dan 30 kliks gebruikt
+De hypothese klopt als de gebruiker minder dan 30 clicks gebruikt.
 
 ## TESTKAART 3
 
@@ -71,9 +71,9 @@ Om dit te testen geef ik de tester de volgende doelen:
 3. bekijk via dashboard of jou vraag beantwoord is
 
 ### METRIEK
-Ik zal optellen hoeveel kliks de gebruiker gebruikt om alle doeleinden te behalen.
+Ik zal het aantaal clicks optellen die de gebruiker nodig heeft om alle doelen te bereiken.
 
 ### CRITERIA
-De Hypothese klopt als de gebruiker minder dan 10 kliks gebruikt om de doelen te behalen.
+De Hypothese klopt als de gebruiker minder dan 10 clicks gebruikt om de doelen te behalen.
 
 
