@@ -156,6 +156,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-top: 2rem;
 }
 
 .created-info {
@@ -283,7 +284,6 @@ body {
     color: #ffffff;
     opacity: 0;
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    bottom: 10rem;
 }
 
 
