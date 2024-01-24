@@ -199,8 +199,10 @@
             <div class="question-title-container">
                 <div class="custom-text-field">
                     <label for="questionTitle" class="label">Title</label>
-
-                    <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"/>
+                    <p class="title-helper-text">Be specific and imagine you’re asking a question to another
+                        person.</p>
+                    <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"
+                           placeholder="Type a short, descriptive title for your question..."/>
                 </div>
             </div>
         </section>
@@ -217,15 +219,9 @@
                             <button id="codeBlock" class="option-button text-editor-button">
                                 <i class="fa-solid fa-code"></i>
                             </button>
-                            <button id="superscript" class="option-button script text-editor-button">
-                                <i class="fa-solid fa-superscript"></i>
-                            </button>
-                            <button id="subscript" class="option-button script text-editor-button">
-                                <i class="fa-solid fa-subscript"></i>
-                            </button>
 
                             <button id="insertOrderedList" class="option-button text-editor-button">
-                                <div class="fa-solid fa-list-ol"></div>
+                                <i class="fa-solid fa-list-ol"></i>
                             </button>
                             <button id="insertUnorderedList" class="option-button text-editor-button">
                                 <i class="fa-solid fa-list"></i>
@@ -284,7 +280,7 @@
                             </div>
 
                         </div>
-                        <div id="text-input" contenteditable="true"></div>
+                        <div id="text-input" tabindex="0" contenteditable="true"></div>
                     </div>
                 </div>
             </div>

@@ -12,9 +12,11 @@
         crossorigin="anonymous"
     />
     <title>Registreren bij SE Code Exchange</title>
+
+    <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./assets/css/page/signup.css"/>
     <link rel="stylesheet" href="assets/css/component/hide.css">
-    <link rel="stylesheet" href="assets/css/component/hide.css"/>
+    <link rel="stylesheet" href="assets/css/component/password.css">
 </head>
 <body>
 <main>
@@ -41,9 +43,10 @@
                             <label class="form-label" for="email">Email</label>
                             <input type="text" id="email" name="email" class="form-control form-control-lg"/>
                         </div>
-                        <div class="form-outline form-white mb-4">
+                        <div class="form-outline form-white mb-4 passwordBox">
                             <label class="form-label" for="password">Wachtwoord</label>
-                            <input type="password" id="password" name="password" class="form-control form-control-lg"/>
+                            <input type="password" id="password" name="password" class="form-control form-control-lg inputBox"/>
+                            <div class="show-password"><i class="fa-solid fa-eye-slash icon-eye big-box-icon"></i></div>
                         </div>
                         <div class="d-flex flex-row align-items-center justify-content-between">
                             <button

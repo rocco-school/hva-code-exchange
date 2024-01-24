@@ -15,7 +15,6 @@ body {
     }
 }
 
-
 .title {
     margin-top: 5rem;
     text-align: center;
@@ -34,6 +33,10 @@ body {
     align-items: flex-start;
     gap: 2rem;
     justify-content: center;
+}
+
+.question-body-section {
+    margin-top: 2rem;
 }
 
 .question-container--inner {
@@ -59,7 +62,6 @@ body {
 
 
 .question-title-input {
-    margin-bottom: 3rem;
     padding: 1rem;
     border-radius: .5rem;
     border: 0;
@@ -124,4 +126,12 @@ body {
 
 .block {
     display: block;
+}
+
+.title-helper-text {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(107 114 128);
+    margin-right: auto;
 }
