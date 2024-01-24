@@ -254,9 +254,6 @@ async function setup(): Promise<void> {
                 profilePicture = user.profilePicture;
             }
 
-            console.log(newProfilePicture);
-
-
             // If all validations pass, update user data
             if (verifiedEmail && verifiedFirstname && verifiedLastname) {
                 try {
@@ -274,8 +271,6 @@ async function setup(): Promise<void> {
                         null,
                     );
 
-                    console.log(user);
-
                     const updatedUser: User = await user.updateUser() as User;
 
                     if (updatedUser) {
@@ -285,7 +280,7 @@ async function setup(): Promise<void> {
 
                         if (createUserTags) {
                             await showSuccessMessage("Successfully updated User!", 2000, "success", null, null);
-                            // location.reload();
+                            location.reload();
                         }
                     }
 
