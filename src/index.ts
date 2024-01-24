@@ -174,9 +174,10 @@ async function processSingleQuestion(question: Question, recentQuestionsBody: El
         questionId.toString()
     );
 
-    const sanitized: string = DOMPurify.sanitize(questionElement);
-
-    recentQuestionsBody.innerHTML += sanitized;
+    if (recentQuestionsBody) {
+        const sanitized: string = DOMPurify.sanitize(questionElement);
+        recentQuestionsBody.innerHTML += sanitized;
+    }
 
     // Add click event listener to the question body
     const questionBodyElem: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".question-body"));
