@@ -2,6 +2,7 @@
     display: flex;
     align-self: center;
     justify-content: center;
+    gap: 2rem;
 }
 
 .button {
@@ -105,5 +106,37 @@
 }
 
 .signButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+/* change password button css */
+.changePasswordButton {
+    color: #ffffff;
+    background-color: #1F456E;
+    margin-top: 1.5rem;
+}
+
+.changePasswordButton:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.changePasswordFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+/* change password button css */
+.changePasswordBtn {
+    color: #ffffff;
+    background-color: #1F456E;
+    margin-top: 1.5rem;
+}
+
+.changePasswordBtn:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.changePasswordBtnFocus {
     box-shadow: 0 0 0 5px lightblue;
 }

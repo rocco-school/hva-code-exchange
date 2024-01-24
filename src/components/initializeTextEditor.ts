@@ -13,6 +13,8 @@ export async function initializeTextEditor(): Promise<void> {
     let formatButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".format"));
     let scriptButtons: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".script"));
 
+    const textInput: HTMLDivElement = (<HTMLDivElement>document.querySelector("#text-input"));
+
     // List of available fonts
     let fontList: string[] = [
         "Arial",
@@ -53,6 +55,8 @@ export async function initializeTextEditor(): Promise<void> {
     // Add click event listeners for standard buttons
     optionsButtons.forEach((button: Element): void => {
         button.addEventListener("click", (): void => {
+            // Set focus back to the text editor
+            textInput?.focus();
             modifyText(button.id, false, undefined);
         });
     });
@@ -60,6 +64,8 @@ export async function initializeTextEditor(): Promise<void> {
     // Add change event listeners for advanced option buttons
     advancedOptionButton.forEach((button: HTMLButtonElement): void => {
         button.addEventListener("change", (): void => {
+            // Set focus back to the text editor
+            textInput?.focus();
             modifyText(button.id, false, button.value);
         });
     });
@@ -68,9 +74,13 @@ export async function initializeTextEditor(): Promise<void> {
     linkButton.addEventListener("click", (): void => {
         let userLink: string = prompt("Enter a URL?") as string;
         if (/http/i.test(userLink)) {
+            // Set focus back to the text editor
+            textInput?.focus();
             modifyText(linkButton.id, false, userLink);
         } else {
             userLink = "http://" + userLink;
+            // Set focus back to the text editor
+            textInput?.focus();
             modifyText(linkButton.id, false, userLink);
         }
     });
@@ -241,12 +251,7 @@ function highlighter(className: any[] | NodeListOf<Element>, needsRemoval: boole
         button.addEventListener("click", () => {
             // Check if "needsRemoval" flag is set
             if (needsRemoval) {
-                let alreadyActive: boolean = false;
-
-                // Check if the current element already has the "active" class
-                if (button.classList.contains("active")) {
-                    alreadyActive = true;
-                }
+                let alreadyActive: boolean = button.classList.contains("active");
 
                 // Remove the "active" class from all elements in the array
                 highlighterRemover(className);

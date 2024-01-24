@@ -9,9 +9,10 @@ import {Question} from "./models/question";
 import {createNewQuestionInstance} from "./components/handleModelInstances";
 import {User} from "./models/user";
 import {CodingTag} from "./models/codingTag";
-import {createQuestionElement} from "./components/htmlTemplate";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import DOMPurify from "dompurify";
+import {removeHTMLTagsAndExtraWhitespace} from "./components/filterHTML";
+import {createQuestionElemForIndex} from "./components/htmlTemplate";
 
 /**
  * Deze methode wordt aangeroepen als de pagina is geladen, dat gebeurt helemaal onderin!
@@ -72,7 +73,7 @@ async function setup(): Promise<void> {
 
     homeButton?.addEventListener("click", () => {
         // Redirect to the home page
-        url.redirect("homepage.html");
+        url.redirect("index.html");
     });
 
     aboutButton?.addEventListener("click", () => {
@@ -123,7 +124,7 @@ async function displayRecentQuestions(): Promise<void> {
         const recentQuestions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_RECENT_SIX_QUESTIONS) as [Question];
 
         // Select the HTML element where recent questions will be displayed
-        const recentQuestionsBody: Element = (<Element>document.querySelector(".questions-table"));
+        const recentQuestionsBody: Element = (<Element>document.querySelector(".questionsTable"));
 
         // Iterate over each recent question
         for (const question of recentQuestions) {
@@ -145,7 +146,6 @@ async function processSingleQuestion(question: Question, recentQuestionsBody: El
 
     const userId: number = singleQuestion.userId as number;
     const questionId: number = singleQuestion.questionId as number;
-    const questionBody: string = singleQuestion.questionBody as string;
     let questionUsername: string = "Unknown user";
     let questionTagString: string = "Unknown";
 
@@ -164,13 +164,16 @@ async function processSingleQuestion(question: Question, recentQuestionsBody: El
         questionTagString = uniqueTagIds.join(", ");
     }
 
+    const filteredQuestion: string = removeHTMLTagsAndExtraWhitespace(singleQuestion.questionBody);
+
+    const questionText: string = filteredQuestion.substring(0, 180);
+
     // Create the question element
-    const questionElement: string = createQuestionElement(
-        singleQuestion.questionTitle.slice(0, 30),
+    const questionElement: string = createQuestionElemForIndex(
         questionUsername,
         questionTagString,
         singleQuestion.questionTitle,
-        questionBody.slice(0, 170) + "...",
+        questionText,
         questionId.toString()
     );
 

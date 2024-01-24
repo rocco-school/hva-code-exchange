@@ -7,6 +7,7 @@ import {comparePasswords} from "./components/hashPassword";
 import {security} from "./components/security";
 import {JWTPayload} from "jose";
 import {assignToken} from "./components/handleUserSession";
+import {togglePasswordVisibility} from "./components/handlePasswordVisibility";
 
 /**
  * The main application entry point for the login page.
@@ -25,6 +26,8 @@ async function setup(): Promise<void> {
     if (loginStatus) {
         url.redirect("/index.html");
     }
+
+    document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
     // Create an action for the login button. When you press this, the code between the { } is called
     document.querySelector(".login-btn")?.addEventListener("click", async () => {

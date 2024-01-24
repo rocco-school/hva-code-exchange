@@ -18,6 +18,7 @@ import {Answer} from "./models/answer";
 import {QUESTION_QUERY} from "./query/question.query";
 import DOMPurify from "dompurify";
 import {getProfilePicturePath} from "./components/handleProfilePicture";
+import {togglePasswordVisibility} from "./components/handlePasswordVisibility";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -42,6 +43,10 @@ async function setup(): Promise<void> {
     // DOM element selections
     const updateButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".updateUserButton"));
     const deleteButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".deleteUserButton"));
+
+    const settingsTab: HTMLAnchorElement = (<HTMLAnchorElement>document.querySelector(".userSettings"));
+    const headerButtons: HTMLDivElement = (<HTMLDivElement>document.querySelector(".headerButtons"));
+
     const updateForm: HTMLFormElement = (<HTMLFormElement>document.querySelector(".edit-user"));
 
     const editProfileSection: HTMLElement = (<HTMLElement>document.querySelector(".editProfileSection"));
@@ -64,13 +69,37 @@ async function setup(): Promise<void> {
     const programmingExperienceInput: HTMLInputElement = (<HTMLInputElement>document.querySelector("#experienceInput"));
 
     // Buttons for user interactions
-    const editPasswordBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".editPasswordBtn"));
+    const editPasswordBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".changePasswordButton"));
     const changePasswordBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".changePasswordBtn"));
     const passwordCloseBtn: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".passwordCloseBtn"));
 
-
     const file: HTMLInputElement = (<HTMLInputElement>document.querySelector("#file-upload"));
     const profilePicture: HTMLImageElement = (<HTMLImageElement>document.querySelector(".profile-picture"));
+
+    const observerConfig: object = {
+        attributes: true,
+        attributeFilter: ["class"],
+        extraAttribute: settingsTab
+    };
+
+    if (settingsTab.classList.contains("is-active")) {
+        headerButtons.classList.remove("hidden");
+    } else {
+        headerButtons.classList.add("hidden");
+    }
+
+    function classListChangeListener(): void {
+        if (settingsTab.classList.contains("is-active")) {
+            headerButtons.classList.remove("hidden");
+        } else {
+            headerButtons.classList.add("hidden");
+        }
+    }
+
+    // Create a MutationObserver to observe changes in classList
+    const classListObserver: MutationObserver = new MutationObserver(classListChangeListener);
+
+    classListObserver.observe(settingsTab, observerConfig);
 
     document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
@@ -451,31 +480,6 @@ async function updatePasswordData(userId: number, updatedPassword: string): Prom
     console.log(passwordDatabase);
     console.log("SUCCESS! WOOHOO!");
     return;
-}
-
-/**
- * Toggle password visibility on icon click.
- * @param {Element} icon - The icon element to attach the click event to.
- */
-function togglePasswordVisibility(icon: Element): void {
-    icon.addEventListener("click", (): void => {
-        // Find the closest ancestor with class "passwordBox"
-        const passwordBox: Element = icon.closest(".passwordBox") as Element;
-
-        // Find the input element within the passwordBox
-        const inputElem: HTMLInputElement = passwordBox?.querySelector(".inputBox") as HTMLInputElement;
-
-        // Check if the input element is of type "password"
-        if (inputElem && inputElem.type === "password") {
-            // If it's a password input, change type to "text"
-            inputElem.type = "text";
-            icon.classList.replace("fa-eye-slash", "fa-eye");
-        } else {
-            // If it's not a password input or doesn't exist, change type to "password"
-            inputElem.type = "password";
-            icon.classList.replace("fa-eye", "fa-eye-slash");
-        }
-    });
 }
 
 

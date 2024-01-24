@@ -12,6 +12,7 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
         const loggedOutBlock: HTMLElement = (<HTMLElement>document.querySelector(".logged-out"));
         const sideMenuLogButtons: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".containerLogButtons"));
         const profileBlock: HTMLElement = (<HTMLElement>document.querySelector(".profile-block"));
+        const createQuestionButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".createQuestionButton"));
 
         if (!isAuthenticated) {
             // If not authenticated, display the logged-out block.
@@ -26,8 +27,9 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
             const nameCardUsername: HTMLElement = (<HTMLElement>document.querySelector(".nameCardUsername"));
             const nameCardEmail: HTMLElement = (<HTMLElement>document.querySelector(".nameCardEmail"));
             const signOutButton: HTMLElement = (<HTMLElement>document.querySelector(".signOut"));
-            const profileButton: HTMLElement = (<HTMLElement>document.querySelector(".profilePicture"));
+            const profileButton: HTMLElement = (<HTMLElement>document.querySelector("#profileButton"));
 
+            createQuestionButton?.classList.remove("hidden");
             profileButton.parentElement?.classList.remove("hidden");
 
             // @ts-ignore
@@ -38,8 +40,10 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
 
             profilePicture.addEventListener("click", (): void => {
                 // Update the name and email in the UI.
+
                 nameCardUsername.innerHTML = user.firstname + " " + user.lastname;
                 nameCardEmail.innerHTML = user.email;
+
 
                 // Toggle the visibility of the user dropdown.
                 userDropdown.classList.toggle("hidden");
@@ -47,7 +51,9 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
                 signOutButton.addEventListener("click", endUserSession);
             });
 
+
             profileBlock.classList.remove("hidden");
+
         }
 
         // Return the authentication status or JWT payload.

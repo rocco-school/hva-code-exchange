@@ -9,6 +9,7 @@ import DOMPurify from "dompurify";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
 import {delay} from "./components/delay";
 import {createQuestionElement} from "./components/htmlTemplate";
+import {removeHTMLTagsAndExtraWhitespace} from "./components/filterHTML";
 
 /**
  * The main application entry point for the home page.
@@ -19,11 +20,13 @@ import {createQuestionElement} from "./components/htmlTemplate";
  * @returns {Promise<void>} A Promise that resolves when the application setup is complete.
  */
 async function setup(): Promise<void> {
+
     // populate question table.
     await populateQuestionTable();
 
     // Add pagination page numbers
     await addPagination();
+
     await populatePaginationResult();
 
     // Get all create question form elements.
@@ -367,7 +370,6 @@ async function populateQuestionTable(): Promise<void> {
 
             const userId: number = singleQuestion.userId as number;
             const questionId: number = singleQuestion.questionId as number;
-            const questionBody: string = singleQuestion.questionBody as string;
             let questionUsername: string = "Unknown user";
             let questionTagString: string = "Unknown";
 
@@ -386,12 +388,15 @@ async function populateQuestionTable(): Promise<void> {
                 questionTagString = uniqueTagIds.join(", ");
             }
 
+            const filteredQuestion: string = removeHTMLTagsAndExtraWhitespace(singleQuestion.questionBody);
+
+            const questionText: string = filteredQuestion.substring(0, 80);
+
             const questionElement: string = createQuestionElement(
-                singleQuestion.questionTitle.slice(0, 30),
                 questionUsername,
                 questionTagString,
                 singleQuestion.questionTitle,
-                questionBody.slice(0, 170) + "...",
+                questionText + "...",
                 questionId.toString()
             );
 

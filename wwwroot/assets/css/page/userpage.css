@@ -65,8 +65,7 @@ body {
 .edit-block, .question-box, .answer-box {
     background-color: #ffffff;
     border-radius: 1rem;
-    --tw-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);
-    box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 2rem;
     margin-bottom: 5rem;
 }
@@ -256,13 +255,21 @@ body {
 .passwordSection {
     display: flex;
     justify-content: center;
-    margin: 5rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
+
+@media only screen and (min-width: 1024px) {
+    .passwordSection {
+        margin-left: 14.5rem;
+    }
+}
+
 
 .passwordSectionContainer {
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 1);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border-radius: 2rem;
     padding: 2rem;
 }
@@ -296,7 +303,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: baseline;
-    height: 1.5rem;
     font-size: 1rem;
     margin: auto;
 }
@@ -333,17 +339,6 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.icon-eye {
-    float: right;
-    margin-top: -25px;
-    margin-right: 1rem;
-    position: relative;
-    width: 1rem;
-    height: 1rem;
-    z-index: 2;
-    cursor: pointer;
-}
-
 .profile-pic {
     color: transparent;
     display: flex;}
@@ -371,6 +366,12 @@ body {
 .questionBoxes {
     margin-left: 2rem;
     margin-right: 2rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .questionBoxes {
+        margin-left: 14.5rem;
+    }
 }
 
 .questionBoxesContainer {

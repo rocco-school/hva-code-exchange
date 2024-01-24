@@ -1,7 +1,6 @@
 /**
  * Creates HTML markup for displaying a question.
  *
- * @param {string} questionTitle - The title of the question.
  * @param {string} username - The username of the user who posted the question.
  * @param {string} questionTags - The Tags of the question.
  * @param questionPreviewTitle
@@ -10,29 +9,33 @@
  * @returns {string} - HTML markup for the question.
  */
 export function createQuestionElement(
-    questionTitle: string,
     username: string,
     questionTags: string,
     questionPreviewTitle: string,
     questionPreviewContent: string,
     questionId: string
 ): string {
+
     return `
         <div class="question-body" id="${questionId}">
             <div class="single-question">
-                <div class="question-header">
-                    <h2 class="questionTitle">${questionTitle}</h2>
-
-                    <div class="questionUser">By ${username}</div>
-                </div>
-
-                <div class="question-tag-section">
-                    <span>Tags</span>
-                    <i class="fa-solid fa-slash fa-rotate-by fa-xs" style="--fa-rotate-angle: 80deg;"></i>
-                    <div class="questionTags">
-                        <span>${questionTags}</span>
+                <div class="card-header">
+                    <div class="tags-container">
+                        <span>Tags</span>
+                        <div class="icon-container">
+                            <i class="fa-solid fa-slash fa-rotate-by fa-xs tag-icon" style="--fa-rotate-angle: 80deg;"></i>
+                        </div>
+                       
+                        <div class="questionTags">
+                            <span>${questionTags}</span>
+                        </div>
+                        <div class="icon-container">
+                            <i class="fa-solid fa-slash fa-rotate-by fa-xs tag-icon" style="--fa-rotate-angle: 80deg;"></i>
+                        </div>
                     </div>
-                    <i class="fa-solid fa-slash fa-rotate-by fa-xs" style="--fa-rotate-angle: 80deg;"></i>
+                    <div class="by-user">
+                        <div class="questionUser">By ${username}</div>
+                    </div>
                 </div>
                 
                 <div class="question-box">
@@ -187,6 +190,59 @@ export function createQuestionPerson(
                         <div id="tooltipContent" role="tooltip" class="tool-tip-content">${userExpertise}</div>
                     </div>
                 </div>
+            </div>
+        </div>`;
+}
+
+
+
+/**
+ * Creates HTML markup for displaying a question.
+ *
+ * @param {string} username - The username of the user who posted the question.
+ * @param {string} questionTags - The Tags of the question.
+ * @param questionPreviewTitle
+ * @param questionPreviewContent
+ * @param {string} questionId - The id of the question
+ * @returns {string} - HTML markup for the question.
+ */
+export function createQuestionElemForIndex(
+    username: string,
+    questionTags: string,
+    questionPreviewTitle: string,
+    questionPreviewContent: string,
+    questionId: string
+): string {
+
+    return `
+        <div class="question-body" id="${questionId}">
+            <div class="single-question">
+                <div class="card-header">
+                    <div class="tags-container">
+                        <span>Tags</span>
+                        <div class="icon-container">
+                            <i class="fa-solid fa-slash fa-rotate-by fa-xs tag-icon" style="--fa-rotate-angle: 80deg;"></i>
+                        </div>
+                       
+                        <div class="questionTags">
+                            <span>${questionTags}</span>
+                        </div>
+                        <div class="icon-container">
+                            <i class="fa-solid fa-slash fa-rotate-by fa-xs tag-icon" style="--fa-rotate-angle: 80deg;"></i>
+                        </div>
+                    </div>
+                    <div class="by-user">
+                        <div class="questionUser">By ${username}</div>
+                    </div>
+                </div>
+                
+                <div class="question-box">
+                    <div class="question-preview">
+                        <div class="question-preview-title">${questionPreviewTitle}</div>
+                        <div class="question-preview-content">${questionPreviewContent}<div>
+                    </div>
+                </div>
+
             </div>
         </div>`;
 }

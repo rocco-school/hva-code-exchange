@@ -5,6 +5,7 @@ import {hashPassword} from "./components/hashPassword";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
+import {togglePasswordVisibility} from "./components/handlePasswordVisibility";
 
 /**
  * The main application entry point for the signup page.
@@ -45,6 +46,8 @@ async function setup(): Promise<void> {
     // Regular Expression for firstname and lastname
     // only letters are allowed and numbers are not allowed
     const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
+
+    document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
     if (submitButton) {
         submitButton.addEventListener("submit", async function (e: any): Promise<void> {
