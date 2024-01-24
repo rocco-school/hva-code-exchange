@@ -573,28 +573,31 @@ async function initializeUserActivity(userId:number): Promise<void> {
             questionAnswers.innerHTML = "answers: " + answerAmount[0].answerCount;
         }
 
-        // Answer Section
-        const allQuestionsByAnswer: [Question] = await Question.getMostRecentQuestionsByAnswer(userId) as [Question];
+        
+    }
+    // Answer Section
+    const allQuestionsByAnswer: [Question] = await Question.getMostRecentQuestionsByAnswer(userId) as [Question];
 
-        const answerTitle: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#answerCount"));
+    console.log(allQuestionsByAnswer);
 
-        if (answerTitle) {
-            const answerAmount: string = allQuestionsByAnswer.length.toString();
-            answerTitle.innerHTML = answerAmount + " Answers";
-        }
+    const answerTitle: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#answerCount"));
 
-        if (allQuestionsByAnswer) {
-            for (const questionByAnswer of allQuestionsByAnswer) {
-                const answerDiv: HTMLDivElement = answersOfUserContainer.appendChild(document.createElement("div"));
-                answerDiv.classList.add("answer-box");
+    if (answerTitle) {
+        const answerAmount: string = allQuestionsByAnswer.length.toString();
+        answerTitle.innerHTML = answerAmount + " Answers";
+    }
 
-                answerDiv.addEventListener("click", (): void => {
-                    handleRedirectToQuestionDetail(questionByAnswer.questionId);
-                });
-    
-                const answerBody: HTMLDivElement = answerDiv.appendChild(document.createElement("div"));
-                answerBody.innerHTML = questionByAnswer.questionTitle;
-            }
+    if (allQuestionsByAnswer) {
+        for (const questionByAnswer of allQuestionsByAnswer) {
+            const answerDiv: HTMLDivElement = answersOfUserContainer.appendChild(document.createElement("div"));
+            answerDiv.classList.add("answer-box");
+
+            answerDiv.addEventListener("click", (): void => {
+                handleRedirectToQuestionDetail(questionByAnswer.questionId);
+            });
+
+            const answerBody: HTMLDivElement = answerDiv.appendChild(document.createElement("div"));
+            answerBody.innerHTML = questionByAnswer.questionTitle;
         }
     }
 
