@@ -1,7 +1,7 @@
 import {JWTPayload} from "jose";
 import {User} from "../models/user";
 import {endUserSession} from "./handleUserSession";
-import {getProfilePicturePath} from "../userpage";
+import {getProfilePicturePath} from "./handleProfilePicture";
 
 /**
  * Handle authentication and update UI elements accordingly.
@@ -9,7 +9,6 @@ import {getProfilePicturePath} from "../userpage";
  */
 export async function handleAuthentication(isAuthenticated: JWTPayload | boolean): Promise<any> {
     try {
-
         const loggedOutBlock: HTMLElement = (<HTMLElement>document.querySelector(".logged-out"));
         const sideMenuLogButtons: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".containerLogButtons"));
         const profileBlock: HTMLElement = (<HTMLElement>document.querySelector(".profile-block"));
@@ -27,7 +26,7 @@ export async function handleAuthentication(isAuthenticated: JWTPayload | boolean
             const nameCardUsername: HTMLElement = (<HTMLElement>document.querySelector(".nameCardUsername"));
             const nameCardEmail: HTMLElement = (<HTMLElement>document.querySelector(".nameCardEmail"));
             const signOutButton: HTMLElement = (<HTMLElement>document.querySelector(".signOut"));
-            const profileButton: HTMLElement = (<HTMLElement>document.querySelector("#profileButton"));
+            const profileButton: HTMLElement = (<HTMLElement>document.querySelector(".profilePicture"));
 
             profileButton.parentElement?.classList.remove("hidden");
 
