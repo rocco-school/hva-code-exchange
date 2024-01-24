@@ -14,6 +14,8 @@ import {delay} from "./components/delay";
 import { Question } from "./models/question";
 import { ANSWER_QUERY } from "./query/answer.query";
 import { handleRedirectToQuestionDetail } from "./components/handleRedirects";
+import { Answer } from "./models/answer";
+import { QUESTION_QUERY } from "./query/question.query";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -575,10 +577,9 @@ async function initializeUserActivity(userId:number): Promise<void> {
 
         
     }
+
     // Answer Section
     const allQuestionsByAnswer: [Question] = await Question.getMostRecentQuestionsByAnswer(userId) as [Question];
-
-    console.log(allQuestionsByAnswer);
 
     const answerTitle: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#answerCount"));
 
@@ -588,20 +589,39 @@ async function initializeUserActivity(userId:number): Promise<void> {
     }
 
     if (allQuestionsByAnswer) {
-        for (const questionByAnswer of allQuestionsByAnswer) {
-            const answerDiv: HTMLDivElement = answersOfUserContainer.appendChild(document.createElement("div"));
-            answerDiv.classList.add("answer-box");
 
-            answerDiv.addEventListener("click", (): void => {
-                handleRedirectToQuestionDetail(questionByAnswer.questionId);
-            });
+        const answerBodyArray: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_BY_USER, userId) as [Answer];
 
-            const answerBody: HTMLDivElement = answerDiv.appendChild(document.createElement("div"));
-            answerBody.innerHTML = questionByAnswer.questionTitle;
+        if (answerBodyArray) {
+            for (const singleAnswer of answerBodyArray ) {
+                const answerDiv: HTMLDivElement = answersOfUserContainer.appendChild(document.createElement("div"));
+                answerDiv.classList.add("answer-box");
+
+                answerDiv.addEventListener("click", (): void => {
+                    handleRedirectToQuestionDetail(singleAnswer.questionId);
+                });
+
+                const answerTitle: HTMLHeadingElement = answerDiv.appendChild(document.createElement("h3"));
+                const titleArray: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_TITLE, singleAnswer.questionId) as [Question];
+                answerTitle.innerHTML = "The question: " + titleArray[0].questionTitle;
+
+                const answerTextTitle: HTMLHeadingElement = answerDiv.appendChild(document.createElement("h4"));
+                answerTextTitle.innerHTML= "You replied with: ";
+
+                const answerTextContent: HTMLParagraphElement = answerDiv.appendChild(document.createElement("p"));
+                answerTextContent.innerHTML = singleAnswer.answerBody;
+                
+            }
         }
     }
 
+
 }
+
+
+
+ 
+
 
 /**
  * Function to handle tab navigation on the single-event detail page.

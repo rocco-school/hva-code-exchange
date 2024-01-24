@@ -464,7 +464,7 @@ export class Question extends Post {
         }
     }
 
-    public static async getMostRecentQuestionsByAnswer(userId: number): Promise<Question[] | string> {
+    public static async getMostRecentQuestionsByAnswer(userId: number | null): Promise<[Question] | string> {
         try {
             return await QuestionService.getMostRecentQuestionsByAnswer(userId);
         } catch (error) {
