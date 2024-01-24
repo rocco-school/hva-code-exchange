@@ -7,6 +7,7 @@ export const ANSWER_QUERY: {
     GET_ANSWERS_FROM_QUESTION: string;
     GET_ANSWERS_AND_USERS_FROM_QUESTION: string;
     GET_TOTAL_ANSWERS_BY_USER: string
+    GET_QUESTION_BY_ANSWER_ID: string;
     COUNT_ANSWERS_FROM_QUESTION: string;
     UPDATE_TOTAL_UPVOTES: string;
     UPDATE_TOTAL_DOWNVOTES: string;
@@ -19,6 +20,7 @@ export const ANSWER_QUERY: {
     DELETE_ANSWER: "DELETE FROM answer WHERE answerId = ?",
     GET_ANSWERS_FROM_QUESTION: "SELECT * FROM answer WHERE questionId = ?",
     GET_ANSWERS_AND_USERS_FROM_QUESTION: "SELECT answer.answerId, answer.questionId, answer.answerBody, answer.totalUpvotes, answer.totalDownvotes, answer.isAccepted, answer.createdAt, answer.updatedAt, user.userId, user.firstname, user.lastname, user.profilePicture FROM answer LEFT JOIN user ON user.userId = answer.userId WHERE questionId = ? ORDER BY answer.createdAt DESC",
+    GET_QUESTION_BY_ANSWER_ID: "SELECT questionId WHERE answerid = ?",
     GET_TOTAL_ANSWERS_BY_USER: "SELECT COUNT(answerId) as totalAnswers FROM answer WHERE userId = ?",
     COUNT_ANSWERS_FROM_QUESTION: "SELECT COUNT(*) AS answerCount FROM answer WHERE questionId = ?",
     UPDATE_TOTAL_UPVOTES: "UPDATE answer SET totalUpvotes = totalUpvotes + ? WHERE answerId = ?",

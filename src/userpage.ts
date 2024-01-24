@@ -11,6 +11,9 @@ import {showSuccessMessage} from "./components/successMessage";
 import {CodingTag} from "./models/codingTag";
 import {createNewUserInstance} from "./components/handleModelInstances";
 import {delay} from "./components/delay";
+import { Question } from "./models/question";
+import { ANSWER_QUERY } from "./query/answer.query";
+import { handleRedirectToQuestionDetail } from "./components/handleRedirects";
 
 // Asynchronous setup function
 async function setup(): Promise<void> {
@@ -29,6 +32,8 @@ async function setup(): Promise<void> {
     const currentUserId: number = loginStatus["userId"];
 
     await initializeUserSettings(currentUserId);
+
+    await initializeUserActivity(currentUserId);
 
     // DOM element selections
     const updateButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".updateUserButton"));
@@ -63,7 +68,7 @@ async function setup(): Promise<void> {
     const file: HTMLInputElement = (<HTMLInputElement>document.querySelector("#file"));
     const profilePicture: HTMLImageElement = (<HTMLImageElement>document.querySelector(".profile-picture"));
 
-    const userDeleteButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".continue-button"));
+    // const userDeleteButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".continue-button"));
 
     document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
@@ -71,12 +76,12 @@ async function setup(): Promise<void> {
         item.addEventListener("click", handleHeroTab);
     });
 
-    userDeleteButton.addEventListener("click", async (): Promise<void> => {
-        if (userDeleteButton.classList.contains("user")) {
-            await User.deleteUser(parseInt(userDeleteButton.id));
-            location.reload();
-        }
-    });
+    // userDeleteButton.addEventListener("click", async (): Promise<void> => {
+    //     if (userDeleteButton.classList.contains("user")) {
+    //         await User.deleteUser(parseInt(userDeleteButton.id));
+    //         location.reload();
+    //     }
+    // });
 
     updateButton.addEventListener("click", async (): Promise<void> => {
         updateButton.classList.add("editButtonFocus");
@@ -525,6 +530,78 @@ async function initializeUserSettings(userId: number): Promise<void> {
     }
 }
 
+async function initializeUserActivity(userId:number): Promise<void> {
+    const questionsOfUserContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector("#questionsOfUserContainer"));
+    const answersOfUserContainer: HTMLDivElement = (<HTMLDivElement>document.querySelector("#answersOfUserContainer"));
+    
+    const questions: [Question] = await Question.getMostRecentQuestionsByUser(userId) as [Question];
+
+    for (const question of questions) {
+        // Question Section
+        const questionDiv: HTMLDivElement = questionsOfUserContainer.appendChild(document.createElement("div"));
+        questionDiv.classList.add("question-box");
+
+        questionDiv.addEventListener("click", (): void => {
+            handleRedirectToQuestionDetail(question.questionId);
+        });
+
+        const questionH1: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#questionCount"));
+        const questionLength: string = questions.length.toString();
+        questionH1.innerHTML = questionLength + " Questions";
+
+        const questionTitle: HTMLHeadingElement = questionDiv.appendChild(document.createElement("h3"));
+
+        if (questionTitle) {
+            questionTitle.innerHTML = question.questionTitle;
+        }
+
+        const questionBodyExample: HTMLDivElement = questionDiv.appendChild(document.createElement("div"));
+        
+        if (questionBodyExample) {
+            questionBodyExample.innerHTML = question.questionBody.substring(0, 2000);
+            // Truncate long question bodies and add ellipsis
+            if (questionBodyExample.innerHTML.length > 2000) {
+                questionBodyExample.innerHTML += "...";
+            }
+        }
+
+        const questionAnswers: HTMLDivElement = questionDiv.appendChild(document.createElement("div"));
+
+        if (questionAnswers) {
+            // Fetch the number of answers for the current question
+            const answerAmount: any = await api.queryDatabase(ANSWER_QUERY.COUNT_ANSWERS_FROM_QUESTION, question.questionId);
+            questionAnswers.innerHTML = "answers: " + answerAmount[0].answerCount;
+        }
+
+        
+    }
+    // Answer Section
+    const allQuestionsByAnswer: [Question] = await Question.getMostRecentQuestionsByAnswer(userId) as [Question];
+
+    console.log(allQuestionsByAnswer);
+
+    const answerTitle: HTMLHeadingElement = (<HTMLHeadingElement>document.querySelector("#answerCount"));
+
+    if (answerTitle) {
+        const answerAmount: string = allQuestionsByAnswer.length.toString();
+        answerTitle.innerHTML = answerAmount + " Answers";
+    }
+
+    if (allQuestionsByAnswer) {
+        for (const questionByAnswer of allQuestionsByAnswer) {
+            const answerDiv: HTMLDivElement = answersOfUserContainer.appendChild(document.createElement("div"));
+            answerDiv.classList.add("answer-box");
+
+            answerDiv.addEventListener("click", (): void => {
+                handleRedirectToQuestionDetail(questionByAnswer.questionId);
+            });
+
+            const answerBody: HTMLDivElement = answerDiv.appendChild(document.createElement("div"));
+            answerBody.innerHTML = questionByAnswer.questionTitle;
+        }
+    }
+
+}
 
 /**
  * Function to handle tab navigation on the single-event detail page.

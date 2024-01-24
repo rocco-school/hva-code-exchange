@@ -431,5 +431,45 @@ export class Question extends Post {
             return `Error retrieving max question pages: ${error}`;
         }
     }
+
+    /**
+     * Retrieves questions associated with a specific user from the QuestionService.
+     *
+     * @param {number} userId - The unique identifier of the user.
+     * @returns {Promise<[Question] | string>} A Promise resolving to an array of questions or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method calls the getQuestionByUser method from the QuestionService to retrieve
+     * questions associated with a specific user. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * an array of questions or an error message.
+     *
+     * @example
+     * // Example: Get questions for a specific user.
+     * try {
+     *   const userQuestions = await Question.getQuestionsByUser(123);
+     *   console.log('User questions retrieved successfully:', userQuestions);
+     * } catch (error) {
+     *   console.error('Failed to retrieve user questions:', error);
+     * }
+     */
+    public static async getMostRecentQuestionsByUser(userId: number): Promise<[Question] | string> {
+        try {
+            // Calling the getQuestionByUser method from the service.
+            return await QuestionService.getMostRecentQuestionByUser(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error getting questions by user ${error}`;
+        }
+    }
+
+    public static async getMostRecentQuestionsByAnswer(userId: number): Promise<Question[] | string> {
+        try {
+            return await QuestionService.getMostRecentQuestionsByAnswer(userId);
+        } catch (error) {
+            return `Error getting answers for the userId ${userId}: ${error}`;
+        }
+    }
 }
 

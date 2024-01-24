@@ -62,7 +62,7 @@ body {
     background-color: #F9FAFB;
 }
 
-.edit-block {
+.edit-block, .question-box, .answer-box {
     background-color: #ffffff;
     border-radius: 1rem;
     --tw-shadow: 0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);
@@ -382,9 +382,76 @@ body {
     margin: auto auto 1rem;
 }
 
+.buttonContainer {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+}
+
+.userButton {
+    padding: .625rem 1.25rem;
+    text-align: center;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    border: 0;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.updateUserButton:hover {
+    background-color: #1F456E;
+}
+
+.editButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+.deleteButtonFocus {
+    box-shadow: 0 0 0 5px lightcoral;
+}
+
+.updateUserButton {
+    background-color: #0492C2;
+    margin-top: 1.5rem;
+}
+
+.deleteUserButton {
+    background-color: #C80815;
+    margin-top: 1.5rem;
+}
+
+.deleteUserButton:hover {
+    background-color: #960018;
+}
+
 .edit-title {
     margin-bottom: 1rem;
     text-align: center;
+}
+
+.questionBoxes {
+    margin-left: 14.5rem;
+    margin-right: 2rem;
+}
+
+.questionBoxesContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.question-box, .answer-box{
+    display: flex;
+    flex-direction: column;
+}
+
+.question-box:hover, .answer-box:hover {
+    cursor: pointer;
+    background-color:#ced4da;
 }
 
 .hidden {

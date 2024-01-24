@@ -329,4 +329,32 @@ export class Answer extends Post {
             return `Error updating answer total downvotes: ${error}`;
         }
     }
+
+    /**
+     * Retrieves answers associated with a given user ID.
+     *
+     * @param {number} userId - The unique identifier of the user.
+     * @returns {Promise<[Answer] | string>} A promise that resolves to an array of answers or an error message.
+     * @throws {Error} Throws an error if there is an issue retrieving answers.
+     * @description This function fetches answers for a specific user based on their user ID.
+     *              It returns a promise that resolves to an array of answers or a string
+     *              indicating an error if the retrieval fails.
+     *
+     * @example
+     * const userId = 123;
+     * try {
+     *   const answers = await YourClassName.getAnswersByUserId(userId);
+     *   console.log(answers); // Array of answers or string
+     * } catch (error) {
+     *   console.error(error); // Error message if there's an issue
+     * }
+     */
+    public static async getAnswersByUserId(userId: number): Promise<[Answer] | string> {
+        try {
+            return await AnswerService.getAnswersByUserId(userId);
+        } catch (error) {
+            return `Error getting answers for the userId: ${userId}: ${error}`;
+        }
+    }
+
 }
