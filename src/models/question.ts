@@ -464,12 +464,34 @@ export class Question extends Post {
         }
     }
 
-    public static async getMostRecentQuestionsByAnswer(userId: number): Promise<Question[] | string> {
+    /**
+     * Gets the most recent questions answered by a user.
+     *
+     * @param {number | null} userId - The ID of the user or null if not provided.
+     * @returns {Promise<[Question] | string>} A promise that resolves to an array of questions or an error message.
+     * 
+     * @description This function retrieves the most recent questions that have been answered by the specified user.
+     * If the operation is successful, it returns an array of questions; otherwise, it returns an error message.
+     * 
+     * @example
+     * // Example usage:
+     * const userId = 123;
+     * try {
+     *   const recentQuestions = await Question.getMostRecentQuestionsByAnswer(userId);
+     *   console.log("Recent Questions:", recentQuestions);
+     * } catch (error) {
+     *   console.error("Error:", error);
+     * }
+     */
+    public static async getMostRecentQuestionsByAnswer(userId: number | null): Promise<[Question] | string> {
         try {
+            // Call the QuestionService to get most recent questions by answer
             return await QuestionService.getMostRecentQuestionsByAnswer(userId);
         } catch (error) {
+            // Handle errors and return an error message
             return `Error getting answers for the userId ${userId}: ${error}`;
         }
     }
+
 }
 

@@ -1,6 +1,7 @@
 import {Question} from "../models/question";
 import {api} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "../query/question.query";
+import { Answer } from "../models/answer";
 
 /**
  * A service class for handling operations related to questions in the database.
@@ -330,9 +331,9 @@ export class QuestionService {
         }
     }
 
-    public static async getMostRecentQuestionsByAnswer(userId: number): Promise<Question[]> {
+    public static async getMostRecentQuestionsByAnswer(userId: number | null): Promise<[Question]> {
         try {
-            const question: Question[] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_BY_ANSWER_ID, userId) as Question[];
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_BY_ANSWER_ID, userId) as [Question];
 
             if (!question) {
                 throw new Error(`Failed to get questions for user with ID ${userId}!`);
