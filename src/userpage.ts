@@ -119,7 +119,7 @@ async function setup(): Promise<void> {
 
 
     if (profilePicture) {
-        profilePicture.src = user.profilePicture ? user.profilePicture : `https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}&background=random`;
+        profilePicture.src = await getProfilePicturePath(user);
     }
 
     // Display the username in the UI
@@ -248,7 +248,7 @@ async function setup(): Promise<void> {
             const verifiedLastname: boolean = await verifyLastname(lastnameInput, nameRegEx);
             if (!verifiedLastname) return;
             const newProfilePicture: string | unknown = await updateProfilePicture(file, user);
-            if (typeof newProfilePicture === "string") {
+            if (typeof newProfilePicture === "string" && newProfilePicture.includes("https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/")) {
                 profilePicture = newProfilePicture;
             } else {
                 profilePicture = user.profilePicture;
@@ -545,8 +545,7 @@ async function initializeUserSettings(userId: number): Promise<void> {
         }
 
         if (profilePicture) {
-            const defaultPicture: string = "https://ui-avatars.com/api/?name=" + user.firstname + "+" + user.lastname + "?background=random";
-            profilePicture.src = user.profilePicture ?? defaultPicture;
+            profilePicture.src = await getProfilePicturePath(user);
 
             profilePicture.classList.remove("hidden");
         }
@@ -558,6 +557,38 @@ async function initializeUserSettings(userId: number): Promise<void> {
     } catch (error) {
         // Handle errors, e.g., log or display an error message
         console.error("Error initializing user settings:", error);
+    }
+}
+
+/**
+ * Get the profile picture path for a user.
+ *
+ * @param {User} user - The user object containing user information.
+ * @returns {Promise<string>} The profile picture URL.
+ */
+export async function getProfilePicturePath(user: User): Promise<string> {
+    // Default picture URL
+    const defaultPicture: string = "https://ui-avatars.com/api/?name=" + user.firstname + "+" + user.lastname + "?background=random";
+
+    try {
+        if (user.profilePicture) {
+            // Extract filename from the profilePicture URL
+            const getFileName: string[] = user.profilePicture.split("https://quumuuteexaa68-pb2b2324.hbo-ict.cloud/uploads/");
+            const filename: string = getFileName[1];
+
+            // Check if the file exists
+            const fileExists: boolean = await api.fileExists(filename) as boolean;
+
+            // Return the appropriate profile picture URL
+            return fileExists ? user.profilePicture : defaultPicture;
+        } else {
+            // If there's no profile picture, return the default picture URL
+            return defaultPicture;
+        }
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error("Error fetching profile picture:", error);
+        return defaultPicture; // Return default picture URL on error
     }
 }
 
