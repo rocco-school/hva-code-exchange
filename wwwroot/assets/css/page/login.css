@@ -4,31 +4,35 @@
     margin: 0;
 }
 
+html, body {
+    height: 100%;
+}
+
 main {
     display: flex;
     flex-direction: row;
+    height: 100%;
 }
 
 .info-box {
     width: 60%;
     background: linear-gradient(-45deg, #141e30, #243b55);
-	background-size: 400% 400%;
-	animation: gradient 5s ease infinite;
-	height: auto;
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
+    height: 100%; 
 }
 
 @keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
-
 
 .login-box {
     display: flex;

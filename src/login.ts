@@ -28,6 +28,7 @@ async function setup(): Promise<void> {
     }
 
     document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
+    document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display:none");
 
     // Create an action for the login button. When you press this, the code between the { } is called
     document.querySelector(".login-btn")?.addEventListener("click", async () => {
@@ -74,6 +75,8 @@ async function loginFromDatabase(email: string, password: string): Promise<User 
         if (user.length <= 0) {
             // If no user is found, return an empty array.
             console.error("User not found for the provided email.");
+            const textInput: string = "User not found for the provided email";
+            await alertPopUp(textInput);
             return [];
         }
 
@@ -83,6 +86,8 @@ async function loginFromDatabase(email: string, password: string): Promise<User 
         // If the passwords do not match, return an empty array.
         if (!checkPassword) {
             console.error("Password does not match.");
+            const textInput: string = "Password does not match";
+            await alertPopUp(textInput);
             return [];
         }
 
@@ -101,6 +106,15 @@ async function loginFromDatabase(email: string, password: string): Promise<User 
         console.error("Unexpected error during login:", error);
         return [];
     }
+}
+
+/**
+ *
+ * @param textInput
+ */
+async function alertPopUp(textInput: string): Promise<void> {
+    document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display: block");
+    document.getElementsByClassName("alert-danger")[0].innerHTML = textInput;
 }
 
 // Invoke the login page application entry point.

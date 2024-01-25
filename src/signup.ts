@@ -27,6 +27,7 @@ async function setup(): Promise<void> {
 
     // keeps redirect message hidden
     document.getElementsByTagName("section")[0].setAttribute("style", "display:none");
+    document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display:none");
 
     const firstnameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("firstname"));
     const lastnameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("lastname"));
