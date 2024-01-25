@@ -138,7 +138,7 @@ async function setup(): Promise<void> {
     });
 }
 
-// Invoke the homepage application entry point.
+// Invoke the questions application entry point.
 await setup();
 
 function mapNumberToPaginationValue(num: number): number | "ALL" {

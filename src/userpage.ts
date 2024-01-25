@@ -27,7 +27,7 @@ async function setup(): Promise<void> {
     const loginStatus: JWTPayload | boolean | any = await security();
 
     if (!loginStatus) {
-        url.redirect("homepage.html");
+        url.redirect("index.html");
     }
 
     // Initialize the tag select component
