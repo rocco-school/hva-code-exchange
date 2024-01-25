@@ -97,9 +97,8 @@ async function setup(): Promise<void> {
                             // Log the newly created user.
                             console.log("User signed up successfully:", newUser);
 
-
                             // TODO:add popup to tell user successfully signed up
-                            // location.replace("login.html");
+                            location.replace("login.html");
                         }
                     } catch (e) {
                         // Handle unexpected errors during sign-up.
