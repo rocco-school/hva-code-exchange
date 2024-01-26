@@ -4,7 +4,7 @@
 In de derde sprint van ons project ondervonden we uitdagingen die onze planning en samenwerking beïnvloedden. Hieronder beschrijven we een specifieke situatie die relevant is voor dit probleem, en analyseren we hoe we als team hebben gereageerd op deze onvoorziene omstandigheden.
 
 ## Situatie (S):
-Tijdens onze derde sprint werden Fauzan en Rocco geconfronteerd met het feit dat onze beschikbaarheid niet op elkaar aansloot. Dit leidde ertoe dat het product niet volledig klaar was voor de geplande gebruikerstesten, die halverwege sprint 3 gepland waren.
+Tijdens onze derde sprint werden we geconfronteerd met het feit dat onze beschikbaarheid niet op elkaar aansloot. Dit leidde ertoe dat het product niet volledig klaar was voor de geplande gebruikerstesten, die halverwege sprint 3 gepland waren.
 
 ## Taak (T):
 **FAUZAN**
@@ -13,7 +13,7 @@ Binnen deze sprint was ik onder andere belast met de uitvoering van de gebruiker
 
 **ROCCO**
 
-Binnen deze sprint was een van mijn toegewezen taken het stileren van de applicatie, gevolgd door het verwerken van de feedback die we uit ons gebruikersonderzoek hadden verzameld. Daarnaast hield ik me bezig met het doorlopend debuggen van de code, aangezien dit een voortdurend proces was gedurende het hele project. Mijn verantwoordelijkheid was om de applicatie zowel visueel aantrekkelijk te maken als functioneel te optimaliseren.
+De taken die ik deze sprint had waren, ten eerste de styling van de applicatie. Als tweede het verwerken van de feedback die we hadden verzameld uit ons gebruikersonderzoek. En ten derde was ik bezig met het debuggen van de code, het debuggen van de code was een doorlopend proces wat gedurende project voorkwam, er kwamen bijvoorbeeld tijdens het testen best veel kleine bugs langs.
 
 ## Actie (A):
 
