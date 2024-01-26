@@ -1,0 +1,79 @@
+.pagination {
+    display: flex;
+    position: inherit;
+    width: 100%;
+    margin: 2rem auto 10rem auto;
+    justify-content: center;
+}
+
+.pagination-inner {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 2rem;
+}
+
+.paginator {
+    display: flex;
+    margin: auto;
+}
+
+.pagination-info {
+    display: flex;
+    gap: 2rem;
+}
+
+.prev {
+    transform: rotate(180deg);
+}
+
+.pages {
+    margin-left: 2rem;
+    margin-right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: #0492C2;
+}
+
+.current-pagination {
+    margin: auto;
+    color: #0492C2;
+}
+
+.page {
+    cursor: pointer;
+}
+
+.paginate-icon {
+    cursor: pointer;
+}
+
+.paginate {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.current {
+    background: lightblue;
+    font-weight: bold;
+    line-height: 2.5rem;
+    text-align: center;
+    width: 2.5rem;
+    border-radius: .5rem;
+    height: 2.5rem;
+    color: black;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: column;
+}
+
+.questionAmount {
+    padding: 0.5rem;
+    border: 1px solid #d3d3d3;
+    border-radius: 0.3rem;
+    color: #0492C2;
+    outline: 0
+}

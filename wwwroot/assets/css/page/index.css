@@ -1,0 +1,109 @@
+/* Resetting default padding and margin for all elements */
+* {
+    padding: 0;
+    margin: 0;
+}
+
+
+.contentContainer {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 5.5rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .contentContainer {
+        padding-left: 14.5rem;
+    }
+}
+
+/* Styling for the main header section */
+.headerContainer {
+    display: flex;
+    flex-direction: row;
+    padding: 5rem 2rem 2rem;
+    gap: 6rem;
+}
+
+/* Styling for layout within the main header */
+.mainHeaderTextLayout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: auto;
+    max-width: 40rem;
+}
+
+/* Styling for specific elements within the main header */
+.mainHeaderTextLayout h1 {
+    margin-bottom: 1rem;
+}
+
+.mainHeaderTextLayout button {
+    margin-top: 1rem;
+}
+
+.picture-border {
+    display: none;
+    margin: auto;
+}
+
+@media only screen and (min-width: 800px) {
+    .picture-border {
+        display: flex;
+    }
+}
+
+#unsplashPicture1 {
+    height: 15rem;
+    border-radius: .5rem;
+}
+
+@media only screen and (min-width: 1260px) {
+    #unsplashPicture1 {
+        height: 20rem;
+        border-radius: .5rem;
+    }
+}
+
+/* Styling for the perks section */
+.sectionPerks {
+    height: auto;
+    width: auto;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+}
+
+/* Styling for the perks container */
+.sectionPerks .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.containerPerkBoxes {
+    width: 100%;
+}
+
+.perkBox {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 4fr));
+    grid-gap: 3.5rem;
+    justify-items: center;
+}
+
+.recentQuestionContainer h2 {
+    text-align: center;
+}
+
+.recentQuestionContainer {
+    margin-bottom: 5rem;
+}
+
+
+
+
+
+

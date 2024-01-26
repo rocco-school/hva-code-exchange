@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/x-icon" href="assets/img/icons/coding-icon.png">
+    <title>SE Code Exchange</title>
+
+    <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/css/component/pagination.css">
+    <link rel="stylesheet" href="assets/css/component/button.css">
+    <link rel="stylesheet" href="assets/css/component/questionCard.css">
+    <link rel="stylesheet" href="assets/css/general.css"/>
+    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="assets/css/page/questions.css"/>
+    <link rel="stylesheet" href="assets/css/component/hide.css"/>
+</head>
+<body>
+
+<!-- Sidebar Section -->
+<aside class="sidebarMenu">
+    <div class="sidebarContainer">
+        <div class="containerButtons">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="index.html" class="buttonItem" id="homeButton">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="questions.html" class="buttonItem" id="questionsButton">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>Questions</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarContainer logButtonsContainer">
+        <div class="containerButtons containerLogButtons hidden">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="login.html" class="buttonItem" id="login-button">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Login</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="signup.html" class="buttonItem" id="signup-button">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Signup</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Navbar Section -->
+<nav class="navbar">
+    <div class="container">
+        <img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu">
+
+        <div class="centered-block">
+            <img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo">
+        </div>
+        <div class="end-block">
+            <div class="logged-out hidden">
+                <button class="button logButtons logButton" id="loginButton">Log in</button>
+                <button class="button logButtons signButton" id="signupButton">Sign up</button>
+            </div>
+
+            <div class="profile-block hidden">
+                <img tabindex="0" class="profilePicture" src="" alt="Profile picture Button">
+
+                <div class="userDropdown hidden">
+                    <div id="arrow" class="tooltip-arrow-up"></div>
+
+                    <div class="personalInfo">
+                        <div class="nameCardUsername"></div>
+                        <div class="nameCardEmail"></div>
+                    </div>
+                    <ul class="avatarButtons" aria-labelledby="avatarButton">
+                        <li class="avatarButton-cover">
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                        </li>
+                    </ul>
+                    <div class="sign-out-block py-1">
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- This HTML page is called first when the website is called in the browser -->
+<main>
+    <div class="questions-container">
+
+        <div class="questionsTitle">
+            <h1>Questions</h1>
+
+            <div class="buttonContainer">
+                <button type="submit" class="createQuestionButton button hidden">
+                    <i class="fa-solid fa-plus"></i>
+                    Ask question
+                </button>
+            </div>
+
+        </div>
+
+        <div class="questions-table">
+
+        </div>
+
+        <div class="pagination">
+            <div class="pagination-inner">
+                <div class="paginator hidden">
+                    <div class="prev paginate">
+                        <i class="fa-solid fa-angle-right fa-xl prev-icon paginate-icon"
+                           style="color: #d3d3d3;"></i>
+                    </div>
+                    <div class="pages">
+
+                    </div>
+                    <div class="next paginate">
+                        <i class="fa-solid fa-angle-right fa-xl next-icon paginate-icon"
+                           style="color: #d3d3d3;"></i>
+                    </div>
+                </div>
+
+                <div class="pagination-info">
+                    <div class="paginate-select">
+                        <label for="questionAmount" hidden="hidden"></label>
+                        <select class="questionAmount" name="questionAmount" id="questionAmount">
+                            <option value="1" selected>10</option>
+                            <option value="2">20</option>
+                            <option value="3">50</option>
+                            <option value="4">100</option>
+                            <option value="5">All</option>
+                        </select>
+                    </div>
+
+                    <div class="current-pagination">
+                        <span>Results:</span>
+                        <span class="currentPageRange">1 - 15</span>
+                        <span>of</span>
+                        <span class="totalResults">365</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- This typescript file (questions.ts) is called and executed here  -->
+<script src="/src/index.ts" type="module"></script>
+<script src="/src/questions.ts" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+.buttonContainer {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.button {
+    padding: .625rem 1.25rem;
+    text-align: center;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    border: 0;
+    color: #ffffff;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+
+/* Update user css */
+.updateUserButton {
+    background-color: #0492C2;
+    margin-top: 1.5rem;
+}
+
+.updateUserButton:hover {
+    background-color: #1F456E;
+}
+
+.editButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+
+/* Delete user css */
+.deleteUserButton {
+    background-color: #C80815;
+    margin-top: 1.5rem;
+}
+
+.deleteUserButton:hover {
+    background-color: #960018;
+}
+
+.deleteButtonFocus {
+    box-shadow: 0 0 0 5px lightcoral;
+}
+
+/* Create question css */
+.createQuestionButton {
+    background-color: #0492C2;
+}
+
+.createQuestionButton:hover {
+    background-color: #1F456E;
+}
+
+.createButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+
+/* Create question css */
+.loginButton {
+    background-color: #0492C2;
+}
+
+.loginButton:hover {
+    background-color: #1F456E;
+}
+
+.loginButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+
+/* login button css */
+.logButton {
+    color: #1a202c;
+    background-color: #d3d3d3;
+}
+
+.logButton:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.logButtonFocus {
+    box-shadow: 0 0 0 5px lightgrey;
+}
+
+
+/* signup button css */
+.signButton {
+    color: #ffffff;
+    background-color: #1F456E;
+}
+
+.signButton:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.signButtonFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+/* change password button css */
+.changePasswordButton {
+    color: #ffffff;
+    background-color: #1F456E;
+    margin-top: 1.5rem;
+}
+
+.changePasswordButton:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.changePasswordFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}
+
+/* change password button css */
+.changePasswordBtn {
+    color: #ffffff;
+    background-color: #1F456E;
+    margin-top: 1.5rem;
+}
+
+.changePasswordBtn:hover {
+    color: #ffffff;
+    background-color: #1a202c;
+}
+
+.changePasswordBtnFocus {
+    box-shadow: 0 0 0 5px lightblue;
+}

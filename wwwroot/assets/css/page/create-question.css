@@ -1,0 +1,137 @@
+body {
+    --tw-bg-opacity: 1;
+    background-color: rgb(249 250 251/var(--tw-bg-opacity));
+}
+
+.create-question-container {
+    max-width: calc(100% - 2rem);
+    padding-top: 4rem;
+    margin: auto;
+}
+
+@media only screen and (min-width: 1024px) {
+    .create-question-container {
+        margin: auto 2rem auto 14.5rem;
+    }
+}
+
+.title {
+    margin-top: 5rem;
+    text-align: center;
+}
+
+.question-title-container {
+    margin-top: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.question-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.question-body-section {
+    margin-top: 2rem;
+}
+
+.question-container--inner {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.question-body-textarea {
+    min-height: 10rem;
+    max-height: 30rem;
+    padding: 10px;
+    outline: none;
+    overflow-y: scroll;
+    max-width: 50rem;
+    resize: vertical;
+}
+
+.question-body-textarea:focus {
+    border-color: #ccc;
+}
+
+
+.question-title-input {
+    padding: 1rem;
+    border-radius: .5rem;
+    border: 0;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+@media only screen and (min-width: 400px) {
+    .question-title-input {
+        min-width: 15rem;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .question-title-input {
+        min-width: 30rem;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .question-title-input {
+        width: 45rem;
+    }
+}
+
+.tags-section, .question-section, .question-title-section {
+    display: flex;
+    justify-content: center;
+}
+
+.tag-container {
+    width: 100%;
+    max-width: 30rem;
+}
+
+.tag-container--inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.custom-text-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 1rem;
+}
+
+.no-result-message {
+    padding: 0 0 12px 12px;
+}
+
+.error {
+    color: #ff1a2a;
+    margin-top: 8px;
+}
+
+.block {
+    display: block;
+}
+
+.title-helper-text {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(107 114 128);
+    margin-right: auto;
+}

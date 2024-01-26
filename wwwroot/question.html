@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/x-icon" href="assets/img/icons/coding-icon.png">
+    <title>SE Code Exchange</title>
+
+    <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/css/general.css"/>
+    <link rel="stylesheet" href="assets/css/navbar.css"/>
+    <link rel="stylesheet" href="assets/css/sidebar.css"/>
+    <link rel="stylesheet" href="assets/css/page/question.css"/>
+    <link rel="stylesheet" href="assets/css/text-editor.css"/>
+    <link rel="stylesheet" href="assets/css/component/hide.css"/>
+</head>
+<body>
+
+<!-- Sidebar Section -->
+<aside class="sidebarMenu">
+    <div class="sidebarContainer">
+        <div class="containerButtons">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="index.html" class="buttonItem" id="homeButton">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="questions.html" class="buttonItem" id="questionsButton">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>Questions</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarContainer logButtonsContainer">
+        <div class="containerButtons containerLogButtons hidden">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="login.html" class="buttonItem" id="login-button">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Login</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="signup.html" class="buttonItem" id="signup-button">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Signup</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- Navbar Section -->
+<nav class="navbar">
+    <div class="container">
+        <img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu">
+
+        <div class="centered-block">
+            <img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo">
+        </div>
+        <div class="end-block">
+            <div class="logged-out hidden">
+                <button id="signupButton">sign up</button>
+                <button id="loginButton">log in</button>
+            </div>
+
+            <div class="profile-block hidden">
+                <img tabindex="0" class="profilePicture" src="" alt="Profile picture Button">
+
+                <div class="userDropdown hidden">
+                    <div id="arrow" class="tooltip-arrow-up"></div>
+
+                    <div class="personalInfo">
+                        <div class="nameCardUsername"></div>
+                        <div class="nameCardEmail"></div>
+                    </div>
+                    <ul class="avatarButtons" aria-labelledby="avatarButton">
+                        <li class="avatarButton-cover">
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                        </li>
+                    </ul>
+                    <div class="sign-out-block py-1">
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- This HTML page is called first when the website is called in the browser -->
+<main>
+
+    <!-- Success/Failed/Delete messages -->
+    <div class="darkness-container filter hidden">
+        <!-- Success message -->
+        <div id="successModal" tabindex="-1" aria-hidden="true" class="success-modal">
+            <div class="modal-wrapper">
+                <div class="modal-content">
+                    <!-- Modal content -->
+                    <button type="button" class="close-modal-button hidden" data-modal-toggle="successModal">
+                        <svg class="close-icon" width="800px" height="800px" viewBox="0 0 512 512"
+                             version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <title>cancel</title>
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="currentColor"
+                               fill-rule="evenodd">
+                                <g id="work-case" fill="currentColor"
+                                   transform="translate(91.520000, 91.520000)">
+                                    <polygon id="Close"
+                                             points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
+
+                                    </polygon>
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+
+                    <div class="icon-and-message success-background hidden">
+                        <svg class="icon success-background" width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 12.6111L8.92308 17.5L20 6.5" stroke="currentColor" stroke-width="2"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="sr-only">Success</span>
+                    </div>
+                    <div class="icon-and-message delete-background hidden">
+                        <svg class="icon delete-background" width="800px" height="800px" viewBox="0 0 24 24"
+                             fill="none">
+                            <path d="M10 12V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                            <path d="M14 12V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                            <path d="M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                            <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10"
+                                  stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
+                                  stroke="currentColor"
+                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span class="sr-only">Delete</span>
+                    </div>
+                    <div class="icon-and-message failed-background hidden">
+                        <svg class="icon failed-background" width="800px" height="800px" viewBox="0 0 512 512"
+                             version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="currentColor"
+                               fill-rule="evenodd">
+                                <g id="work-case" fill="currentColor"
+                                   transform="translate(91.520000, 91.520000)">
+                                    <polygon id="Close"
+                                             points="328.96 30.2933333 298.666667 1.42108547e-14 164.48 134.4 30.2933333 1.42108547e-14 1.42108547e-14 30.2933333 134.4 164.48 1.42108547e-14 298.666667 30.2933333 328.96 164.48 194.56 298.666667 328.96 328.96 298.666667 194.56 164.48">
+
+                                    </polygon>
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="sr-only">Delete</span>
+                    </div>
+                    <p class="message">Successfully created!</p>
+                    <button data-modal-toggle="successModal" type="button" class="continue-button hidden">
+                        Continue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="create-question-container">
+        <div class="question-container--outer">
+            <h1 class="question-title"></h1>
+            <hr class="question-divider">
+
+            <div class="question">
+                <div class="vote">
+                    <div class="upvote">
+                        <img class="arrow upvote-question" alt="upvote answer"
+                             src="assets/img/icons/arrow-up.svg">
+
+                        <div role="tooltip" class="tooltip-upvote tool-tip">
+                            Currently 0 upvotes on this question!
+                        </div>
+                    </div>
+
+                    <span class="upvote-count">0</span>
+                    <div class="downvote">
+                        <img class="arrow arrow-down downvote-question" alt="downvote answer"
+                             src="assets/img/icons/arrow-up.svg">
+                        <div role="tooltip" class="tooltip-downvote tool-tip">
+                            Currently 0 downvotes on this question!
+                        </div>
+                    </div>
+
+                </div>
+                <div class="question-inner">
+                    <p class="question-body"></p>
+                    <div class="question-info">
+                        <button class="button edit-button question-edit hidden">Edit</button>
+                    </div>
+                </div>
+
+            </div>
+            <hr class="question-divider">
+
+            <div class="answers-count">
+                <span class="answer-count">0</span>
+                <span>Answers</span>
+            </div>
+
+
+            <div class="answers">
+
+            </div>
+
+            <h2 class="new-answer-title">new Answer</h2>
+
+            <!-- Section for Question Body -->
+            <section class="new-answer-section question-body-section">
+                <div class="new-answer-container">
+                    <div class="new-answer-container--inner">
+
+                        <div class="text-editor">
+                            <div class="text-editor-options">
+                                <button id="bold" class="option-button format text-editor-button">
+                                    <i class="fa-solid fa-bold fa-xl"></i>
+                                </button>
+                                <button id="codeBlock" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-code fa-xl"></i>
+                                </button>
+                                <button id="superscript" class="option-button script text-editor-button">
+                                    <i class="fa-solid fa-superscript fa-xl"></i>
+                                </button>
+                                <button id="subscript" class="option-button script text-editor-button">
+                                    <i class="fa-solid fa-subscript fa-xl"></i>
+                                </button>
+
+                                <button id="insertOrderedList" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-list-ol fa-xl"></i>
+                                </button>
+                                <button id="insertUnorderedList" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-list fa-xl"></i>
+                                </button>
+
+                                <button id="undo" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-rotate-left fa-xl"></i>
+                                </button>
+                                <button id="redo" class="option-button text-editor-button">
+                                    <i class="fa-solid fa-rotate-right fa-xl"></i>
+                                </button>
+
+                                <button id="createLink" class="adv-option-button text-editor-button">
+                                    <i class="fa fa-link fa-xl"></i>
+                                </button>
+                                <button id="unlink" class="option-button text-editor-button">
+                                    <i class="fa fa-unlink fa-xl"></i>
+                                </button>
+
+                                <button id="justifyLeft" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-left fa-xl"></i>
+                                </button>
+                                <button id="justifyCenter" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-center fa-xl"></i>
+                                </button>
+                                <button id="justifyRight" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-right fa-xl"></i>
+                                </button>
+                                <button id="justifyFull" class="option-button align text-editor-button">
+                                    <i class="fa-solid fa-align-justify fa-xl"></i>
+                                </button>
+                                <button id="indent" class="option-button spacing text-editor-button">
+                                    <i class="fa-solid fa-indent fa-xl"></i>
+                                </button>
+                                <button id="outdent" class="option-button spacing text-editor-button">
+                                    <i class="fa-solid fa-outdent fa-xl"></i>
+                                </button>
+                                <select id="formatBlock" class="adv-option-button text-editor-select">
+                                    <option value="H1">H1</option>
+                                    <option value="H2">H2</option>
+                                    <option value="H3">H3</option>
+                                    <option value="H4">H4</option>
+                                    <option value="H5">H5</option>
+                                    <option value="H6">H6</option>
+                                </select>
+                                <select id="fontName" class="adv-option-button text-editor-select"></select>
+                                <select id="fontSize" class="adv-option-button text-editor-select"></select>
+
+                                <div class="input-wrapper">
+                                    <input type="color" id="foreColor" class="adv-option-button">
+                                    <label for="foreColor">Font Color</label>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="color" id="backColor" class="adv-option-button">
+                                    <label for="backColor">Highlight Color</label>
+                                </div>
+
+                            </div>
+                            <div id="text-input" contenteditable="true"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section for submitting -->
+            <section class="new-answer-section submit-section">
+                <div class="submit-container">
+                    <button class="submit-button btn_submit">Post answer</button>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+<!--  This typescript file (single-questions.ts) is called and executed here -->
+<script src="/src/index.ts" type="module"></script>
+<script src="/src/question.ts" type="module"></script>
+</body>
+</html>

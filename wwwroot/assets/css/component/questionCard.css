@@ -1,0 +1,150 @@
+.questions-container {
+    padding-top: 3.5rem;
+}
+
+.questions-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    margin: auto;
+    max-width: 80rem;
+}
+
+.questionsTable {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    margin: auto;
+    max-width: 80rem;
+}
+
+.question-body {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    margin: 3rem auto auto;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 2.5rem;
+    cursor: pointer;
+    width: calc(100% - 10rem);
+    max-width: 40rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px; /* Adjust padding as necessary */
+    gap: 2rem;
+}
+
+.tags-container {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    color: #0492C2;
+    display: flex;
+}
+
+.by-user {
+    min-width: 100px; /* You can adjust this as necessary */
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: right;
+    background-color: lightblue;
+    border-radius: 10rem;
+    color: #1F456E;
+}
+
+/* Ensure the .tags-container doesn't push .by-user out of the view */
+.tags-container {
+    max-width: calc(100% - 100px); /* Adjust the subtracted value based on the min-width of .by-user */
+}
+
+.questionsTitle {
+    display: flex;
+    justify-content: start;
+    margin-top: 2rem;
+    width: calc(100% - 10rem);
+    gap: 1rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.questionUser {
+    background-color: lightblue;
+    border-radius: 10rem;
+    color: #1F456E;
+    text-align: center;
+}
+
+@media only screen and (max-width: 800px) {
+    .questionUser {
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .questionTitle {
+        margin-left: auto;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .questionUser {
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+    }
+
+    .question-tag-section {
+        justify-content: start;
+    }
+}
+
+.questionTags {
+    margin-left: 1rem;
+}
+
+.question-box {
+    max-height: 20rem;
+    width: calc(100% - 3rem);
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(255, 255, 255, 1);
+    color: #000;
+    border-radius: 10px;
+    box-shadow: 0px 0px 0px 2px rgba(4,146,194,1),
+    15px 1px 0px -4px rgba(4,146,194,1) inset;
+}
+
+.question-preview {
+    padding: 1.5rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    font-size: .8rem;
+}
+
+.question-preview-title {
+    font-size: .8rem;
+    font-weight: 600;
+}
+
+
+@media only screen and (min-width: 800px) {
+    .question-preview {
+        font-size: medium;
+    }
+
+    .question-preview-title {
+        font-size: 1.3rem;
+    }
+}
+
+.question-preview-content {
+    color: #0492C2;
+    word-break: break-word;
+}
+
+.icon-container {
+    margin-left: 1rem;
+}

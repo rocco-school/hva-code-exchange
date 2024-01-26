@@ -1,0 +1,207 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+/* Styling for the navigation bar */
+.navbar {
+    --tw-bg-opacity: 1;
+    --tw-border-opacity: 1;
+    background-color: rgb(255 255 255/var(--tw-bg-opacity));
+    border-color: rgb(229 231 235/var(--tw-border-opacity));
+    border-bottom-width: 1px;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-left-width: 0;
+    border-style: solid;
+    position: fixed;
+    z-index: 15;
+    height: 3.5rem;
+    width: 100%;
+    padding-left: 1rem;
+}
+
+/* Styling for the navigation bar container */
+.navbar .container {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+}
+
+.navbar .container .centered-block {
+    display: flex;
+    justify-content: center;
+    grid-column-start: 2;
+}
+
+
+.navbar .container .end-block {
+    display: flex;
+    justify-content: end;
+    gap: 2rem;
+}
+
+.navbar .container .end-block .logged-out {
+    margin-top: auto;
+    margin-bottom: auto;
+    display: none;
+    flex-direction: row;
+    gap: 1rem;
+    margin-right: 2rem;
+}
+
+@media only screen and (min-width: 750px) {
+    .navbar .container .end-block .logged-out {
+        display: flex;
+    }
+}
+
+
+.navbar .container li:nth-child(1) {
+    margin-right: auto;
+}
+
+.navbar .container li:nth-child(4) {
+    margin-left: auto;
+}
+
+.navbar .container #searchBarInput {
+    height: 1.5rem;
+    width: 40rem;
+    margin: auto auto auto 2rem;
+}
+
+/* Styling for buttons within the navigation bar */
+.logButtons {
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* Styling for specific elements within the navigation bar */
+#burgerMenu {
+    height: 2rem;
+    cursor: pointer;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+@media only screen and (min-width: 1024px) {
+    #burgerMenu {
+        display: none;
+    }
+}
+
+
+.navbar .container #codeExchangeLogo {
+    height: 3.5rem;
+}
+
+.profile-block {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.profilePicture {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    margin-right: 1.5rem;
+    display: flex;
+}
+
+.userDropdown {
+    position: absolute;
+    right: 1rem;
+    z-index: 10;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    width: 11rem;
+    margin-top: 1rem;
+}
+
+.tooltip-arrow-up {
+    z-index: 1;
+    visibility: hidden;
+    position: absolute;
+    height: 2.5rem;
+    width: 2.5rem;
+    background-color: inherit;
+    right: 0.8rem;
+    top: -0.2rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.tooltip-arrow-up:before {
+    z-index: 1;
+    visibility: visible;
+    position: absolute;
+    height: 2.5rem;
+    width: 2.5rem;
+    transform: rotate(45deg);
+    background-color: inherit;
+    content: "";
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.personalInfo {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(17 24 39);
+    z-index: 10;
+    position: relative;
+    background-color: #ffffff;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}
+
+.personalInfo .nameCardEmail {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.avatarButtons {
+    padding-top: 0.5rem; /* 8px */
+    padding-bottom: 0.5rem; /* 8px */
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+    color: rgb(55 65 81);
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: rgb(229 231 235);
+
+}
+
+.avatarButton-cover {
+    list-style-type: none;
+}
+
+.avatarButton {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.avatarButton:hover {
+    background-color: rgb(243 244 246);
+}
+
+.sign-out-block {
+    padding-top: 0.25rem; /* 4px */
+    padding-bottom: 0.25rem; /* 4px */
+    font-size: 0.875rem; /* 14px */
+}
+
+.sign-out-button {
+    display: block;
+}
