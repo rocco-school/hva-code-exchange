@@ -211,11 +211,7 @@ body {
     width: 100%;
     height: 100%;
     backdrop-filter: brightness(50%);
-    z-index: 1;
-}
-
-.hidden {
-    display: none;
+    z-index: 100;
 }
 
 .create-question {
@@ -238,17 +234,4 @@ body {
 .create-question:hover {
     background-color: darkgray;
     color: white;
-}
-
-.button {
-    background-color: transparent;
-    border-width: 0;
-    cursor: pointer;
-    margin: auto;
-    padding: 1rem;
-    border-radius: .5rem;
-}
-
-.button:hover {
-    background-color: #f4f4f4;
 }

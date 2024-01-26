@@ -6,20 +6,25 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`user`
     `userId`  INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `firstname` VARCHAR(50) NOT NULL,
     `lastname` VARCHAR(50) NOT NULL,
+    `dateOfBirth` DATE NULL,
     `username` VARCHAR(45) NOT NULL,
+    `experienceYears` INT NOT NULL DEFAULT 0,
+    `profilePicture` VARCHAR(255) NULL,
     `password` VARCHAR(60) NOT NULL,
-    `email`    VARCHAR(255) NOT NULL
+    `email`    VARCHAR(255) NOT NULL,
+    `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 )  ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`question`
 (
     `questionId` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `userId` INT NOT NULL,
+    `userId` INT NULL,
     `questionTitle` VARCHAR(255) NOT NULL,
     `questionBody` TEXT NOT NULL,
+    `totalUpvotes` INT DEFAULT 0 NOT NULL,
+    `totalDownvotes` INT DEFAULT 0 NOT NULL,
     `isClosed` BOOLEAN DEFAULT FALSE,
-    `upVotes` INT DEFAULT 0 NOT NULL,
-    `downVotes` INT DEFAULT 0 NOT NULL,
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX `user_idx` (`userId` ASC),
@@ -33,11 +38,12 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`question`
 CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`answer`
 (
     `answerId` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `questionId` INT NOT NULL,
+    `questionId` INT NULL,
     `userId` INT NOT NULL,
     `answerBody` TEXT NOT NULL,
-    `upVotes` INT DEFAULT 0 NOT NULL,
-    `downVotes` INT DEFAULT 0 NOT NULL,
+    `totalUpvotes` INT DEFAULT 0 NOT NULL,
+    `totalDownvotes` INT DEFAULT 0 NOT NULL,
+    `isAccepted` BOOLEAN DEFAULT FALSE,
     `createdAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX `question_idx` (`questionId` ASC),
@@ -97,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`user_tag`
             ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`votes`
+CREATE TABLE IF NOT EXISTS `pb2b2324_quumuuteexaa68_live`.`vote`
 (
     `voteId` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `userId` INT NOT NULL,

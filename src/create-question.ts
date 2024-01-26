@@ -1,13 +1,5 @@
 import "./config";
-import {
-    addClickListenersToOptions,
-    handleButtonClick,
-    handleDocumentClick,
-    setupCustomSelect,
-    setupSelectBoxClickHandling,
-    updateSelectedOptions
-} from "./components/customSelect";
-import {CodingTag} from "./models/codingTag";
+import {handleButtonClick} from "./components/customSelect";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
 import {url} from "@hboictcloud/api";
@@ -15,6 +7,7 @@ import {initializeTextEditor} from "./components/initializeTextEditor";
 import {Question} from "./models/question";
 import {showSuccessMessage} from "./components/successMessage";
 import {handleRedirectToQuestionDetail} from "./components/handleRedirects";
+import {initializeTagSelect} from "./components/initializeSelect";
 
 /**
  * The main application entry point for the create-question page.
@@ -30,42 +23,19 @@ async function setup(): Promise<void> {
 
     // If the user is authenticated (loginStatus is true), redirect them to the index.html page.
     if (!loginStatus) {
-        url.redirect("/question-list.html");
+        url.redirect("/questions.html");
     }
-
-    const selectOptions: HTMLElement = document.querySelector(".options") as HTMLElement;
-    if (selectOptions) await populateTagSelect(selectOptions);
 
     // Initialize the text Editor.
     await initializeTextEditor();
+
+    await initializeTagSelect();
 
     // Select all elements with the class "custom-select"
     const postButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector(".btn_submit"));
     const textarea: HTMLDivElement = (<HTMLDivElement>document.querySelector("#text-input"));
     const questionTitleInput: HTMLInputElement = (<HTMLInputElement>document.querySelector(".question-title-input"));
 
-    const customSelects: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".custom-select"));
-    const selectBoxes: NodeListOf<Element> = (<NodeListOf<Element>>document.querySelectorAll(".select-box"));
-
-    // Update selected options for each custom select
-    customSelects.forEach(item => {
-        updateSelectedOptions(item);
-    });
-
-    // Apply setup to all custom select elements
-    customSelects.forEach(setupCustomSelect);
-
-    // Add click event listeners to options within each custom select
-    customSelects.forEach(addClickListenersToOptions);
-
-    // Add a click event listener to the document for handling custom select elements and removing tags
-    document.addEventListener("click", handleDocumentClick);
-
-    // Set up click event handling for select boxes
-    setupSelectBoxClickHandling(selectBoxes);
-
-    // Update selected options for the first custom select (assuming there's at least one)
-    updateSelectedOptions(customSelects[0]);
 
     // Add a click event listener to the submit button to handle the click
     postButton!.addEventListener("click", async function (): Promise<void> {
@@ -139,30 +109,6 @@ async function setup(): Promise<void> {
 // Invoke the question detail page application entry point.
 await setup();
 
-/**
- * Fetches the list of coding tags and populates the select options.
- *
- * @param {Element} optionsBody - The container element where the select options will be appended.
- * @returns {Promise<void>} - A Promise that resolves to undefined when the function completes.
- */
-async function populateTagSelect(optionsBody: Element): Promise<void> {
-    // Fetch the list of coding tags from the server
-    const codingTags: CodingTag[] = await CodingTag.getCodingTags() as CodingTag[];
 
-    // If no coding tags were returned, return early
-    if (codingTags.length === 0) return;
-
-    // Iterate over each coding tag
-    for (const codingTag of codingTags) {
-        // Type assertion to ensure codingTag is an instance of CodingTag
-        const tag: CodingTag = codingTag as CodingTag;
-
-        // Create a new select option with the coding tag's name and id
-        const newOption: string = "<div class=\"option\" tabindex=\"0\" data-value=\"" + tag.tagId + "\">" + tag.tagName + "</div>";
-
-        // Append the new option to the options container
-        optionsBody.innerHTML += newOption;
-    }
-}
 
 

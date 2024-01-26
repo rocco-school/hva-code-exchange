@@ -23,7 +23,7 @@ export class AnswerService {
      */
     public static async saveAnswer(answer: Answer): Promise<Answer> {
         // Querying the database with the new answer data.
-        const param: (string | number | boolean | null)[] = [answer.questionId, answer.userId, answer.answerBody];
+        const param: Array<any> = [answer.questionId, answer.userId, answer.answerBody];
         const newAnswer: any = await api.queryDatabase(ANSWER_QUERY.CREATE_ANSWER, ...param);
 
         // Retrieving the newly created answer from the database.
@@ -47,24 +47,33 @@ export class AnswerService {
      * @throws {Error} Throws an error if the database update was not successful.
      *
      * @description
-     * This static method updates a answer in the database using the provided answer object.
+     * This static method updates an answer in the database using the provided answer object.
      * It destructures the answer object to extract individual properties and then queries the database
      * to perform the update. The method returns a Promise that resolves to the updated answer.
      */
     public static async updateAnswer(answer: Answer): Promise<Answer> {
-        // Destructuring the answer object to get individual properties
-        const answerData: (string | number | boolean | null)[] = [answer.questionId, answer.userId, answer.answerBody];
+        try {
+            // Update the answer in the Answer table.
+            const answerData: any[] = [answer.userId, answer.answerBody, answer.isAccepted, answer.answerId];
 
-        // Querying the database to update the answer with the given answerId.
-        const updatedAnswer: [Answer] = await api.queryDatabase(ANSWER_QUERY.UPDATE_ANSWER, ...answerData) as [Answer];
+            await api.queryDatabase(ANSWER_QUERY.UPDATE_ANSWER, ...answerData);
 
-        // Checking if the database update was successful.
-        if (!updatedAnswer) {
-            throw new Error(`Failed to update answer with ID: ${answer.answerId}`);
+            // Retrieve the updated answer from the database.
+            const getAnswer: [Answer] = await api.queryDatabase(ANSWER_QUERY.SELECT_ANSWER, answer.answerId) as [Answer];
+
+            // Checking if the database retrieval was successful.
+            if (!getAnswer) {
+                new Error(`Failed to get answer: ${answer.answerId}!`);
+            }
+
+            // Return the updated answer.
+            return getAnswer[0] as Answer;
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update answer: ${answer.answerId}: ${error}`);
         }
-
-        return updatedAnswer[0] as Answer;
     }
+
 
     /**
      * Retrieve an answer from the database.
@@ -212,7 +221,7 @@ export class AnswerService {
 
         try {
             // Update the total_upvotes column in the Answer table.
-            const params: number[] = [updateValue, answerId];
+            const params: Array<any> = [updateValue, answerId];
             await api.queryDatabase(ANSWER_QUERY.UPDATE_TOTAL_UPVOTES, ...params);
 
             // Retrieve the updated answer from the database.
@@ -249,7 +258,7 @@ export class AnswerService {
 
         try {
             // Update the total_downvotes column in the Answer table.
-            const params: number[] = [updateValue, answerId];
+            const params: Array<any> = [updateValue, answerId];
             await api.queryDatabase(ANSWER_QUERY.UPDATE_TOTAL_DOWNVOTES, ...params);
 
             // Retrieve the updated answer from the database.
@@ -266,4 +275,33 @@ export class AnswerService {
             throw new Error(`Failed to update total answer downvotes for ${answerId}: ${error}`);
         }
     }
+
+    /**
+     * Retrieves answers associated with a specific user ID.
+     *
+     * @param {number} userId - The ID of the user for whom answers are retrieved.
+     * @returns {Promise<Array<Answer>>} A promise that resolves to an array of Answer objects.
+     * @throws {Error} Throws an error if the retrieval of answers fails.
+     *
+     * @description
+     * This method queries the database to retrieve answers associated with the provided user ID.
+     * It returns a promise that resolves to an array of Answer objects. If the retrieval fails,
+     * it throws an error with an appropriate error message.
+     */
+    public static async getAnswersByUserId(userId: number): Promise<[Answer]> {
+        try {
+            // Use try-catch to handle errors during the asynchronous operation
+            const answers: [Answer] = await api.queryDatabase(ANSWER_QUERY.GET_ANSWERS_BY_USER, userId) as [Answer];
+
+            if (!answers) {
+                throw new Error(`Failed to get answers for the userId ${userId}`);
+            }
+
+            return answers;
+        } catch (error) {
+            // You can log or handle the error appropriately here
+            throw new Error(`Error in getAnswersByUserId for userId ${userId}: ${error}`);
+        }
+    }
+
 }

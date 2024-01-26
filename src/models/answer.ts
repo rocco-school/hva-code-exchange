@@ -5,14 +5,15 @@ export class Answer extends Post {
     // private fields
     private _answerId: number | null;
     private _questionId: number;
-    private _userId: number;
+    private _userId: number | null;
     private _answerBody: string;
     private _totalUpvotes: number | null;
     private _totalDownvotes: number | null;
+    private _isAccepted: boolean;
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(answerId: number | null, questionId: number, userId: number, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(answerId: number | null, questionId: number, userId: number | null, answerBody: string, totalUpvotes: number | null, totalDownvotes: number | null, isAccepted: boolean, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._answerId = answerId;
         this._questionId = questionId;
@@ -20,6 +21,7 @@ export class Answer extends Post {
         this._answerBody = answerBody;
         this._totalUpvotes = totalUpvotes;
         this._totalDownvotes = totalDownvotes;
+        this._isAccepted = isAccepted;
     }
 
     // Getters en setters
@@ -31,7 +33,7 @@ export class Answer extends Post {
         return this._questionId;
     }
 
-    public get userId(): number {
+    public get userId(): number | null{
         return this._userId;
     }
 
@@ -47,6 +49,10 @@ export class Answer extends Post {
         return this._totalDownvotes;
     }
 
+    public get isAccepted(): boolean {
+        return this._isAccepted;
+    }
+
     public set answerId(value: number | null) {
         this._answerId = value;
     }
@@ -55,7 +61,7 @@ export class Answer extends Post {
         this._questionId = value;
     }
 
-    public set userId(value: number) {
+    public set userId(value: number | null) {
         this._userId = value;
     }
 
@@ -71,8 +77,43 @@ export class Answer extends Post {
         this._totalDownvotes = value;
     }
 
+    public set isAccepted(value: boolean) {
+        this._isAccepted = value;
+    }
+
     public toString(): string {
-        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._totalUpvotes} ${this._totalDownvotes} ${this.createdAt} ${this.updatedAt}`;
+        return `Answer: ${this._answerId} ${this._questionId} ${this._userId} ${this._answerBody} ${this._totalUpvotes} ${this._totalDownvotes} ${this._isAccepted} ${this.createdAt} ${this.updatedAt}`;
+    }
+
+    /**
+     * Toggles the isAccepted field and updates the answer in the database using the service.
+     *
+     * @returns {Promise<Answer | string>} A Promise resolving to either the updated answer or an error message.
+     * @throws {Error} Throws an error if the update operation fails.
+     *
+     * @example
+     * const answerToUpdate: Answer = new Answer(
+     *   // ... (your answer initialization parameters)
+     * );
+     *
+     * try {
+     *   const updatedAnswer = await answerToUpdate.toggleIsAcceptedAndUpdate();
+     *   console.log('Answer updated successfully:', updatedAnswer);
+     * } catch (error) {
+     *   console.error('Failed to update answer:', error.message);
+     * }
+     */
+    public async toggleIsAcceptedAndUpdate(): Promise<Answer | string> {
+        // Toggle the isAccepted field
+        this.isAccepted = !this.isAccepted;
+
+        try {
+            // Calling the updateAnswer method from the service.
+            return await AnswerService.updateAnswer(this);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error updating answer: ${error}`;
+        }
     }
 
     /**
@@ -130,6 +171,9 @@ export class Answer extends Post {
      *   questionId,
      *   userId,
      *   answerBody,
+     *   null, // Default totalUpvotes is 0
+     *   null, // Default totalDownvotes is 0
+     *   false, // isAccepted is false.
      *   null, // createdAt
      *   null, // updatedAt auto-updates in the database
      * );
@@ -285,4 +329,32 @@ export class Answer extends Post {
             return `Error updating answer total downvotes: ${error}`;
         }
     }
+
+    /**
+     * Retrieves answers associated with a given user ID.
+     *
+     * @param {number} userId - The unique identifier of the user.
+     * @returns {Promise<[Answer] | string>} A promise that resolves to an array of answers or an error message.
+     * @throws {Error} Throws an error if there is an issue retrieving answers.
+     * @description This function fetches answers for a specific user based on their user ID.
+     *              It returns a promise that resolves to an array of answers or a string
+     *              indicating an error if the retrieval fails.
+     *
+     * @example
+     * const userId = 123;
+     * try {
+     *   const answers = await YourClassName.getAnswersByUserId(userId);
+     *   console.log(answers); // Array of answers or string
+     * } catch (error) {
+     *   console.error(error); // Error message if there's an issue
+     * }
+     */
+    public static async getAnswersByUserId(userId: number): Promise<[Answer] | string> {
+        try {
+            return await AnswerService.getAnswersByUserId(userId);
+        } catch (error) {
+            return `Error getting answers for the userId: ${userId}: ${error}`;
+        }
+    }
+
 }

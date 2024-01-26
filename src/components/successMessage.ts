@@ -43,25 +43,25 @@ export async function showSuccessMessage(message: string, duration: number | nul
 
     // Use a switch statement based on the truthiness of the expression 'type === "success"', 'type === "danger"'.
     switch (true) {
-        // Case: Show success icon
-        case type === "success":
-            successIcon?.classList.remove("hidden");
-            break;
+    // Case: Show success icon
+    case type === "success":
+        successIcon?.classList.remove("hidden");
+        break;
 
         // Case: Show danger (failure) icon
-        case type === "danger":
-            failureIcon?.classList.remove("hidden");
-            break;
+    case type === "danger":
+        failureIcon?.classList.remove("hidden");
+        break;
 
         // Case: Show delete icon, message button, and close button
-        case type === "delete":
-            deleteIcon?.classList.remove("hidden");
-            messageButton?.classList.remove("hidden");
-            closeButton?.classList.remove("hidden");
+    case type === "delete":
+        deleteIcon?.classList.remove("hidden");
+        messageButton?.classList.remove("hidden");
+        closeButton?.classList.remove("hidden");
 
-            // If 'typeOfId' is truthy, add it as a class to 'messageButton'
-            if (typeOfId) messageButton?.classList.add(typeOfId);
-            break;
+        // If 'typeOfId' is truthy, add it as a class to 'messageButton'
+        if (typeOfId) messageButton?.classList.add(typeOfId);
+        break;
     }
 
     // Set the custom message content

@@ -1,6 +1,7 @@
 import {Question} from "../models/question";
 import {api} from "@hboictcloud/api";
 import {QUESTION_QUERY} from "../query/question.query";
+import { Answer } from "../models/answer";
 
 /**
  * A service class for handling operations related to questions in the database.
@@ -51,18 +52,25 @@ export class QuestionService {
      * to perform the update. The method returns a Promise that resolves to the updated question.
      */
     public static async updateQuestion(question: Question): Promise<Question> {
-        // Destructuring the question object to get individual properties
-        const questionData: (string | number | boolean | null)[] = [question.questionTitle, question.questionBody, question.isClosed, question.questionId];
+        try {
+            // Update the question in the Question table.
+            const questionData: (string | number | boolean | null)[] = [question.userId, question.questionTitle, question.questionBody, question.isClosed, question.questionId];
+            await api.queryDatabase(QUESTION_QUERY.UPDATE_QUESTION, ...questionData);
 
-        // Querying the database to update the question with the given questionId.
-        const updatedQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.UPDATE_QUESTION, ...questionData) as [Question];
+            // Retrieve the updated question from the database.
+            const getQuestion: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION, question.questionId) as [Question];
 
-        // Checking if the database update was successful.
-        if (!updatedQuestion) {
-            throw new Error(`Failed to update question with ID: ${question.questionId}`);
+            // Checking if the database retrieval was successful.
+            if (!getQuestion) {
+                new Error(`Failed to get question: ${question.questionId}!`);
+            }
+
+            // Return the updated question.
+            return getQuestion[0] as Question;
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update question: ${question.questionId}: ${error}`);
         }
-
-        return updatedQuestion[0] as Question;
     }
 
     /**
@@ -270,4 +278,87 @@ export class QuestionService {
             throw new Error(`Failed to update total question downvotes for ${questionId}: ${error}`);
         }
     }
+
+
+    /**
+     * Gets the maximum number of question pages from the database.
+     *
+     * @returns {Promise<number>} A Promise resolving to the maximum number of question pages.
+     * @throws {Error} Throws an error if the database retrieval fails.
+     *
+     * @description
+     * This static method retrieves the maximum number of question pages from the database using a specified query.
+     * It returns a Promise that resolves to the maximum number of question pages.
+     */
+    public static async getMaxQuestionPages(itemsPerPage: number): Promise<number> {
+        // Querying the database to retrieve questions for the specified question.
+        const maxPages: any = await api.queryDatabase(QUESTION_QUERY.GET_MAX_QUESTION_PAGES, itemsPerPage);
+
+        // Checking if the database retrieval was successful.
+        if (!maxPages) {
+            throw new Error("Failed to retrieve max pages for question from the Database!");
+        }
+
+        return maxPages[0]["max_pages"];
+    }
+
+    /**
+     * Retrieves questions associated with a specific user from the database using the provided user ID.
+     *
+     * @param {number} userId - The unique identifier of the user.
+     * @returns {Promise<[Question]>} A Promise resolving to an array of questions for the specified user.
+     * @throws {Error} Throws an error if the retrieval operation fails or if no questions are found.
+     *
+     * @description
+     * This static method queries the database using the `api` service and the `QUESTION_QUERY.GET_QUESTIONS_BY_USER`
+     * query to retrieve questions associated with a specific user. It expects the result to be an array of questions
+     * and handles the case where no questions are found. The function returns a Promise that resolves to the array of questions.
+     */
+    public static async getMostRecentQuestionByUser(userId: number): Promise<[Question]> {
+        try {
+            // Query the database using the provided user ID.
+            const question: [Question] = await api.queryDatabase(QUESTION_QUERY.GET_RECENT_QUESTIONS_BY_USER, userId) as [Question];
+
+            if (!question) {
+                // Throw an error if no questions are found for the specified user.
+                throw new Error(`Failed to get question for user with ID ${userId}!`);
+            }
+
+            return question;
+        } catch (error) {
+            // Forward any errors that occur during the database query.
+            throw new Error(`Error retrieving questions for user with ID ${userId}: ${error}`);
+        }
+    }
+
+    /**
+     * Gets the most recent questions answered by a user.
+     *
+     * @param {number | null} userId - The ID of the user or null if not provided.
+     * @returns {Promise<[Question]>} A promise that resolves to an array of questions.
+     *
+     * @throws {Error} If there is an error retrieving questions or if no questions are found for the specified user.
+     *
+     * @description
+     * This function retrieves the most recent questions that have been answered by the specified user.
+     * If the operation is successful, it returns an array of questions; otherwise, it throws an error.
+     */
+    public static async getMostRecentQuestionsByAnswer(userId: number | null): Promise<[Question]> {
+        try {
+            // Use api.queryDatabase to fetch most recent questions by answer ID
+            const questions: [Question] = await api.queryDatabase(QUESTION_QUERY.SELECT_QUESTION_BY_ANSWER_ID, userId) as [Question];
+
+            if (!questions) {
+                // Throw an error if no questions are found for the specified user
+                throw new Error(`Failed to get questions for user with ID ${userId}!`);
+            }
+            
+            return questions;
+        } catch (error) {
+            // Throw an error if there is an issue retrieving questions
+            throw new Error(`Error retrieving questions for user with ID ${userId}: ${error}`);
+        }
+    }
+
+
 }

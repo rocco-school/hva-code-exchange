@@ -6,7 +6,7 @@ import {Post} from "./post";
 export class Question extends Post {
     // private fields
     private _questionId: number | null;
-    private _userId: number;
+    private _userId: number | null;
     private _questionTitle: string;
     private _questionBody: string;
     private _isClosed: boolean;
@@ -15,7 +15,7 @@ export class Question extends Post {
 
     // The constructor is called once when the class is instantiated.
     // This constructor fills the fields when creating an object.
-    public constructor(questionId: number | null, userId: number, questionTitle: string, questionBody: string, isClosed: boolean, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
+    public constructor(questionId: number | null, userId: number | null, questionTitle: string, questionBody: string, isClosed: boolean, totalUpvotes: number | null, totalDownvotes: number | null, createdAt: Date | null, updatedAt: Date | null) {
         super(createdAt, updatedAt);
         this._questionId = questionId;
         this._userId = userId;
@@ -31,7 +31,7 @@ export class Question extends Post {
         return this._questionId;
     }
 
-    public get userId(): number {
+    public get userId(): number | null {
         return this._userId;
     }
 
@@ -59,7 +59,7 @@ export class Question extends Post {
         this._questionId = value;
     }
 
-    public set userId(value: number) {
+    public set userId(value: number | null) {
         this._userId = value;
     }
 
@@ -399,5 +399,99 @@ export class Question extends Post {
             return `Error updating question total downvotes: ${error}`;
         }
     }
+
+
+    /**
+     * Gets the maximum number of question pages using the QuestionService.
+     *
+     * @returns {Promise<number | string>} A Promise resolving to the maximum number of question pages or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method calls the getMaxQuestionPages method from the QuestionService to retrieve
+     * the maximum number of question pages. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * the maximum number of question pages or an error message.
+     *
+     * @example
+     * // Example: Get the maximum number of question pages.
+     * try {
+     *   const maxPages = await Question.getMaxQuestionPages();
+     *   console.log('Maximum question pages retrieved successfully:', maxPages);
+     * } catch (error) {
+     *   console.error('Failed to retrieve max question pages:', error);
+     * }
+     */
+    public static async getMaxQuestionPages(itemsPerPage: number): Promise<number | string> {
+        try {
+            // Calling the getMaxQuestionPages method from the service.
+            return await QuestionService.getMaxQuestionPages(itemsPerPage);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error retrieving max question pages: ${error}`;
+        }
+    }
+
+    /**
+     * Retrieves questions associated with a specific user from the QuestionService.
+     *
+     * @param {number} userId - The unique identifier of the user.
+     * @returns {Promise<[Question] | string>} A Promise resolving to an array of questions or an error message.
+     * @throws {Error} Throws an error if the retrieval operation fails.
+     *
+     * @description
+     * This static method calls the getQuestionByUser method from the QuestionService to retrieve
+     * questions associated with a specific user. It forwards the request to the service layer, handling any
+     * errors that may occur during the process. The function returns a Promise that resolves to either
+     * an array of questions or an error message.
+     *
+     * @example
+     * // Example: Get questions for a specific user.
+     * try {
+     *   const userQuestions = await Question.getQuestionsByUser(123);
+     *   console.log('User questions retrieved successfully:', userQuestions);
+     * } catch (error) {
+     *   console.error('Failed to retrieve user questions:', error);
+     * }
+     */
+    public static async getMostRecentQuestionsByUser(userId: number): Promise<[Question] | string> {
+        try {
+            // Calling the getQuestionByUser method from the service.
+            return await QuestionService.getMostRecentQuestionByUser(userId);
+        } catch (error) {
+            // Handling any errors that occur during the process.
+            return `Error getting questions by user ${error}`;
+        }
+    }
+
+    /**
+     * Gets the most recent questions answered by a user.
+     *
+     * @param {number | null} userId - The ID of the user or null if not provided.
+     * @returns {Promise<[Question] | string>} A promise that resolves to an array of questions or an error message.
+     * 
+     * @description This function retrieves the most recent questions that have been answered by the specified user.
+     * If the operation is successful, it returns an array of questions; otherwise, it returns an error message.
+     * 
+     * @example
+     * // Example usage:
+     * const userId = 123;
+     * try {
+     *   const recentQuestions = await Question.getMostRecentQuestionsByAnswer(userId);
+     *   console.log("Recent Questions:", recentQuestions);
+     * } catch (error) {
+     *   console.error("Error:", error);
+     * }
+     */
+    public static async getMostRecentQuestionsByAnswer(userId: number | null): Promise<[Question] | string> {
+        try {
+            // Call the QuestionService to get most recent questions by answer
+            return await QuestionService.getMostRecentQuestionsByAnswer(userId);
+        } catch (error) {
+            // Handle errors and return an error message
+            return `Error getting answers for the userId ${userId}: ${error}`;
+        }
+    }
+
 }
 

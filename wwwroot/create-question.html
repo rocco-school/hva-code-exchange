@@ -7,53 +7,106 @@
     <title>SE Code Exchange</title>
 
     <script src="https://kit.fontawesome.com/c907be94f8.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./assets/css/general.css"/>
-    <link rel="stylesheet" href="./assets/css/navbar.css"/>
-    <link rel="stylesheet" href="./assets/css/sidebar.css"/>
+    <link rel="stylesheet" href="assets/css/general.css"/>
+    <link rel="stylesheet" href="assets/css/navbar.css"/>
+    <link rel="stylesheet" href="assets/css/sidebar.css"/>
     <link rel="stylesheet" href="assets/css/page/create-question.css"/>
+    <link rel="stylesheet" href="assets/css/custom-select.css"/>
     <link rel="stylesheet" href="assets/css/text-editor.css"/>
+    <link rel="stylesheet" href="assets/css/component/hide.css"/>
 </head>
 <body>
 <!-- This HTML page is called first when the website is called in the browser -->
 
 <!-- Sidebar Section -->
 <aside class="sidebarMenu">
-    <div class="container">
-        <!-- Close button for the sidebar -->
-        <div><img id="sidebarClose" class="siderbarClose" src="assets/img/svg/burgerMenuClose.svg"
-                  alt="siderbarClose"></div>
-        <!-- Sidebar menu buttons -->
-        <ul class="containerButtons">
-            <li>
-                <button id="homeButton">Home</button>
-            </li>
-            <li>
-                <button id="aboutButton">about</button>
-            </li>
-            <li>
-                <button id="questionsButton">Questions</button>
-            </li>
-        </ul>
+    <div class="sidebarContainer">
+        <div class="containerButtons">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="index.html" class="buttonItem" id="homeButton">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="questions.html" class="buttonItem" id="questionsButton">
+                        <i class="fa-solid fa-circle-question"></i>
+                        <span>Questions</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover hidden">
+                    <a href="user-page.html" class="buttonItem" id="profileButton">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User profile</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebarContainer logButtonsContainer">
+        <div class="containerButtons containerLogButtons hidden">
+            <div class="sidebarButtons">
+                <div class="sidebarButtons-cover">
+                    <a href="login.html" class="buttonItem" id="login-button">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Login</span>
+                    </a>
+                </div>
+
+                <div class="sidebarButtons-cover">
+                    <a href="signup.html" class="buttonItem" id="signup-button">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Signup</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </aside>
-
 <!-- Navbar Section -->
 <nav class="navbar">
-    <ul class="container">
-        <!-- Burger menu icon -->
-        <li><img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu"></li>
-        <!-- Code Exchange logo -->
-        <li><img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo"></li>
-        <!-- Search bar input -->
-        <li><input id="searchBarInput" type="text" placeholder="  search..."></li>
-        <!-- Sign up and log in buttons -->
-        <li>
-            <button id="signupButton">sign up</button>
-        </li>
-        <li>
-            <button id="loginButton">log in</button>
-        </li>
-    </ul>
+    <div class="container">
+        <img id="burgerMenu" class="burgerMenu" src="assets/img/svg/burgerMenu.svg" alt="burgerMenu">
+
+        <div class="centered-block">
+            <img id="codeExchangeLogo" src="assets/img/code_exchange.png" alt="codeExchangeLogo">
+        </div>
+        <div class="end-block">
+            <div class="logged-out hidden">
+                <button id="signupButton">sign up</button>
+                <button id="loginButton">log in</button>
+            </div>
+
+            <div class="profile-block hidden">
+                <img tabindex="0" class="profilePicture" src="" alt="Profile picture Button">
+
+                <div class="userDropdown hidden">
+                    <div id="arrow" class="tooltip-arrow-up"></div>
+
+                    <div class="personalInfo">
+                        <div class="nameCardUsername"></div>
+                        <div class="nameCardEmail"></div>
+                    </div>
+                    <ul class="avatarButtons" aria-labelledby="avatarButton">
+                        <li class="avatarButton-cover">
+                            <a href="user-page.html" class="avatarButton"><i
+                                class="fa-solid fa-chart-pie"></i> Dashboard</a>
+                        </li>
+                    </ul>
+                    <div class="sign-out-block py-1">
+                        <a tabindex="0" class="avatarButton signOut"><i
+                            class="fa-solid fa-right-from-bracket"></i> Sign out</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </nav>
 
 
@@ -146,8 +199,10 @@
             <div class="question-title-container">
                 <div class="custom-text-field">
                     <label for="questionTitle" class="label">Title</label>
-
-                    <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"/>
+                    <p class="title-helper-text">Be specific and imagine you’re asking a question to another
+                        person.</p>
+                    <input type="text" id="questionTitle" name="questionTitle" class="question-title-input"
+                           placeholder="Type a short, descriptive title for your question..."/>
                 </div>
             </div>
         </section>
@@ -164,15 +219,9 @@
                             <button id="codeBlock" class="option-button text-editor-button">
                                 <i class="fa-solid fa-code"></i>
                             </button>
-                            <button id="superscript" class="option-button script text-editor-button">
-                                <i class="fa-solid fa-superscript"></i>
-                            </button>
-                            <button id="subscript" class="option-button script text-editor-button">
-                                <i class="fa-solid fa-subscript"></i>
-                            </button>
 
                             <button id="insertOrderedList" class="option-button text-editor-button">
-                                <div class="fa-solid fa-list-ol"></div>
+                                <i class="fa-solid fa-list-ol"></i>
                             </button>
                             <button id="insertUnorderedList" class="option-button text-editor-button">
                                 <i class="fa-solid fa-list"></i>
@@ -231,7 +280,7 @@
                             </div>
 
                         </div>
-                        <div id="text-input" contenteditable="true"></div>
+                        <div id="text-input" tabindex="0" contenteditable="true"></div>
                     </div>
                 </div>
             </div>
@@ -263,7 +312,6 @@
                             <div class="option all-tags" tabindex="0" data-value="All">Select All</div>
                             <div class="no-result-message hidden">No result match</div>
                         </div>
-                        <div class="tag_error_msg error"></div>
                     </div>
                 </div>
             </div>

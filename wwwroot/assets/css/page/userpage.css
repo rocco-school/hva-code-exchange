@@ -1,0 +1,472 @@
+* {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+}
+
+body {
+    --tw-bg-opacity: 1;
+    background-color: rgb(249 250 251/var(--tw-bg-opacity));
+}
+
+.profileTabs {
+    display: flex;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding: 1rem 2rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .profileTabs {
+        margin-left: 14.5rem;
+    }
+}
+
+
+.profileTabsContainer {
+    display: flex;
+    padding: .5rem;
+    box-shadow: 0 5px 4px rgba(0, 0, 0, 0.01), 0 1px 1px rgba(0, 0, 0, 0.1);
+    column-gap: 0.25rem;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 0.75rem;
+}
+
+
+.profile-tab {
+    display: flex;
+    align-items: center;
+    border-radius: 0.75rem;
+    column-gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 75ms;
+}
+
+.profile-tab:hover {
+    background-color: #F9FAFB;
+    color: #0492C2;
+}
+
+.is-active {
+    color: #0492C2;
+    background-color: #F9FAFB;
+}
+
+.edit-block, .question-box, .answer-box {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 2rem;
+    margin-bottom: 5rem;
+}
+
+@media only screen and (min-width: 480px) {
+    .edit-block--inner {
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.field-container {
+    justify-self: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Initially, 4 boxes next to each other */
+    gap: 3rem; /* Adjust the gap between the boxes */
+}
+
+@media (max-width: 1440px) {
+    /* On screens with a maximum width of 768px and below, change to 2 boxes next to each other */
+    .field-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 850px) {
+    /* On screens with a maximum width of 768px and below, change to 2 boxes next to each other */
+    .field-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+
+
+@media only screen and (min-width: 1024px) {
+    .field-container {
+        max-width: 100%;
+        gap: 2rem;
+    }
+}
+
+.grid-item {
+    max-width: 20rem;
+}
+
+.blockTitle {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+
+.subtitle {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 2rem;
+    font-size: 0.8rem;
+}
+
+.info-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.infoBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.firstnameBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.lastnameBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.nameInfo {
+    gap: 1rem;
+}
+
+.profileHeader {
+    padding-top: 3.5rem;
+    border-bottom: 1px #ced4da solid;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .profileHeader {
+        margin-left: 14.5rem;
+    }
+
+}
+
+.profileHeaderContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 2rem 0 2rem 1rem;
+}
+
+.profileNameCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+@media only screen and (min-width: 1024px) {
+    .profileHeaderContainer {
+        flex-direction: row;
+    }
+
+    .profileNameCard {
+        flex-direction: row;
+    }
+}
+
+.nameAndRankContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+@media only screen and (min-width: 1024px) {
+    .nameAndRankContainer {
+        margin-top: 0;
+        margin-left: 2rem;
+        text-align: start;
+    }
+
+}
+
+.userStatsContainer {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    gap: .5rem;
+    margin-top: .5rem;
+}
+
+.memberSinceBlock {
+    display: flex;
+    gap: 1rem;
+}
+
+.experienceBlock {
+    display: flex;
+    gap: 1rem;
+}
+
+.profileTabsContainer {
+    display: flex;
+    list-style: none;
+}
+
+
+.profileStats {
+    display: flex;
+    flex-direction: column;
+}
+
+.profileExpertise {
+    display: flex;
+    flex-direction: row;
+}
+
+.editProfileSection {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .editProfileSection {
+        padding-left: 14.5rem;
+    }
+}
+
+.passwordSection {
+    display: flex;
+    justify-content: center;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .passwordSection {
+        margin-left: 14.5rem;
+    }
+}
+
+
+.passwordSectionContainer {
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 2rem;
+    padding: 2rem;
+}
+
+.errorMessage {
+    margin-bottom: 1rem;
+    text-align: center;
+    max-width: 30rem;
+    color: darkred;
+}
+
+.passwordSectionTitle {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+.passwordCloseBtn {
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 1rem;
+    justify-self: end;
+}
+
+.passwordCloseBtn:hover {
+    transform: scale(1.5);
+}
+
+.changePasswordBtn {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    font-size: 1rem;
+    margin: auto;
+}
+
+.passwordInputs {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.passwordBox {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputBox {
+    height: 1rem;
+    padding: .4rem;
+    --tw-bg-opacity: 1;
+    background-color: rgb(249 250 251/var(--tw-bg-opacity));
+    --tw-border-opacity: 1;
+    border-color: rgb(209 213 219/var(--tw-border-opacity));
+    border-width: 1px;
+    border-radius: 0.5rem;
+    border-style: solid;
+}
+
+.inputLabel {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.profile-pic {
+    color: transparent;
+    display: flex;}
+
+
+.profile-picture {
+    object-fit: cover;
+    width: 135px;
+    height: 135px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 1);
+    border-radius: 100px;
+    z-index: 0;
+}
+
+.editTitle {
+    text-align: center;
+    margin: auto auto 1rem;
+}
+
+.edit-title {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.questionBoxes {
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+@media only screen and (min-width: 1024px) {
+    .questionBoxes {
+        margin-left: 14.5rem;
+    }
+}
+
+.questionBoxesContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.questionSection, .answerSection {
+    width: 50%;
+}
+
+.question-box, .answer-box{
+    display: flex;
+    flex-direction: column;
+}
+
+.question-box:hover, .answer-box:hover {
+    cursor: pointer;
+    background-color:#ced4da;
+}
+
+.image-container {
+    position: relative;
+    width: 300px; /* Adjust this width as needed */
+    padding-top: 100%; /* Creates a square aspect ratio */
+    cursor: pointer;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    border-radius: .5rem;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(75, 85, 99, 0.5); /* bg-gray-900/50 */
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 0.5rem; /* rounded-lg */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.image-container:hover .overlay {
+    opacity: 1;
+}
+
+.download-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    outline: none;
+    cursor: pointer;
+    background-color: transparent;
+    border: 0;
+}
+
+.download-icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 10;
+    visibility: hidden;
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    background-color: rgba(55, 65, 81, 1); /* bg-gray-900 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-arrow {
+    /* Style for tooltip arrow */
+}
+
+.image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem; /* rounded-lg */
+}

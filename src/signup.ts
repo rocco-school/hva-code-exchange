@@ -5,6 +5,7 @@ import {hashPassword} from "./components/hashPassword";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
 import {security} from "./components/security";
+import {togglePasswordVisibility} from "./components/handlePasswordVisibility";
 
 /**
  * The main application entry point for the signup page.
@@ -26,6 +27,7 @@ async function setup(): Promise<void> {
 
     // keeps redirect message hidden
     document.getElementsByTagName("section")[0].setAttribute("style", "display:none");
+    document.getElementsByClassName("alert-danger")[0].setAttribute("style", "display:none");
 
     const firstnameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("firstname"));
     const lastnameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("lastname"));
@@ -45,6 +47,8 @@ async function setup(): Promise<void> {
     // Regular Expression for firstname and lastname
     // only letters are allowed and numbers are not allowed
     const nameRegEx: RegExp = /^[a-zA-Z\s]+$/;
+
+    document.querySelectorAll(".icon-eye").forEach(togglePasswordVisibility);
 
     if (submitButton) {
         submitButton.addEventListener("submit", async function (e: any): Promise<void> {
@@ -93,9 +97,8 @@ async function setup(): Promise<void> {
                             // Log the newly created user.
                             console.log("User signed up successfully:", newUser);
 
-
                             // TODO:add popup to tell user successfully signed up
-                            // location.replace("login.html");
+                            location.replace("login.html");
                         }
                     } catch (e) {
                         // Handle unexpected errors during sign-up.
@@ -237,7 +240,7 @@ async function signUpDatabase(firstnameInput: string, lastnameInput: string, use
             .catch((error: Error) => {
                 console.error("Error inserting user:", error);
                 throw error; // Propagate the error for external handling.
-            }) as User;
+            }) as unknown as User;
     } catch (error) {
         // If an unexpected error occurs, return an error object.
         console.error("Unexpected error during user sign-up:", error);

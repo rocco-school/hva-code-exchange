@@ -53,22 +53,25 @@ export class CodingTagService {
      * that resolves to the updated codingTag. If the database update is not successful, it throws an error.
      */
     public static async updateCodingTag(codingTag: CodingTag): Promise<CodingTag> {
-        // Destructuring the codingTag object to get individual properties.
-        const codingTagData: (string | number | null)[] = [codingTag.tagDescription, codingTag.tagName, codingTag.tagId];
+        try {
+            // Update the codingTag in the CodingTag table.
+            const codingTagData: (string | number | null)[] = [codingTag.tagDescription, codingTag.tagName, codingTag.tagId];
+            await api.queryDatabase(CODING_TAG_QUERY.UPDATE_CODING_TAG, ...codingTagData);
 
-        // Querying the database to update the codingTag with the given tagId.
-        const updatedCodingTag: [CodingTag] = await api.queryDatabase(
-            CODING_TAG_QUERY.UPDATE_CODING_TAG,
-            ...codingTagData
-        ) as [CodingTag];
+            // Retrieve the updated codingTag from the database.
+            const getCodingTag: [CodingTag] = await api.queryDatabase(CODING_TAG_QUERY.SELECT_CODING_TAG, codingTag.tagId) as [CodingTag];
 
-        // Checking if the database update was successful.
-        if (!updatedCodingTag) {
-            throw new Error(`Failed to update codingTag with ID: ${codingTag.tagId}`);
+            // Checking if the database retrieval was successful.
+            if (!getCodingTag) {
+                new Error(`Failed to get codingTag: ${codingTag.tagId}!`);
+            }
+
+            // Return the updated codingTag.
+            return getCodingTag[0] as CodingTag;
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update codingTag: ${codingTag.tagId}: ${error}`);
         }
-
-        // Returning the updated codingTag.
-        return updatedCodingTag[0] as CodingTag;
     }
 
     /**
@@ -146,5 +149,108 @@ export class CodingTagService {
 
         // If affectedRows is not 0 or greater than 0, something unexpected happened.
         throw new Error(`Failed to delete codingTag with ID: ${tagId}`);
+    }
+
+
+    /**
+     * Retrieves all coding tags associated with a specific question from the database.
+     *
+     * @param {number} questionId - The ID of the question for which coding tags are to be retrieved.
+     * @returns {Promise<[CodingTag]>} - A promise that resolves to an array of coding tags.
+     * @throws {Error} - Throws an error if the database retrieval fails.
+     *
+     * @description
+     * This static method queries the database to delete a specific coding tag with the given tagId.
+     * It returns a Promise that resolves to a boolean indicating whether the deletion was successful.
+     * If the database deletion is not successful, it throws an error.
+     */
+    public static async getAllCodingTagsForQuestion(questionId: number): Promise<[CodingTag]> {
+        // Querying the database to get coding tags associated with the question.
+        const codingTags: any = await api.queryDatabase(CODING_TAG_QUERY.GET_CODING_TAGS_BY_QUESTION_ID, questionId) as any;
+
+        // Extracting unique tagIds from the result.
+        const uniqueTagIds: any = [...new Set(codingTags.map((item: { tagId: any; }) => item.tagId))];
+
+        // Fetching coding tags for each unique tagId.
+        const tagsArray: [CodingTag] = await Promise.all(
+            uniqueTagIds.map(async (tagId: any) => {
+                const codingTag: string | CodingTag = await CodingTag.retrieveCodingTag(tagId);
+                return codingTag;
+            })
+        ) as [CodingTag];
+
+        // Checking if the database retrieval was successful.
+        if (!tagsArray) {
+            throw new Error(`Failed to retrieve Coding tags with questionID: ${questionId}`);
+        }
+
+        // Returning the retrieved coding tags.
+        return tagsArray as [CodingTag];
+    }
+
+
+    /**
+     * Remove all coding tags associated with a specific question from the database.
+     *
+     * @param {number} questionId - The ID of the question for which coding tags are to be removed.
+     * @returns {Promise<boolean>} - A Promise resolving to a boolean indicating the success of the removal.
+     * @throws {Error} - Throws an error if there is an issue with the database removal process.
+     *
+     * @description
+     * This static method queries the database to remove all coding tags associated with a specific question.
+     * It returns a Promise that resolves to a boolean indicating whether the removal was successful.
+     * If the database removal is not successful, it throws an error.
+     */
+    public static async removeAllQuestionTags(questionId: number): Promise<boolean> {
+        // Querying the database to remove all coding tags associated with the question.
+        const deletedQuestionTags: any = await api.queryDatabase(
+            CODING_TAG_QUERY.DELETE_ALL_QUESTION_TAGS_BY_QUESTION_ID,
+            questionId
+        ) as any;
+
+        // Checking if the database removal was successful.
+        if (deletedQuestionTags.affectedRows === 0) {
+            return false; // No rows affected, indicating no coding tags were found for the question.
+        }
+
+        if (deletedQuestionTags.affectedRows > 0) {
+            return true; // Removal successful.
+        }
+
+        // If affectedRows is not 0 or greater than 0, something unexpected happened.
+        throw new Error(`Failed to remove question tags with questionId: ${questionId}`);
+    }
+
+
+    /**
+     * Remove all coding tags associated with a specific user from the database.
+     *
+     * @param {number} userId - The ID of the user for which coding tags are to be removed.
+     * @returns {Promise<boolean>} - A Promise resolving to a boolean indicating the success of the removal.
+     * @throws {Error} - Throws an error if there is an issue with the database removal process.
+     *
+     * @description
+     * This static method queries the database to remove all coding tags associated with a specific user.
+     * It returns a Promise that resolves to a boolean indicating whether the removal was successful.
+     * If the database removal is not successful, it throws an error.
+     */
+    public static async removeAllUserTags(userId: number): Promise<boolean> {
+        // Querying the database to remove all coding tags associated with the user.
+        const deletedUserTags: any = await api.queryDatabase(
+            CODING_TAG_QUERY.DELETE_ALL_USER_TAGS_BY_USER_ID,
+            userId
+        ) as any;
+
+        // Checking if the database removal was successful.
+        if (deletedUserTags.affectedRows === 0) {
+            return false; // No rows affected, indicating no coding tags were found for the user.
+        }
+
+        if (deletedUserTags.affectedRows > 0) {
+            return true; // Removal successful.
+        }
+
+        // If affectedRows is not 0 or greater than 0, something unexpected happened.
+        throw new Error(`Failed to remove user tags with userId: ${userId}`);
     }
 }

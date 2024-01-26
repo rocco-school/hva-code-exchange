@@ -1,56 +1,64 @@
-```mermaid
 classDiagram
+
     class User {
-        -number userId
         -string firstname
         -string lastname
         -string username
         -string password
         -string email
 
-        +toString()
+        +getQuestions()
+        +getAnswers()
+        +getExpertise()
+        +save()
+        +update()
+        +delete()
     }
+    
+    class Post {
+        -Date createdAt
+        -Date updatedAt
 
+        +save()
+        +update()
+        +delete()
+    }
+    
     class Question {
         -string questionTitle
         -string questionBody
         -boolean isClosed
-
-        +toString()
-        +saveQuestion()
-        +updateQuestion()
-        +getQuestion()
-        +retrieveQuestion()
-        +insertQuestionTag()
-        +deleteQuestion()
+    
+        +getUser()
+        +getAnswers()
+        +getCodingTags()
     }
-
+    
     class Answer {
         -string answerBody
-
-        +toString()
+    
+        +getQuestion()
+        +getUser()
     }
-
+    
     class CodingTag {
-        -number tagId
         -String tagName
         -String tagDescription
-
-        +toString()
-        +saveCodingTag()
-        +getCodingTags()
-        +retrieveCodingTags()
-        +deleteCodingTag()
+    
+        +getQuestions()
+        +getUsers()
+        +save()
+        +update()
+        +delete()
     }
-
-
-    User "1" --* "0..*" Question
-    User "1" --* "0..*" Answer
-
-    Question "1" --* "0..*" Answer
-
-    User "1" --* "0..*" Post
+    
     Question --|> Post
     Answer --|> Post
-    Question "0..*" --* "1..*" CodingTag
-    User "0..*" --* "0..*" CodingTag
+    
+    Question "0..*" --* "1" User
+    Answer "0..*" --* "1" User
+    CodingTag "0..*" --* "0..*" User
+    
+    Answer "0..*" --* "1" Question
+    
+    CodingTag "1..*" --* "0..*" Question

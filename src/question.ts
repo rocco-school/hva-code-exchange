@@ -1,6 +1,5 @@
 import "./config";
 import {Question} from "./models/question";
-import {QuestionService} from "./services/questionService";
 import {AnswerWithUser} from "./models/interface/answerWithUser";
 import {User} from "./models/user";
 import {JWTPayload} from "jose";
@@ -13,6 +12,22 @@ import {PostType} from "./enum/postType";
 import {handleAnswerDownvote, handleQuestionDownvote} from "./components/handleDownvotes";
 import {initializeTextEditor} from "./components/initializeTextEditor";
 import {CodingTag} from "./models/codingTag";
+import {url, utils} from "@hboictcloud/api";
+import {
+    addCertifyClickListener,
+    addEditButtonListeners,
+    addEventListeners,
+    formatDates,
+    getCertifyVisibility,
+    getCheckMarkUrl,
+    getExtraClass,
+    getUpvoteCount,
+    getUserExpertise,
+    getUsername
+} from "./components/handleInitializeAnswers";
+import {createAnswerElement, createQuestionPerson} from "./components/htmlTemplate";
+import {getProfilePicturePath} from "./components/handleProfilePicture";
+
 // Declare eventId at a higher scope, making it accessible to multiple functions.
 let questionId: string | any = "";
 
@@ -35,7 +50,9 @@ async function setup(): Promise<void> {
     const userId: number = loginStatus["userId"] as number;
 
     // Retrieves a question from the database based on the URL parameter question ID.
-    const question: Question = await QuestionService.retrieveQuestion(questionId);
+    const question: Question = await Question.retrieveQuestion(questionId) as Question;
+
+    await generateQuestionUserInfo(question.userId, question);
 
     // If the question does not exist, redirect to the index page
     if (!question) location.replace("index.html");
@@ -43,14 +60,40 @@ async function setup(): Promise<void> {
     // Initialize the text editor.
     await initializeTextEditor();
 
+    const tooltipUpvote: HTMLDivElement = (<HTMLDivElement>document.querySelector(".tooltip-upvote"));
+    const tooltipDownvote: HTMLDivElement = (<HTMLDivElement>document.querySelector(".tooltip-downvote"));
+
     // Calculate the upvote count for the question
     const upvoteSum: number = question.totalUpvotes! - question.totalDownvotes!;
+    tooltipUpvote.innerHTML = "Currently " + question.totalUpvotes + " upvote('s) on this question!";
+    tooltipDownvote.innerHTML = "Currently " + question.totalDownvotes + " downvote('s) on this question!";
     (<HTMLInputElement>document.querySelector(".upvote-count")).innerHTML = upvoteSum.toString();
     (<HTMLInputElement>document.querySelector(".question-title")).innerHTML = <string>question?.questionTitle;
     (<HTMLInputElement>document.querySelector(".question-body")).innerHTML = <string>question?.questionBody;
 
+    if (userId === question.userId) {
+        (<HTMLButtonElement>document.querySelector(".question-edit")).classList.remove("hidden");
+        (<HTMLButtonElement>document.querySelector(".question-divider")).classList.remove("hidden");
+    }
+
     // Populate all answers by questionID
     await addAnswersToPage(userId);
+
+    (<HTMLInputElement>document.querySelector(".upvote-question")).addEventListener("mouseenter", () => {
+        tooltipUpvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".upvote-question")).addEventListener("mouseleave", () => {
+        tooltipUpvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".downvote-question")).addEventListener("mouseenter", () => {
+        tooltipDownvote.classList.toggle("show-tooltip");
+    });
+
+    (<HTMLInputElement>document.querySelector(".downvote-question")).addEventListener("mouseleave", () => {
+        tooltipDownvote.classList.toggle("show-tooltip");
+    });
 
     // Add event listeners for upvoting and downvoting the question
     (<HTMLElement>document.querySelector(".upvote-question")).addEventListener("click", async (): Promise<void> => {
@@ -66,6 +109,16 @@ async function setup(): Promise<void> {
         item.addEventListener("click", async (): Promise<void> => {
             await showSuccessMessage("Are you sure you want to delete this Answer?", null, "delete", parseInt(item.id), "answer");
         });
+    });
+
+    (<HTMLDivElement>document.querySelector(".edit-button")).addEventListener("click", async (): Promise<void> => {
+        // Create a new URL with the updated page number
+        const newURL: string = utils.createUrl("edit-form.html", {
+            postType: PostType.QUESTION,
+            id: questionId
+        });
+
+        url.redirect(newURL);
     });
 
     // Add event listener for continuing the delete operation
@@ -116,6 +169,7 @@ async function setup(): Promise<void> {
             newAnswerTextBody.innerHTML,
             null,
             null,
+            false,
             null,
             null
         );
@@ -137,6 +191,74 @@ async function setup(): Promise<void> {
 
 // Invoke the question detail page application entry point.
 await setup();
+
+
+/**
+ * Generates and displays user information for a given user ID within a question.
+ *
+ * @param {number | null} userId - The ID of the user for whom the information is generated.
+ * @param {Question} question - The Question Object with whom the information is generated.
+ * @returns {Promise<void>} A Promise that resolves when the function completes successfully.
+ */
+async function generateQuestionUserInfo(userId: number | null, question: Question): Promise<void> {
+    let totalAnswers: number = 0;
+    let totalQuestions: number = 0;
+    let username: string = "Unknown user";
+    let userExpertise: string = "Unknown user";
+    let AvatarUrl: string = "https://ui-avatars.com/api/?name=Unknown+user&background=random";
+
+    if (userId) {
+        const user: User = await User.retrieveUser(userId) as User;
+
+        // Get total answers and total questions count for the user
+        totalAnswers = await User.getTotalAnswers(user.userId) as number;
+        totalQuestions = await User.getTotalQuestions(user.userId) as number;
+        username = user.firstname + " " + user.lastname;
+
+        // Retrieve user expertises, which are coding tags associated with the user
+        let userExpertises: [CodingTag] = await User.getUserExpertises(user.userId) as [CodingTag];
+
+        // Extract unique tag names from user expertises
+        const tagNames: string[] = [...new Set(userExpertises.map((item: {
+            tagName: any;
+        }) => item.tagName))];
+        userExpertise = tagNames.join(", ");
+
+        // Check if the user has no expertise and update the userExpertise accordingly
+        if (tagNames.length === 0) {
+            userExpertise = "No expertise!";
+        }
+
+        AvatarUrl = await getProfilePicturePath(user);
+    }
+
+    // Format the creation date of the answer
+    const createdAt: Date = question.createdAt as Date;
+    const updatedAt: Date = question.updatedAt as Date;
+
+    const theCreatedAtDate: Date = new Date(createdAt);
+    const theUpdatedAtDate: Date = new Date(updatedAt);
+    const createdDate: string = theCreatedAtDate.toISOString().slice(0, 10);
+    const updatedDate: string = theUpdatedAtDate.toISOString().slice(0, 10);
+
+    /**
+     * Represents user information displayed in a question.
+     * @type {string}
+     */
+    const questionUser: string = createQuestionPerson(
+        createdDate,
+        updatedDate,
+        AvatarUrl,
+        username,
+        totalAnswers.toString(),
+        totalQuestions.toString(),
+        userExpertise,
+    );
+
+    if (questionUser) {
+        (<HTMLDivElement>document.querySelector(".question-info")).innerHTML += questionUser;
+    }
+}
 
 
 /**
@@ -195,194 +317,116 @@ async function handleDownvote(postId: number, userId: number, postType: string):
 
 
 /**
- * Creates HTML markup for displaying an answer.
- *
- * @param {number} answerId - The unique identifier for the answer.
- * @param {string} answerText - The text content of the answer.
- * @param {string} upvoteCount - The count of upvotes for the answer.
- * @param {string} createdAt - The creation timestamp of the answer.
- * @param {string} updatedAt - The updated timestamp of the answer.
- * @param {string} profilePictureSrc - The source URL for the user's profile picture.
- * @param {string} username - The username of the user who posted the answer.
- * @param {number} answersCount - The total count of answers posted by the user.
- * @param {number} questionsCount - The total count of questions posted by the user.
- * @param {string} userExpertise - The expertise of the user that posted this answer
- * @param {string} extraClass - Additional CSS class to be applied to action buttons.
- * @returns {string} - HTML markup for the answer.
- */
-function createAnswerElement(
-    answerId: number,
-    answerText: string,
-    upvoteCount: string,
-    createdAt: string,
-    updatedAt: string,
-    profilePictureSrc: string,
-    username: string,
-    answersCount: number,
-    questionsCount: number,
-    userExpertise: string,
-    extraClass: string
-): string {
-    return `
-        <div class="answer">
-            <div class="answer-container">
-                <div id="${answerId}" class="vote">
-                    <!-- Upvote button and count -->
-                    <img class="arrow answer-upvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                    <span class="upvote-count">${upvoteCount}</span>
-                    <!-- Downvote button -->
-                    <img class="arrow arrow-down answer-downvote" alt="upvote answer" src="assets/img/icons/arrow-up.svg">
-                </div>
-                <div class="answer-body">
-                    <!-- Answer text -->
-                    <span>${answerText}</span>
-                    
-                    <div class="answer-info">
-                        <div class="action-buttons ${extraClass}">
-                            <!-- Delete button with unique ID -->
-                            <button class="button delete-button" id="${answerId}">Delete</button>
-                        </div>
-                        
-                        <div class="created-info">
-                            <div class="inner-info">
-                                <!-- Creation timestamp -->
-                                <div class="answer-date">
-                                    <span>Created at: ${createdAt}</span>
-                                    <span>Last updated: ${updatedAt}</span>
-                                </div>
-                                <div class="person">
-                                    <!-- User profile picture -->
-                                    <img class="profile-picture" alt="profile picture" src="${profilePictureSrc}">
-                                    <div class="personal-information">
-                                        <!-- User details -->
-                                        <span>${username}</span>
-                                        <span>Answers: ${answersCount}</span>
-                                        <span>Questions: ${questionsCount}</span>
-                                        <button id="tooltipButton" type="button" class="tool-tip-button">Expertise</button>
-                                        <div id="tooltipContent" role="tooltip" class="tool-tip-content">${userExpertise}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-/**
  * Adds answers to the page for a specific question.
  *
  * @param {number} userId - The unique identifier for the current user.
  * @returns {Promise<void>} - A Promise that resolves when answers are successfully added to the page.
  */
 async function addAnswersToPage(userId: number): Promise<void> {
-    // Get references to HTML elements
-    const answersBody: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answers"));
-    const answerCount: HTMLDivElement = (<HTMLDivElement>document.querySelector(".answer-count"));
+    const answersBody: HTMLDivElement = document.querySelector(".answers") as HTMLDivElement;
+    const answerCount: HTMLDivElement = document.querySelector(".answer-count") as HTMLDivElement;
 
-    // Retrieve answers for the current question from the database
-    const answers: AnswerWithUser[] | string = await Question.getAnswersForQuestion(questionId);
+    const answers: [AnswerWithUser] = await Question.getAnswersForQuestion(questionId) as [AnswerWithUser];
+    const loginStatus: boolean | JWTPayload = await security();
+    // @ts-ignore
+    const currentUserId: number = loginStatus["userId"] as number;
 
-    // Update the answer count displayed on the page
+    const question: Question = await Question.retrieveQuestion(questionId) as Question;
     answerCount.innerHTML = String(answers.length);
 
     // Check if there are any answers to display
-    if (answers.length !== 0) {
-        for (const singleAnswer of answers) {
-            // Cast answer to the type with user information
-            const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
+    for (const singleAnswer of answers) {
+        const answer: AnswerWithUser = singleAnswer as AnswerWithUser;
 
-            // Get total answers and total questions count for the user
-            let totalAnswers: number | string = await User.getTotalAnswers(answer.userId);
-            let totalQuestions: number | string = await User.getTotalQuestions(answer.userId);
+        let totalAnswers: number = 0;
+        let totalQuestions: number = 0;
+        let userExpertise: string = "Unknown user";
+        let extraClass: string = "hidden";
+        let canUserCertify: string = "hidden";
+        let username: string = "Unknown user";
+        let AvatarUrl: string = "https://ui-avatars.com/api/?name=Unknown+user&background=random";
 
-            // Retrieve user expertises, which are coding tags associated with the user
-            let userExpertises: [CodingTag] = await User.getUserExpertises(answer.userId) as [CodingTag];
-
-            // Extract unique tag names from user expertises
-            const tagNames: string[] = [...new Set(userExpertises.map((item: {
-                tagName: any;
-            }) => item.tagName))];
-            let userExpertise: string = tagNames.join(", ");
-
-            // Check if the user has no expertise and update the userExpertise accordingly
-            if (tagNames.length === 0) {
-                userExpertise = "No expertise!";
-            }
-
-
-            // Ensure the counts are numbers, default to 0 if not
-            if (typeof totalAnswers !== "number") {
-                totalAnswers = 0;
-            }
-
-            if (typeof totalQuestions !== "number") {
-                totalQuestions = 0;
-            }
-
-            // Format the creation date of the answer
-            const createdAt: Date = answer.createdAt as Date;
-            const updatedAt: Date = answer.updatedAt as Date;
-            let createdDate: string = Date.now().toString();
-            let updatedDate: string = Date.now().toString();
-
-
-            const theCreatedAtDate: Date = new Date(createdAt);
-            const theUpdatedAtDate: Date = new Date(updatedAt);
-            createdDate = theCreatedAtDate.toISOString().slice(0, 10);
-            updatedDate = theUpdatedAtDate.toISOString().slice(0, 10);
-
-            let extraClass: string = "";
-
-            // If the user is not the author of the answer, add the "hidden" class
-            if (userId !== answer.userId) {
-                extraClass = "hidden";
-            }
-
-            // Create the HTML markup for the answer
-            const username: string = answer.firstname + " " + answer.lastname as string;
-            const upvoteCount: number = answer.totalUpvotes! - answer.totalDownvotes!;
-            const answerElement: string = createAnswerElement(
-                answer.answerId!,
-                answer.answerBody,
-                upvoteCount.toString(),
-                createdDate,
-                updatedDate,
-                "https://ui-avatars.com/api/?name=" + username,
-                username,
-                totalAnswers,
-                totalQuestions,
-                userExpertise,
-                extraClass
-            );
-
-            // Append the answer element to the answers container
-            answersBody.innerHTML += answerElement;
+        if (answer.userId) {
+            totalAnswers = await User.getTotalAnswers(answer.userId) as number;
+            totalQuestions = await User.getTotalQuestions(answer.userId) as number;
+            userExpertise = await getUserExpertise(answer.userId);
+            extraClass = getExtraClass(userId, answer.userId);
+            username = getUsername(answer);
+            const user: User = await User.retrieveUser(answer.userId) as User;
+            AvatarUrl = await getProfilePicturePath(user);
         }
 
-        // Add event listeners for upvoting and downvoting answers
-        (<NodeListOf<Element>>document.querySelectorAll(".answer-upvote")).forEach(item => {
-            item.addEventListener("click", async (): Promise<void> => {
-                if (item.parentElement) {
-                    const answerId: string = item.parentElement.id;
-                    await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.UPVOTE);
-                }
-            });
-        });
+        if (answer.userId && question.userId) {
+            canUserCertify = getCertifyVisibility(currentUserId, question.userId, answer.isAccepted);
+        }
 
-        (<NodeListOf<Element>>document.querySelectorAll(".answer-downvote")).forEach(item => {
-            item.addEventListener("click", async (): Promise<void> => {
-                if (item.parentElement) {
-                    const answerId: string = item.parentElement.id;
-                    await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
-                }
-            });
-        });
+        const {createdAt, updatedAt} = formatDates(answer.createdAt as Date, answer.updatedAt as Date);
+
+        const checkMarkUrl: string = getCheckMarkUrl(answer.isAccepted);
+
+        const upvoteCount: number = getUpvoteCount(answer);
+
+        const answerElement: string = createAnswerElement(
+            answer.answerId!,
+            answer.answerBody,
+            upvoteCount.toString(),
+            createdAt,
+            updatedAt,
+            AvatarUrl,
+            username,
+            totalAnswers,
+            totalQuestions,
+            userExpertise,
+            extraClass,
+            checkMarkUrl,
+            canUserCertify,
+            "Currently " + answer.totalUpvotes + " upvote('s) on this answer!",
+            "Currently " + answer.totalDownvotes + " downvote('s) on this answer!"
+        );
+
+        answersBody.innerHTML += answerElement;
+
+        addCertifyClickListener(currentUserId, question.userId as number, answer);
     }
+
+    addEventListeners(".answer-upvote", async (item: Element) => {
+        const answerId: string = item.parentElement?.id as string;
+        answerId && await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.UPVOTE);
+    });
+
+    addEventListeners(".answer-downvote", async (item: Element) => {
+        const answerId: string = item.parentElement?.id as string;
+        answerId && await handleVoting(parseInt(answerId), userId, PostType.ANSWER, VoteType.DOWNVOTE);
+    });
+
+
+    // Select and toggle tooltips for upvote buttons
+    toggleTooltipOnHover(document.querySelectorAll(".answer-upvote"));
+
+    // Select and toggle tooltips for downvote buttons
+    toggleTooltipOnHover(document.querySelectorAll(".answer-downvote"));
+
+
+    addEditButtonListeners();
 }
 
+/**
+ * Toggle tooltip visibility on mouse enter and mouse leave events.
+ * @param {NodeListOf<HTMLElement>} elements - The elements to attach the event listeners to.
+ */
+function toggleTooltipOnHover(elements: NodeListOf<HTMLElement>): void {
+    elements.forEach(item => {
+        item.addEventListener("mouseenter", async (): Promise<void> => {
+            const tooltip: Element = item.parentElement?.lastElementChild as Element;
+            tooltip.classList.toggle("show-tooltip");
+        });
+
+        item.addEventListener("mouseleave", async (): Promise<void> => {
+            const tooltip: Element = item.parentElement?.lastElementChild as Element;
+            tooltip.classList.toggle("show-tooltip");
+        });
+    });
+}
 
 /**
  * Function to check and retrieve the `questionId` from the URL parameters.

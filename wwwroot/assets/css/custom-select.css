@@ -1,0 +1,129 @@
+.custom-select {
+    position: relative;
+    width: 100%;
+    --tw-border-opacity: 1;
+
+    background-color: #ffffff;
+    border-color: rgb(209 213 219/var(--tw-border-opacity));
+    border-width: 1px;
+    border-radius: .5rem;
+    border-style: solid;
+}
+
+.select-box {
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.selected-options {
+    display: flex;
+    margin-top: 0;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.holder {
+    padding-top: .5rem;
+}
+
+.tag {
+    background-color: #f2f2f2;
+    color: black;
+    border-radius: 5px;
+    margin-right: 5px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.remove-tag {
+    margin-left: 6px;
+    cursor: pointer;
+}
+
+.arrow {
+    margin: 0 10px;
+}
+
+.fa-angle-down {
+    color: #404040;
+    font-size: 2rem;
+}
+
+.no-result-message {
+    padding: 0 0 12px 12px;
+}
+
+.options {
+    display: none;
+    position: relative;
+    width: 100%;
+    background-color: transparent;
+    border-top: none;
+    max-height: 235px;
+    overflow-y: auto;
+    z-index: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.open .options {
+    display: block;
+    border-top: 1px solid #ced4da;
+}
+
+.option-search-tags {
+    background-color: white;
+    border: 1px solid #ced4da;
+    padding: 8px 0;
+    margin: 8px;
+}
+
+.search-tags {
+    width: 90%;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 14px;
+}
+
+.clear {
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0;
+    color: black;
+    top: 26px;
+    left: auto;
+    right: 15px;
+}
+
+.option {
+    padding: 12px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.option.active {
+    color: black;
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.tag:hover,
+.option:hover {
+    background-color: #eaeaea;
+}
+
+.tag_error_msg {
+    padding: .5rem;
+}

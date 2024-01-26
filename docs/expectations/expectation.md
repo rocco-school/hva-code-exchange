@@ -1,4 +1,4 @@
-# Code Exchange Project Verwachtingen 
+# Code Exchange Project Verwachtingen
 
 ### Navbar van de website
     - [ ] burger menu met pagina verwijzingen
@@ -23,7 +23,7 @@
     - [ ] titel van de vraag
     - [ ] Begin van de vraag (200 characters ofzo)
 
-### overview van een bepaalde vraag: 
+### overview van een bepaalde vraag:
     - [ ] De vraag zelf
     - [ ] antwoorden
     - [ ] jouw antwoord
@@ -32,16 +32,9 @@
         - [ ] Titel van de vraag
         - [ ] Input waar je de vraag kan stellen 
         - [ ] tags (uit selectie of nieuwe aanmaken)
-    
+
 ### profiel pagina:
     - Tabs met Questions, answers, settings
 
 ### Tijd over (user stories af):
     - [ ] externe log in via opties. Daarin zie je jouw Questions, Answers en settings.
-	
-		
-	
-	
-	
-	
-	

@@ -5,14 +5,87 @@
 
 /* Styling for the sidebar menu */
 .sidebarMenu {
+    --tw-bg-opacity: 1;
+    --tw-border-opacity: 1;
+    background-color: rgb(255 255 255/var(--tw-bg-opacity));
+    border-color: rgb(229 231 235/var(--tw-border-opacity));
+    border-bottom-width: 0;
+    border-top-width: 0;
+    border-right-width: 1px;
+    border-left-width: 0;
+    border-style: solid;
+
     visibility: hidden; /* Initially hide the sidebar */
-    padding: 1rem;
     width: 12.5rem;
-    background-color: #f1f1f1;
     position: fixed;
     height: 100%;
     z-index: 10;
     overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.logButtonsContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (min-width: 750px) {
+    .logButtonsContainer {
+        display: none;
+    }
+}
+
+
+.containerLogButtons {
+    margin-top: auto;
+}
+
+.sidebarCloseButton {
+    position: absolute;
+    height: 3.5rem;
+    z-index: 99 !important;
+}
+
+.containerButtons {
+    padding-top: .5rem;
+}
+
+.sidebarButtons {
+    margin-top: 3.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(55 65 81);
+}
+
+.sidebarButtons-cover {
+    list-style-type: none;
+}
+
+.sidebarButtons-cover:hover {
+    background-color: lightblue;
+}
+
+.current-page {
+    background-color: lightblue;
+}
+
+.buttonItem {
+    align-items: center;
+    display: flex;
+    width: 8rem;
+    margin: auto auto 0.5rem;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 1rem;
+    gap: 1rem;
+    border-radius: .5rem;
 }
 
 /* Show the sidebar when the 'show' class is applied */
@@ -20,27 +93,14 @@
     visibility: visible;
 }
 
-/* Styling for the content container within the sidebar */
-.sidebarMenu .container {
+@media only screen and (min-width: 1024px) {
+    .sidebarMenu {
+        visibility: visible;
+    }
+}
+
+
+.container {
     display: flex;
     flex-direction: column;
-}
-
-/* Styling for the close button in the sidebar */
-.sidebarMenu .container #sidebarClose {
-    margin-bottom: 2rem;
-    cursor: pointer;
-}
-
-/* Styling for the list of buttons in the sidebar */
-.sidebarMenu .container .containerButtons {
-    list-style: none; /* Remove default list styling */
-}
-
-/* Styling for individual buttons within the sidebar */
-.sidebarMenu .container .containerButtons button {
-    width: 12rem;
-    padding: 0.5rem;
-    cursor: pointer;
-    margin-bottom: 1rem;
 }

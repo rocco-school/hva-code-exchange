@@ -51,26 +51,25 @@ export class VoteService {
      * to perform the update. The method returns a Promise that resolves to the updated vote.
      */
     public static async updateVote(vote: Vote): Promise<Vote> {
-        // Destructuring the vote object to get individual properties
-        const voteData: (string | number | boolean | null)[] = [vote.userId, vote.questionId, vote.answerId, vote.voteType, vote.voteId];
+        try {
+            // Update the vote in the Vote table.
+            const voteData: (string | number | boolean | null)[] = [vote.userId, vote.questionId, vote.answerId, vote.voteType, vote.voteId];
+            await api.queryDatabase(VOTE_QUERY.UPDATE_VOTE, ...voteData);
 
-        // Querying the database to update the vote with the given voteId.
-        const updateVote: [Vote] = await api.queryDatabase(VOTE_QUERY.UPDATE_VOTE, ...voteData) as [Vote];
+            // Retrieve the updated vote from the database.
+            const getVote: [Vote] = await api.queryDatabase(VOTE_QUERY.SELECT_VOTE, vote.voteId) as [Vote];
 
-        // Retrieve the updated vote from the database.
-        const updatedVote: [Vote] = await api.queryDatabase(VOTE_QUERY.SELECT_VOTE, vote.voteId) as [Vote];
+            // Checking if the database retrieval was successful.
+            if (!getVote) {
+                new Error(`Failed to get Vote: ${vote.voteId}!`);
+            }
 
-        // Checking if the database update was successful.
-        if (!updateVote) {
-            throw new Error(`Failed to update vote with ID: ${vote.voteId}`);
+            // Return the updated vote.
+            return getVote[0] as Vote;
+        } catch (error) {
+            // Handle any errors that occur during the update or retrieval process.
+            throw new Error(`Failed to update Vote: ${vote.voteId}: ${error}`);
         }
-
-        // Checking if the database update was successful.
-        if (!updatedVote) {
-            throw new Error(`Failed to retrieve vote with ID: ${vote.voteId}`);
-        }
-
-        return updatedVote[0] as Vote;
     }
 
     /**

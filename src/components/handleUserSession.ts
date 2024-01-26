@@ -11,7 +11,7 @@ import {sign} from "./jsonwebtoken";
 export async function endUserSession(): Promise<void> {
     // Remove JWTToken From session
     session.remove("JWTToken");
-    location.reload();
+    location.replace("index.html");
 }
 
 
