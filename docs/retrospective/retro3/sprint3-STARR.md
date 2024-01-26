@@ -23,11 +23,11 @@ Vanwege het feit dat het product nog niet volledig operationeel was, stelden we 
 Deze acties resulteerden in de voltooiing van onze eerste versie. Hierdoor kon Fauzan de gebruikerstesten uitvoeren, waarna wij als duo direct de ontvangen feedback van onze gebruikers in ons product konden implementeren.
 
 ## Reflectie (R):
-**Fauzan :**
+**FAUZAN**
 
 Ik ben zeer tevreden met de behaalde resultaten. Deze ervaring heeft mij doen inzien dat effectieve communicatie van essentieel belang is tijdens samenwerkingen om situaties zoals deze succesvol aan te kunnen pakken. Bovendien was ik me er terdege van bewust dat het voltooien van mijn gebruikerstesten een cruciale rol speelde. Zonder deze afgeronde testen zouden we als duo niet in staat zijn geweest om waardevolle verbeteringen aan te brengen in ons product.
 
-**Rocco :**
+**ROCCO**
 
 Terugkijkend op de afgelopen sprint ben ik zeer tevreden met de leerervaringen die ik heb opgedaan. Ik heb vooruitgang geboekt in mijn presentatievaardigheden en heb nieuwe dingen geleerd tijdens het coderen, bijvoorbeeld op het gebied van styling. Het resultaat van de styling van de applicatie is iets waar ik erg blij mee ben.
 
