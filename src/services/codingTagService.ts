@@ -37,7 +37,7 @@ export class CodingTagService {
         }
 
         // Returning the saved codingTag.
-        return newCodingTag[0];
+        return newCodingTag[0] as CodingTag;
     }
 
     /**
@@ -68,7 +68,7 @@ export class CodingTagService {
         }
 
         // Returning the updated codingTag.
-        return updatedCodingTag[0];
+        return updatedCodingTag[0] as CodingTag;
     }
 
     /**
@@ -91,7 +91,7 @@ export class CodingTagService {
             throw new Error("Failed to retrieve coding tags from Database!");
         }
 
-        return codingTags;
+        return codingTags as [CodingTag];
     }
 
     /**
@@ -116,7 +116,7 @@ export class CodingTagService {
         }
 
         // Returning the retrieved coding tag.
-        return getCodingTag[0];
+        return getCodingTag[0] as CodingTag;
     }
 
     /**

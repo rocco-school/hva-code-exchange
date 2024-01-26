@@ -27,13 +27,12 @@ async function setup(): Promise<void> {
     // keeps redirect message hidden
     document.getElementsByTagName("section")[0].setAttribute("style", "display:none");
 
-    const firstnameInput: any = (document.getElementById("firstname") as HTMLInputElement);
-    const lastnameInput: any = (document.getElementById("lastname") as HTMLInputElement);
-    const usernameInput: any = (document.getElementById("username") as HTMLInputElement);
-    const emailInput: any = (document.getElementById("email") as HTMLInputElement);
-    const passwordInput: any = (document.getElementById("password") as HTMLInputElement);
-
-    const submitButton: any = (document.getElementById("signupForm") as HTMLInputElement);
+    const firstnameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("firstname"));
+    const lastnameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("lastname"));
+    const usernameInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("username"));
+    const emailInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("email"));
+    const passwordInput: HTMLInputElement = (<HTMLInputElement>document.getElementById("password"));
+    const submitButton: HTMLInputElement = (<HTMLInputElement>document.getElementById("signupForm"));
 
     // Regular Expression for email
     // Needs alphanumerics before the @ which follows with a dot and 2-4 letters

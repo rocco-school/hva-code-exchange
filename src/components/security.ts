@@ -20,7 +20,7 @@ export async function security(): Promise<JWTPayload | boolean> {
         }
 
         // Verify the JWT token using the secret key.
-        const logged: JWTPayload | null = await verify(token, __SECRET_KEY__);
+        const logged: JWTPayload = await verify(token, __SECRET_KEY__) as JWTPayload;
 
         // If the token is invalid or expired, the user is not authenticated.
         if (!logged) {

@@ -6,16 +6,14 @@ import {url} from "@hboictcloud/api";
  */
 async function setup(): Promise<void> {
     // Get references to various HTML elements
-    const signupButton: HTMLButtonElement | null = document.querySelector("#signupButton");
-    const loginButton: HTMLButtonElement | null = document.querySelector("#loginButton");
-
-    const burgerMenu: HTMLImageElement | null = document.querySelector("#burgerMenu");
-    const sidebarClose: HTMLImageElement | null = document.querySelector("#sidebarClose");
-    const sidebarMenu: HTMLElement | null = document.querySelector(".sidebarMenu");
-
-    const homeButton: HTMLButtonElement | null = document.querySelector("#homeButton");
-    const aboutButton: HTMLButtonElement | null = document.querySelector("#aboutButton");
-    const questionsButton: HTMLButtonElement | null = document.querySelector("#questionsButton");
+    const signupButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#signupButton"));
+    const loginButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#loginButton"));
+    const burgerMenu: HTMLImageElement = (<HTMLImageElement>document.querySelector("#burgerMenu"));
+    const sidebarClose: HTMLImageElement = (<HTMLImageElement>document.querySelector("#sidebarClose"));
+    const sidebarMenu: HTMLElement = (<HTMLElement>document.querySelector(".sidebarMenu"));
+    const homeButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#homeButton"));
+    const aboutButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#aboutButton"));
+    const questionsButton: HTMLButtonElement = (<HTMLButtonElement>document.querySelector("#questionsButton"));
 
     // Add event listeners for various buttons
     signupButton?.addEventListener("click", () => {
@@ -29,7 +27,6 @@ async function setup(): Promise<void> {
     burgerMenu?.addEventListener("click", () => {
         // Show the sidebar menu when the burger menu is clicked
         sidebarMenu?.classList.add("show");
-        console.log("class added");
     });
 
     sidebarClose?.addEventListener("click", () => {
